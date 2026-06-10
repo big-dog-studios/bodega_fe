@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { IonContent, IonFooter, IonPage } from '@ionic/react';
 import AppHeader from '../components/organisms/AppHeader';
 import StoreMap from '../components/organisms/StoreMap';
+import StoreDetailSheet from '../components/organisms/StoreDetailSheet';
 import FilterBar, { STORE_FILTERS } from '../components/molecules/FilterBar';
 import ResultsBadge from '../components/atoms/ResultsBadge';
 import type { StoreFilters } from '../lib/api';
@@ -39,6 +40,8 @@ const Map: React.FC = () => {
       <IonFooter>
         <FilterBar active={active} onToggle={toggle} />
       </IonFooter>
+
+      <StoreDetailSheet />
     </IonPage>
   );
 };
