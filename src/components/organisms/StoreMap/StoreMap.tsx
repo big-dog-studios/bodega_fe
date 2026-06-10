@@ -5,6 +5,7 @@ import { IonSpinner } from '@ionic/react';
 import { Geolocation } from '@capacitor/geolocation';
 import { useStores } from '../../../context/StoresContext';
 import type { Bbox } from '../../../lib/api';
+import BodegaPin from '../../atoms/BodegaPin';
 import './StoreMap.scss';
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
@@ -51,11 +52,6 @@ const StoreMap: React.FC = () => {
     const bbox: Bbox = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
     loadStores(bbox);
   };
-
-  // Log the fetched pins for now.
-  useEffect(() => {
-    console.log('[stores]', pins);
-  }, [pins]);
 
   useEffect(() => {
     let cancelled = false;
@@ -127,6 +123,11 @@ const StoreMap: React.FC = () => {
         onMoveEnd={loadStoresForViewport}
       >
         <NavigationControl position="top-right" showCompass={false} />
+        {pins.map((p) => (
+          <Marker key={p.license_number} longitude={p.lon} latitude={p.lat}>
+            <BodegaPin />
+          </Marker>
+        ))}
         {me && (
           <Marker longitude={me.longitude} latitude={me.latitude}>
             <div className="user-dot" aria-label="Your location" />

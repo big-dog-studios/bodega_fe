@@ -1,0 +1,15 @@
+@use '../../../theme/mixins' as *;
+
+.bodega-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--brand-blue);
+  border: 3px solid var(--brand-orange);
+  border-radius: 4px;
+  color: var(--brand-orange);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.28);
+  @include display-caps(16px, 800, 0);
+}
