@@ -15,7 +15,7 @@ ion-modal.store-sheet {
 
 // Pinned to the bottom of the sheet (works because expandToScroll={false}).
 .store-sheet__footer {
-  background: var(--brand-orange);
+  background: var(--brand-blue);
 
   &::before {
     display: none; // drop Ionic's default top hairline
@@ -35,6 +35,72 @@ ion-modal.store-sheet {
   justify-content: center;
   padding: 32px;
   color: var(--brand-orange);
+}
+
+// Info / Report tabs — same active treatment + pop as the filter bar.
+.store-sheet__tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.store-sheet__tab {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 8px;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  @include display-caps(15px, 700, 0.04em);
+
+  &--active {
+    color: var(--brand-orange);
+
+    .store-sheet__tab-icon {
+      animation: sheet-tab-pop 0.25s ease;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50%;
+      height: 3px;
+      border-radius: 3px 3px 0 0;
+      background: var(--brand-orange);
+    }
+  }
+}
+
+.store-sheet__tab-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.store-sheet__report {
+  padding: 18px 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-body);
+  font-size: 15px;
+}
+
+@keyframes sheet-tab-pop {
+  0% {
+    transform: scale(1);
+  }
+  55% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .store-sheet__head {

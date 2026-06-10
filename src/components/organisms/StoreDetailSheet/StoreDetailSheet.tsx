@@ -1,9 +1,16 @@
+import { useState } from 'react';
 import { IonContent, IonFooter, IonModal, IonSpinner } from '@ionic/react';
 import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import type { StoreDetail } from '../../../lib/api';
 import FeatureBadge from '../../atoms/FeatureBadge';
 import './StoreDetailSheet.scss';
+
+const TABS = [
+  { key: 'info', icon: '📍', label: 'Info' },
+  { key: 'report', icon: '✏️', label: 'Report' },
+] as const;
+type TabKey = (typeof TABS)[number]['key'];
 
 /** Feature flags -> badges. `filled` is the bold red treatment. */
 const BADGES: { test: (s: StoreDetail) => boolean; label: string; filled?: boolean }[] = [
@@ -18,6 +25,12 @@ const BADGES: { test: (s: StoreDetail) => boolean; label: string; filled?: boole
 /** Bottom-sheet drawer for the selected store. Opens on pin select. */
 const StoreDetailSheet: React.FC = () => {
   const { selectedId, selected, selectedLoading, clearSelected } = useStores();
+  const [tab, setTab] = useState<TabKey>('info');
+
+  const dismiss = () => {
+    clearSelected();
+    setTab('info');
+  };
 
   const openDirections = () => {
     if (!selected) return;
@@ -34,7 +47,7 @@ const StoreDetailSheet: React.FC = () => {
     <IonModal
       className="store-sheet"
       isOpen={selectedId !== null}
-      onDidDismiss={clearSelected}
+      onDidDismiss={dismiss}
       breakpoints={[0, 0.6, 0.9]}
       initialBreakpoint={0.6}
       expandToScroll={false}
@@ -49,6 +62,22 @@ const StoreDetailSheet: React.FC = () => {
         )}
 
         {selected && (
+          <div className="store-sheet__tabs">
+            {TABS.map((tb) => (
+              <button
+                key={tb.key}
+                type="button"
+                className={`store-sheet__tab${tab === tb.key ? ' store-sheet__tab--active' : ''}`}
+                onClick={() => setTab(tb.key)}
+              >
+                <span className="store-sheet__tab-icon">{tb.icon}</span>
+                {tb.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {selected && tab === 'info' && (
           <div className="store-sheet__body">
             <header className="store-sheet__head">
               <h1 className="store-sheet__name">{selected.dba}</h1>
@@ -65,6 +94,12 @@ const StoreDetailSheet: React.FC = () => {
                 ))}
               </div>
             </section>
+          </div>
+        )}
+
+        {selected && tab === 'report' && (
+          <div className="store-sheet__report">
+            <p>Report form coming soon.</p>
           </div>
         )}
       </IonContent>
