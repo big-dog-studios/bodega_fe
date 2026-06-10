@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { IonContent, IonFooter, IonPage } from '@ionic/react';
 import AppHeader from '../components/organisms/AppHeader';
+import StoreMap from '../components/organisms/StoreMap';
 import FilterBar from '../components/molecules/FilterBar';
 import ResultsBadge from '../components/atoms/ResultsBadge';
 
 const Map: React.FC = () => {
   // Multi-select: each filter key toggles independently.
   const [active, setActive] = useState<Set<string>>(new Set());
-
-  // TODO: wire to the actual number of pins once the map/data loop lands.
-  const resultCount = 0;
 
   const toggle = (key: string) => {
     setActive((prev) => {
@@ -22,9 +20,11 @@ const Map: React.FC = () => {
 
   return (
     <IonPage>
-      <AppHeader end={<ResultsBadge count={resultCount} />} />
+      <AppHeader end={<ResultsBadge count={0} />} />
 
-      <IonContent fullscreen />
+      <IonContent scrollY={false}>
+        <StoreMap />
+      </IonContent>
 
       <IonFooter>
         <FilterBar active={active} onToggle={toggle} />

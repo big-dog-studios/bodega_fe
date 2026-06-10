@@ -1,0 +1,27 @@
+.store-map {
+  position: absolute;
+  inset: 0;
+
+  .maplibregl-map {
+    width: 100%;
+    height: 100%;
+  }
+
+  &--loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// "You are here" dot — blue core, white ring, soft accuracy halo.
+.user-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--brand-blue);
+  border: 3px solid #ffffff;
+  box-shadow:
+    0 0 0 6px rgba(var(--brand-blue-rgb), 0.18),
+    0 1px 3px rgba(0, 0, 0, 0.35);
+}
