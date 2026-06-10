@@ -1,0 +1,66 @@
+@use '../../../theme/mixins' as *;
+
+ion-modal.store-sheet {
+  --background: var(--brand-blue);
+}
+
+.store-sheet__content {
+  --background: var(--brand-blue);
+  --color: #ffffff;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+// Orange category bar at the very top of the sheet.
+.store-sheet__tag {
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+  padding: 9px 20px;
+  @include display-caps(13px, 700, 0.08em);
+}
+
+.store-sheet__loading {
+  display: flex;
+  justify-content: center;
+  padding: 32px;
+  color: var(--brand-orange);
+}
+
+.store-sheet__head {
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.store-sheet__name {
+  margin: 0;
+  color: var(--brand-orange);
+  text-shadow: 2px 2px 0 var(--brand-red);
+  @include display-caps(34px, 800, 0.02em);
+}
+
+.store-sheet__area {
+  margin: 4px 0 0;
+  color: var(--brand-orange);
+  @include display-caps(14px, 700, 0.08em);
+}
+
+.store-sheet__section {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.store-sheet__address {
+  margin: 0 0 14px;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.store-sheet__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

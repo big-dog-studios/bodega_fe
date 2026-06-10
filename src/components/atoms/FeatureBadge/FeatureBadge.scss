@@ -1,0 +1,17 @@
+@use '../../../theme/mixins' as *;
+
+.feature-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 2px solid var(--brand-orange);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--brand-orange);
+  @include display-caps(12px, 700, 0.06em);
+
+  &--filled {
+    background: var(--brand-red);
+    border-color: var(--brand-red);
+    color: #ffe3bf;
+  }
+}
