@@ -5,9 +5,12 @@ import StoreMap from '../components/organisms/StoreMap';
 import StoreDetailSheet from '../components/organisms/StoreDetailSheet';
 import FilterBar, { STORE_FILTERS } from '../components/molecules/FilterBar';
 import ResultsBadge from '../components/atoms/ResultsBadge';
+import { useStores } from '../context/StoresContext';
 import type { StoreFilters } from '../lib/api';
 
 const Map: React.FC = () => {
+  const { pins } = useStores();
+
   // Multi-select: each filter key toggles independently.
   const [active, setActive] = useState<Set<string>>(new Set());
 
@@ -31,7 +34,7 @@ const Map: React.FC = () => {
 
   return (
     <IonPage>
-      <AppHeader end={<ResultsBadge count={0} />} />
+      <AppHeader end={<ResultsBadge count={pins.length} />} />
 
       <IonContent scrollY={false}>
         <StoreMap filters={filters} />
