@@ -42,32 +42,51 @@ const StoreMap: React.FC = () => {
 
   useEffect(() => {
     let cancelled = false;
+    let watchId: string | null = null;
+
     (async () => {
       // requestPermissions() throws on web ("Not implemented on web") and only the
       // OS prompt matters on native — so it's best-effort and must NOT gate the
-      // getCurrentPosition() call, which is what triggers the browser prompt on web.
+      // watchPosition() call, which is what triggers the browser prompt on web.
       try {
         await Geolocation.requestPermissions();
       } catch {
-        // web / unsupported — ignore and let getCurrentPosition do the asking
+        // web / unsupported — ignore and let watchPosition do the asking
       }
+
       try {
-        const pos = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
-        const { longitude, latitude } = pos.coords;
-        // Only use the device location if it's inside NYC; otherwise drop to default.
-        if (!cancelled && inNyc(longitude, latitude)) {
-          // Street-level: ~a few walkable blocks around the user.
-          setView({ longitude, latitude, zoom: 16 });
-          setMe({ longitude, latitude });
+        const id = await Geolocation.watchPosition({ enableHighAccuracy: true }, (pos, err) => {
+          if (cancelled) return;
+          if (err || !pos) {
+            // denied or unavailable — make sure the map still renders
+            setView((v) => v ?? DEFAULT_VIEW);
+            return;
+          }
+          const { longitude, latitude } = pos.coords;
+          if (inNyc(longitude, latitude)) {
+            // Live dot follows every fix; center only on the FIRST one (zoom 16,
+            // ~a few walkable blocks) so the map doesn't yank around as you move.
+            setMe({ longitude, latitude });
+            setView((v) => v ?? { longitude, latitude, zoom: 16 });
+          } else {
+            // Outside NYC — hide the dot, fall back to the default view.
+            setMe(null);
+            setView((v) => v ?? DEFAULT_VIEW);
+          }
+        });
+        if (cancelled) {
+          Geolocation.clearWatch({ id });
           return;
         }
+        watchId = id;
       } catch {
-        // denied or unavailable — fall back to the default view below
+        if (!cancelled) setView((v) => v ?? DEFAULT_VIEW);
       }
-      if (!cancelled) setView(DEFAULT_VIEW);
     })();
+
     return () => {
       cancelled = true;
+      if (watchId) Geolocation.clearWatch({ id: watchId });
     };
   }, []);
 
