@@ -1,6 +1,7 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+import { StoresProvider } from './context/StoresProvider';
 import Map from './pages/Map';
 
 /* Core CSS required for Ionic components to work properly */
@@ -37,16 +38,18 @@ setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/map">
-          <Map />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/map" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
+    <StoresProvider>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/map">
+            <Map />
+          </Route>
+          <Route exact path="/">
+            <Redirect to="/map" />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </StoresProvider>
   </IonApp>
 );
 
