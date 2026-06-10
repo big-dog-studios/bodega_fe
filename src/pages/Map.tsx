@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { IonContent, IonFooter, IonPage } from '@ionic/react';
 import AppHeader from '../components/organisms/AppHeader';
 import StoreMap from '../components/organisms/StoreMap';
-import FilterBar from '../components/molecules/FilterBar';
+import FilterBar, { STORE_FILTERS } from '../components/molecules/FilterBar';
 import ResultsBadge from '../components/atoms/ResultsBadge';
+import type { StoreFilters } from '../lib/api';
 
 const Map: React.FC = () => {
   // Multi-select: each filter key toggles independently.
@@ -18,12 +19,21 @@ const Map: React.FC = () => {
     });
   };
 
+  // Active toggles -> getStores() query params (each active filter requires has_X=true).
+  const filters = useMemo<StoreFilters>(() => {
+    const f: StoreFilters = {};
+    for (const def of STORE_FILTERS) {
+      if (active.has(def.key)) f[def.param] = true;
+    }
+    return f;
+  }, [active]);
+
   return (
     <IonPage>
       <AppHeader end={<ResultsBadge count={0} />} />
 
       <IonContent scrollY={false}>
-        <StoreMap />
+        <StoreMap filters={filters} />
       </IonContent>
 
       <IonFooter>

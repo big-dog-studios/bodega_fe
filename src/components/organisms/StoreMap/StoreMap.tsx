@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Map, { Marker, NavigationControl, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { IonSpinner } from '@ionic/react';
 import { Geolocation } from '@capacitor/geolocation';
 import { useStores } from '../../../context/StoresContext';
-import type { Bbox } from '../../../lib/api';
+import type { Bbox, StoreFilters } from '../../../lib/api';
 import BodegaPin from '../../atoms/BodegaPin';
 import './StoreMap.scss';
 
@@ -36,7 +36,12 @@ interface LngLat {
   latitude: number;
 }
 
-const StoreMap: React.FC = () => {
+interface StoreMapProps {
+  /** Active feature filters; passed through to getStores(). */
+  filters?: StoreFilters;
+}
+
+const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
   // Hold rendering until we've resolved a location, so the map's initial view
   // is the device location (not a default we then animate away from).
   const [view, setView] = useState<ViewState | null>(null);
@@ -46,12 +51,17 @@ const StoreMap: React.FC = () => {
   const { loadStores, pins, selectStore, selectedId } = useStores();
 
   // Read the current viewport bbox and fetch pins for it (saved to context).
-  const loadStoresForViewport = () => {
+  const loadStoresForViewport = useCallback(() => {
     const b = mapRef.current?.getBounds();
     if (!b) return;
     const bbox: Bbox = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
-    loadStores(bbox);
-  };
+    loadStores(bbox, filters);
+  }, [loadStores, filters]);
+
+  // Re-fetch the current viewport whenever the filters change.
+  useEffect(() => {
+    loadStoresForViewport();
+  }, [loadStoresForViewport]);
 
   useEffect(() => {
     let cancelled = false;

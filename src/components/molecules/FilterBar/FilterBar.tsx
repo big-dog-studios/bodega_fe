@@ -1,17 +1,19 @@
+import type { StoreFilters } from '../../../lib/api';
 import './FilterBar.scss';
 
 export interface StoreFilter {
   key: string;
   label: string;
   icon: string;
+  /** The getStores() query param this filter sets. */
+  param: keyof StoreFilters;
 }
 
-/** Maps to the store feature flags on the API detail record. */
 export const STORE_FILTERS: StoreFilter[] = [
-  { key: 'preparedFood', label: 'HOT FOOD', icon: '🥪' },
-  { key: 'lottery', label: 'LOTTERY', icon: '🎟' },
-  { key: 'alcohol', label: 'BEER & WINE', icon: '🍺' },
-  { key: 'tobacco', label: 'TOBACCO', icon: '🚬' },
+  { key: 'preparedFood', label: 'HOT FOOD', icon: '🥪', param: 'has_prepared_food' },
+  { key: 'lottery', label: 'LOTTERY', icon: '🎟', param: 'has_lottery' },
+  { key: 'alcohol', label: 'BEER & WINE', icon: '🍺', param: 'has_alcohol' },
+  { key: 'tobacco', label: 'TOBACCO', icon: '🚬', param: 'has_tobacco' },
 ];
 
 interface FilterBarProps {

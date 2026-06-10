@@ -31,6 +31,11 @@
         opacity: 1;
       }
 
+      // Pop the emoji on select — same bounce as the map pin.
+      .filter-bar__icon {
+        animation: filter-pop 0.25s ease;
+      }
+
       &::after {
         content: '';
         position: absolute;
@@ -53,5 +58,17 @@
   &__label {
     @include display-caps(12px, 700, 0.04em);
     opacity: 0.9;
+  }
+}
+
+@keyframes filter-pop {
+  0% {
+    transform: scale(1);
+  }
+  55% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
   }
 }
