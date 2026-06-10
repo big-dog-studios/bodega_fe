@@ -43,7 +43,7 @@ const StoreMap: React.FC = () => {
   // The user's coords, only when we have a real in-NYC fix (drives the "you" dot).
   const [me, setMe] = useState<LngLat | null>(null);
   const mapRef = useRef<MapRef>(null);
-  const { loadStores, pins } = useStores();
+  const { loadStores, pins, selectStore, selectedId } = useStores();
 
   // Read the current viewport bbox and fetch pins for it (saved to context).
   const loadStoresForViewport = () => {
@@ -124,8 +124,13 @@ const StoreMap: React.FC = () => {
       >
         <NavigationControl position="top-right" showCompass={false} />
         {pins.map((p) => (
-          <Marker key={p.license_number} longitude={p.lon} latitude={p.lat}>
-            <BodegaPin />
+          <Marker
+            key={p.license_number}
+            longitude={p.lon}
+            latitude={p.lat}
+            onClick={() => selectStore(p.license_number)}
+          >
+            <BodegaPin selected={p.license_number === selectedId} />
           </Marker>
         ))}
         {me && (

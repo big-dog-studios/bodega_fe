@@ -15,6 +15,7 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [pinsLoading, setPinsLoading] = useState(false);
   const [pinsError, setPinsError] = useState<Error | null>(null);
 
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selected, setSelected] = useState<StoreDetail | null>(null);
   const [selectedLoading, setSelectedLoading] = useState(false);
   const [selectedError, setSelectedError] = useState<Error | null>(null);
@@ -44,6 +45,8 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   const selectStore = useCallback((licenseNumber: string) => {
+    // Mark selected immediately so the pin updates without waiting on the fetch.
+    setSelectedId(licenseNumber);
     detailCtrl.current?.abort();
     const ctrl = new AbortController();
     detailCtrl.current = ctrl;
@@ -63,7 +66,10 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       });
   }, []);
 
-  const clearSelected = useCallback(() => setSelected(null), []);
+  const clearSelected = useCallback(() => {
+    setSelectedId(null);
+    setSelected(null);
+  }, []);
 
   // Abort any in-flight requests on unmount.
   useEffect(
@@ -80,6 +86,7 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       pinsLoading,
       pinsError,
       loadStores,
+      selectedId,
       selected,
       selectedLoading,
       selectedError,
@@ -91,6 +98,7 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       pinsLoading,
       pinsError,
       loadStores,
+      selectedId,
       selected,
       selectedLoading,
       selectedError,

@@ -11,5 +11,26 @@
   border-radius: 4px;
   color: var(--brand-orange);
   box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.28);
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
   @include display-caps(16px, 800, 0);
+
+  // Selected: red fill, slightly larger, with a quick pop on select.
+  &--selected {
+    background: var(--brand-red);
+    transform: scale(1.25);
+    animation: bodega-pin-pop 0.25s ease;
+  }
+}
+
+@keyframes bodega-pin-pop {
+  0% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1.25);
+  }
 }
