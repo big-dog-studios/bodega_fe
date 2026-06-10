@@ -1,4 +1,4 @@
-import './ResultsBadge.css';
+import './ResultsBadge.scss';
 
 interface ResultsBadgeProps {
   /** Number of stores currently shown. */

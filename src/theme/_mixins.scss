@@ -1,0 +1,12 @@
+// Shared SCSS helpers for the brand UI.
+
+/// Barlow Condensed, uppercase, tight line-height — the signage look used by the
+/// wordmark, the results badge, and the filter labels.
+@mixin display-caps($size, $weight: 800, $spacing: 0.04em) {
+  font-family: var(--font-display);
+  font-weight: $weight;
+  font-size: $size;
+  letter-spacing: $spacing;
+  text-transform: uppercase;
+  line-height: 1;
+}

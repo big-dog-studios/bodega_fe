@@ -1,13 +1,10 @@
+@use '../../../theme/mixins' as *;
+
 .app-title {
   padding-inline-start: 16px;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 26px;
-  letter-spacing: 0.04em;
   color: var(--brand-orange);
-  text-transform: uppercase;
-  line-height: 1;
   text-shadow: 2px 2px 0 var(--brand-red);
+  @include display-caps(26px, 800, 0.04em);
 }
 
 .app-header__end {

@@ -1,0 +1,57 @@
+@use '../../../theme/mixins' as *;
+
+.filter-bar {
+  display: flex;
+  align-items: stretch;
+  background: var(--brand-blue);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+
+  &__item {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 9px 4px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    // Inactive is still on-brand: full-color emoji + white label, never greyed.
+    color: #ffffff;
+    transition: color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+
+    // Selected: orange label + an orange indicator bar across the top.
+    &--active {
+      color: var(--brand-orange);
+
+      .filter-bar__label {
+        opacity: 1;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 56%;
+        height: 3px;
+        border-radius: 0 0 3px 3px;
+        background: var(--brand-orange);
+      }
+    }
+  }
+
+  &__icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  &__label {
+    @include display-caps(12px, 700, 0.04em);
+    opacity: 0.9;
+  }
+}

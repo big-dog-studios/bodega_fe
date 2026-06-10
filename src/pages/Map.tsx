@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { IonContent, IonFooter, IonPage } from '@ionic/react';
-import AppHeader from '../components/AppHeader';
-import FilterBar from '../components/FilterBar';
-import ResultsBadge from '../components/ResultsBadge';
+import AppHeader from '../components/organisms/AppHeader';
+import FilterBar from '../components/molecules/FilterBar';
+import ResultsBadge from '../components/atoms/ResultsBadge';
 
 const Map: React.FC = () => {
   // Multi-select: each filter key toggles independently.

@@ -1,3 +1,5 @@
+@use '../../../theme/mixins' as *;
+
 .results-badge {
   display: inline-block;
   padding: 5px 12px;
@@ -5,10 +7,6 @@
   border-radius: 6px;
   background: transparent;
   color: var(--brand-orange);
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 15px;
-  letter-spacing: 0.06em;
-  line-height: 1;
   white-space: nowrap;
+  @include display-caps(15px, 800, 0.06em);
 }

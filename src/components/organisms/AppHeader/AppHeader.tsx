@@ -1,5 +1,5 @@
 import { IonHeader, IonToolbar } from '@ionic/react';
-import './AppHeader.css';
+import './AppHeader.scss';
 
 interface AppHeaderProps {
   /** Optional content pinned to the right of the toolbar (e.g. the results badge). */

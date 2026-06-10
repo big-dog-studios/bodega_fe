@@ -1,4 +1,4 @@
-import './FilterBar.css';
+import './FilterBar.scss';
 
 export interface StoreFilter {
   key: string;
