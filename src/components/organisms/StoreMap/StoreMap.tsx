@@ -3,6 +3,8 @@ import Map, { Marker, NavigationControl, type MapRef } from 'react-map-gl/maplib
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { IonSpinner } from '@ionic/react';
 import { Geolocation } from '@capacitor/geolocation';
+import { useStores } from '../../../context/StoresContext';
+import type { Bbox } from '../../../lib/api';
 import './StoreMap.scss';
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
@@ -40,18 +42,20 @@ const StoreMap: React.FC = () => {
   // The user's coords, only when we have a real in-NYC fix (drives the "you" dot).
   const [me, setMe] = useState<LngLat | null>(null);
   const mapRef = useRef<MapRef>(null);
+  const { loadStores, pins } = useStores();
 
-  // Read the current viewport bbox and log it. (Next step: fetch pins for it.)
-  const logBounds = (label: string) => {
+  // Read the current viewport bbox and fetch pins for it (saved to context).
+  const loadStoresForViewport = () => {
     const b = mapRef.current?.getBounds();
     if (!b) return;
-    console.log(`[bounds] ${label}`, {
-      west: b.getWest(),
-      south: b.getSouth(),
-      east: b.getEast(),
-      north: b.getNorth(),
-    });
+    const bbox: Bbox = [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()];
+    loadStores(bbox);
   };
+
+  // Log the fetched pins for now.
+  useEffect(() => {
+    console.log('[stores]', pins);
+  }, [pins]);
 
   useEffect(() => {
     let cancelled = false;
@@ -119,8 +123,8 @@ const StoreMap: React.FC = () => {
         initialViewState={view}
         maxBounds={NYC_BOUNDS}
         minZoom={MIN_ZOOM}
-        onLoad={() => logBounds('load')}
-        onMoveEnd={() => logBounds('moveend')}
+        onLoad={loadStoresForViewport}
+        onMoveEnd={loadStoresForViewport}
       >
         <NavigationControl position="top-right" showCompass={false} />
         {me && (
