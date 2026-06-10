@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import Map, { Marker, NavigationControl } from 'react-map-gl/maplibre';
+import { useEffect, useRef, useState } from 'react';
+import Map, { Marker, NavigationControl, type MapRef } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { IonSpinner } from '@ionic/react';
 import { Geolocation } from '@capacitor/geolocation';
@@ -39,6 +39,19 @@ const StoreMap: React.FC = () => {
   const [view, setView] = useState<ViewState | null>(null);
   // The user's coords, only when we have a real in-NYC fix (drives the "you" dot).
   const [me, setMe] = useState<LngLat | null>(null);
+  const mapRef = useRef<MapRef>(null);
+
+  // Read the current viewport bbox and log it. (Next step: fetch pins for it.)
+  const logBounds = (label: string) => {
+    const b = mapRef.current?.getBounds();
+    if (!b) return;
+    console.log(`[bounds] ${label}`, {
+      west: b.getWest(),
+      south: b.getSouth(),
+      east: b.getEast(),
+      north: b.getNorth(),
+    });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -100,7 +113,15 @@ const StoreMap: React.FC = () => {
 
   return (
     <div className="store-map">
-      <Map mapStyle={MAP_STYLE} initialViewState={view} maxBounds={NYC_BOUNDS} minZoom={MIN_ZOOM}>
+      <Map
+        ref={mapRef}
+        mapStyle={MAP_STYLE}
+        initialViewState={view}
+        maxBounds={NYC_BOUNDS}
+        minZoom={MIN_ZOOM}
+        onLoad={() => logBounds('load')}
+        onMoveEnd={() => logBounds('moveend')}
+      >
         <NavigationControl position="top-right" showCompass={false} />
         {me && (
           <Marker longitude={me.longitude} latitude={me.latitude}>
