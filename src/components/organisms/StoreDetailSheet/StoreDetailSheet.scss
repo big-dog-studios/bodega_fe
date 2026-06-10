@@ -13,6 +13,15 @@ ion-modal.store-sheet {
   --padding-bottom: 0;
 }
 
+// Pinned to the bottom of the sheet (works because expandToScroll={false}).
+.store-sheet__footer {
+  background: var(--brand-orange);
+
+  &::before {
+    display: none; // drop Ionic's default top hairline
+  }
+}
+
 // Orange category bar at the very top of the sheet.
 .store-sheet__tag {
   background: var(--brand-orange);
@@ -63,4 +72,16 @@ ion-modal.store-sheet {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.store-sheet__directions {
+  display: block;
+  width: 100%;
+  border: 0;
+  padding: 18px;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0));
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+  cursor: pointer;
+  @include display-caps(20px, 800, 0.06em);
 }

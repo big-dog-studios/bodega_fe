@@ -1,4 +1,5 @@
-import { IonContent, IonModal, IonSpinner } from '@ionic/react';
+import { IonContent, IonFooter, IonModal, IonSpinner } from '@ionic/react';
+import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import type { StoreDetail } from '../../../lib/api';
 import FeatureBadge from '../../atoms/FeatureBadge';
@@ -18,6 +19,17 @@ const BADGES: { test: (s: StoreDetail) => boolean; label: string; filled?: boole
 const StoreDetailSheet: React.FC = () => {
   const { selectedId, selected, selectedLoading, clearSelected } = useStores();
 
+  const openDirections = () => {
+    if (!selected) return;
+    const dest = `${selected.lat},${selected.lon}`;
+    const isIOS =
+      Capacitor.getPlatform() === 'ios' || /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const url = isIOS
+      ? `https://maps.apple.com/?daddr=${dest}`
+      : `https://www.google.com/maps/dir/?api=1&destination=${dest}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <IonModal
       className="store-sheet"
@@ -25,6 +37,7 @@ const StoreDetailSheet: React.FC = () => {
       onDidDismiss={clearSelected}
       breakpoints={[0, 0.6, 0.9]}
       initialBreakpoint={0.6}
+      expandToScroll={false}
     >
       <IonContent className="store-sheet__content">
         <div className="store-sheet__tag">BODEGA</div>
@@ -55,6 +68,14 @@ const StoreDetailSheet: React.FC = () => {
           </div>
         )}
       </IonContent>
+
+      {selected && (
+        <IonFooter className="store-sheet__footer">
+          <button type="button" className="store-sheet__directions" onClick={openDirections}>
+            DIRECTIONS
+          </button>
+        </IonFooter>
+      )}
     </IonModal>
   );
 };
