@@ -1,2 +1,58 @@
 /* For information on how to create your own theme, please refer to:
 http://ionicframework.com/docs/theming/ */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---- Brand palette (Zohran for NYC) — raw tokens ---------------------- */
+  --brand-blue: #251ad1;
+  --brand-orange: #fea703;
+  --brand-red: #e61800;
+  --brand-white: #ffffff;
+
+  --brand-blue-rgb: 37, 26, 209;
+  --brand-orange-rgb: 254, 167, 3;
+  --brand-red-rgb: 230, 24, 0;
+  --brand-white-rgb: 255, 255, 255;
+
+  /* ---- Typography ------------------------------------------------------- */
+  --font-display: 'Barlow Condensed', system-ui, sans-serif; /* headings, signage */
+  --font-body: 'Barlow', system-ui, -apple-system, sans-serif; /* default UI text */
+  --font-mono: 'Roboto Mono', ui-monospace, monospace; /* license #s, data */
+
+  /* Ionic uses this as the global default font. */
+  --ion-font-family: var(--font-body);
+
+  /* ---- Ionic color roles ----------------------------------------------- */
+  /* primary = brand blue */
+  --ion-color-primary: #251ad1;
+  --ion-color-primary-rgb: 37, 26, 209;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #2117b8;
+  --ion-color-primary-tint: #3b31d6;
+
+  /* secondary = brand orange */
+  --ion-color-secondary: #fea703;
+  --ion-color-secondary-rgb: 254, 167, 3;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #e09303;
+  --ion-color-secondary-tint: #feb01c;
+
+  /* tertiary = brand red (also used for danger/accent) */
+  --ion-color-tertiary: #e61800;
+  --ion-color-tertiary-rgb: 230, 24, 0;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #ca1500;
+  --ion-color-tertiary-tint: #e92f1a;
+
+  /* danger = brand red */
+  --ion-color-danger: #e61800;
+  --ion-color-danger-rgb: 230, 24, 0;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #ca1500;
+  --ion-color-danger-tint: #e92f1a;
+}
