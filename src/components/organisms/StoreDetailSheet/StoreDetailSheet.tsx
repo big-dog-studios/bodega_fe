@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IonContent, IonFooter, IonModal, IonSpinner } from '@ionic/react';
+import { IonContent, IonFooter, IonModal, IonSpinner, useIonToast } from '@ionic/react';
 import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import type { StoreDetail } from '../../../lib/api';
@@ -28,6 +28,8 @@ const StoreDetailSheet: React.FC = () => {
   const { selectedId, selected, selectedLoading, clearSelected } = useStores();
   const [tab, setTab] = useState<TabKey>('info');
   const [reportValid, setReportValid] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [presentToast] = useIonToast();
 
   const dismiss = () => {
     clearSelected();
@@ -100,7 +102,20 @@ const StoreDetailSheet: React.FC = () => {
         )}
 
         {selected && tab === 'report' && (
-          <ReportForm store={selected} onValidityChange={setReportValid} />
+          <ReportForm
+            store={selected}
+            onValidityChange={setReportValid}
+            onSubmittingChange={setSubmitting}
+            onSubmitted={() => {
+              presentToast({
+                message: 'Thanks! Your report was submitted.',
+                duration: 2500,
+                position: 'top',
+                color: 'success',
+              });
+              setTab('info');
+            }}
+          />
         )}
       </IonContent>
 
@@ -115,9 +130,9 @@ const StoreDetailSheet: React.FC = () => {
               type="submit"
               form={REPORT_FORM_ID}
               className="store-sheet__submit"
-              disabled={!reportValid}
+              disabled={!reportValid || submitting}
             >
-              SUBMIT REPORT
+              {submitting ? <IonSpinner name="dots" /> : 'SUBMIT REPORT'}
             </button>
           )}
         </IonFooter>

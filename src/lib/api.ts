@@ -83,3 +83,30 @@ export function getStores(
 export function getStore(licenseNumber: string, signal?: AbortSignal): Promise<StoreDetail> {
   return getJson<StoreDetail>(`/stores/${encodeURIComponent(licenseNumber)}`, signal);
 }
+
+/** A crowd-sourced report posted to `POST /submissions` (multipart/form-data). */
+export interface StoreReport {
+  license_number: string;
+  /** Feature answers keyed by submission field name (e.g. `lottery`) → 'yes' | 'no'. */
+  answers: Record<string, 'yes' | 'no'>;
+  hours?: string;
+  receipt?: File | null;
+  photos?: File[];
+}
+
+/** Submit a crowd-sourced report for a store as multipart form data. */
+export async function submitReport(report: StoreReport, signal?: AbortSignal): Promise<void> {
+  const form = new FormData();
+  form.set('license_number', report.license_number);
+  for (const [field, value] of Object.entries(report.answers)) {
+    form.set(field, value);
+  }
+  if (report.hours?.trim()) form.set('hours', report.hours.trim());
+  if (report.receipt) form.set('receipt', report.receipt);
+  for (const photo of report.photos ?? []) form.append('photos', photo);
+
+  const res = await fetch(`${API_BASE_URL}/submissions`, { method: 'POST', body: form, signal });
+  if (!res.ok) {
+    throw new Error(`API ${res.status} for /submissions`);
+  }
+}

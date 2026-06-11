@@ -135,13 +135,20 @@ ion-modal.store-sheet {
 
 .store-sheet__directions,
 .store-sheet__submit {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
   width: 100%;
   border: 0;
   padding: 18px;
   padding-bottom: calc(18px + env(safe-area-inset-bottom, 0));
   cursor: pointer;
   @include display-caps(20px, 800, 0.06em);
+
+  ion-spinner {
+    height: 24px;
+  }
 }
 
 .store-sheet__directions {

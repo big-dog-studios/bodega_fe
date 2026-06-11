@@ -1,50 +1,93 @@
 import { useEffect, useState } from 'react';
 import { STORE_FILTERS } from '../../molecules/FilterBar';
-import type { StoreDetail } from '../../../lib/api';
+import { submitReport, type StoreDetail } from '../../../lib/api';
 import './ReportForm.scss';
 
 /** Form id so an external submit button (the sticky footer) can submit it. */
 export const REPORT_FORM_ID = 'report-form';
 
+/** Maps a feature filter key to its `POST /submissions` field name. */
+const SUBMIT_FIELDS: Record<string, string> = {
+  preparedFood: 'prepared_food',
+  lottery: 'lottery',
+  alcohol: 'alcohol',
+  tobacco: 'tobacco',
+};
+
 interface ReportFormProps {
   store: StoreDetail;
   /** Reports whether the form has enough to submit (drives the footer button). */
   onValidityChange?: (valid: boolean) => void;
+  /** Reports in-flight state so the footer button can show a spinner. */
+  onSubmittingChange?: (submitting: boolean) => void;
+  /** Fired once a report posts successfully. */
+  onSubmitted?: () => void;
 }
 
 type Answer = 'yes' | 'no';
 
 /** Crowd-sourced report form for a store — feature answers, hours, and media. */
-const ReportForm: React.FC<ReportFormProps> = ({ store, onValidityChange }) => {
+const ReportForm: React.FC<ReportFormProps> = ({
+  store,
+  onValidityChange,
+  onSubmittingChange,
+  onSubmitted,
+}) => {
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
   const [hours, setHours] = useState('');
   const [receipt, setReceipt] = useState<File | null>(null);
   const [photos, setPhotos] = useState<File[]>([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const setAnswer = (key: string, value: Answer) =>
     setAnswers((prev) => ({ ...prev, [key]: value }));
 
   const canSubmit =
-    Object.keys(answers).length > 0 ||
-    hours.trim() !== '' ||
-    !!receipt ||
-    photos.length > 0;
+    !submitting &&
+    (Object.keys(answers).length > 0 ||
+      hours.trim() !== '' ||
+      !!receipt ||
+      photos.length > 0);
 
   useEffect(() => {
     onValidityChange?.(canSubmit);
   }, [canSubmit, onValidityChange]);
 
-  const submit = (e: React.FormEvent) => {
+  useEffect(() => {
+    onSubmittingChange?.(submitting);
+  }, [submitting, onSubmittingChange]);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) return;
-    // TODO: POST the report to the API.
-    console.log('report', {
-      license_number: store.license_number,
-      answers,
-      hours,
-      receipt,
-      photos,
-    });
+
+    // Re-key feature answers by their API field name (e.g. preparedFood → prepared_food).
+    const fields: Record<string, Answer> = {};
+    for (const [key, value] of Object.entries(answers)) {
+      fields[SUBMIT_FIELDS[key] ?? key] = value;
+    }
+
+    setSubmitting(true);
+    setError(null);
+    try {
+      await submitReport({
+        license_number: store.license_number,
+        answers: fields,
+        hours,
+        receipt,
+        photos,
+      });
+      setAnswers({});
+      setHours('');
+      setReceipt(null);
+      setPhotos([]);
+      onSubmitted?.();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Submission failed. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -117,6 +160,8 @@ const ReportForm: React.FC<ReportFormProps> = ({ store, onValidityChange }) => {
             : '📸 Choose photos'}
         </label>
       </div>
+
+      {error && <p className="report-form__error">{error}</p>}
     </form>
   );
 };
