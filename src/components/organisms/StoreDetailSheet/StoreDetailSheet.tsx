@@ -4,6 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import type { StoreDetail } from '../../../lib/api';
 import FeatureBadge from '../../atoms/FeatureBadge';
+import ReportForm, { REPORT_FORM_ID } from '../ReportForm';
 import './StoreDetailSheet.scss';
 
 const TABS = [
@@ -26,6 +27,7 @@ const BADGES: { test: (s: StoreDetail) => boolean; label: string; filled?: boole
 const StoreDetailSheet: React.FC = () => {
   const { selectedId, selected, selectedLoading, clearSelected } = useStores();
   const [tab, setTab] = useState<TabKey>('info');
+  const [reportValid, setReportValid] = useState(false);
 
   const dismiss = () => {
     clearSelected();
@@ -98,17 +100,26 @@ const StoreDetailSheet: React.FC = () => {
         )}
 
         {selected && tab === 'report' && (
-          <div className="store-sheet__report">
-            <p>Report form coming soon.</p>
-          </div>
+          <ReportForm store={selected} onValidityChange={setReportValid} />
         )}
       </IonContent>
 
       {selected && (
         <IonFooter className="store-sheet__footer">
-          <button type="button" className="store-sheet__directions" onClick={openDirections}>
-            DIRECTIONS
-          </button>
+          {tab === 'info' ? (
+            <button type="button" className="store-sheet__directions" onClick={openDirections}>
+              DIRECTIONS
+            </button>
+          ) : (
+            <button
+              type="submit"
+              form={REPORT_FORM_ID}
+              className="store-sheet__submit"
+              disabled={!reportValid}
+            >
+              SUBMIT REPORT
+            </button>
+          )}
         </IonFooter>
       )}
     </IonModal>

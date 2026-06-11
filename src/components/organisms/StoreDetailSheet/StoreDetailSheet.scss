@@ -84,13 +84,6 @@ ion-modal.store-sheet {
   line-height: 1;
 }
 
-.store-sheet__report {
-  padding: 18px 20px;
-  color: rgba(255, 255, 255, 0.7);
-  font-family: var(--font-body);
-  font-size: 15px;
-}
-
 @keyframes sheet-tab-pop {
   0% {
     transform: scale(1);
@@ -140,14 +133,29 @@ ion-modal.store-sheet {
   gap: 8px;
 }
 
-.store-sheet__directions {
+.store-sheet__directions,
+.store-sheet__submit {
   display: block;
   width: 100%;
   border: 0;
   padding: 18px;
   padding-bottom: calc(18px + env(safe-area-inset-bottom, 0));
-  background: var(--brand-orange);
-  color: var(--brand-blue);
   cursor: pointer;
   @include display-caps(20px, 800, 0.06em);
+}
+
+.store-sheet__directions {
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+}
+
+.store-sheet__submit {
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+
+  &:disabled {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.4);
+    cursor: default;
+  }
 }
