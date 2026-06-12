@@ -22,6 +22,17 @@ const BADGES: { test: (s: StoreDetail) => boolean; label: string; filled?: boole
   { test: (s) => s.has_snap, label: 'SNAP/EBT' },
   { test: (s) => s.has_quick_draw, label: 'QUICK DRAW' },
   { test: (s) => s.has_atm, label: 'ATM' },
+  { test: (s) => s.has_cat, label: '🐈' },
+  { test: (s) => s.takeout === true, label: 'TAKEOUT' },
+  { test: (s) => s.delivery === true, label: 'DELIVERY' },
+];
+
+/** Payment methods -> badge. Nullable; only shown when explicitly true. */
+const PAYMENTS: { test: (s: StoreDetail) => boolean; label: string }[] = [
+  { test: (s) => s.accepts_credit_cards === true, label: '💳 CREDIT' },
+  { test: (s) => s.accepts_debit_cards === true, label: '🏧 DEBIT' },
+  { test: (s) => s.accepts_cash_only === true, label: '💵 CASH ONLY' },
+  { test: (s) => s.accepts_nfc === true, label: '📲 TAP TO PAY' },
 ];
 
 /** Bottom-sheet drawer for the selected store. Opens on pin select. */
@@ -85,20 +96,45 @@ const StoreDetailSheet: React.FC = () => {
         {selected && tab === 'info' && (
           <div className="store-sheet__body">
             <header className="store-sheet__head">
-              <h1 className="store-sheet__name">{selected.dba}</h1>
+              <h1 className="store-sheet__name">{selected.display_name || selected.dba}</h1>
               {selected.city && <p className="store-sheet__area">{selected.city}</p>}
+              <p className="store-sheet__area">
+                {selected.house} {selected.street}, {selected.county}, NY {selected.zip}
+              </p>
+              {selected.rating != null && (
+                <p className="store-sheet__rating">★ {selected.rating.toFixed(1)}</p>
+              )}
             </header>
 
             <section className="store-sheet__section">
-              <p className="store-sheet__address">
-                {selected.house} {selected.street}, {selected.county}, NY {selected.zip}
-              </p>
+              <p className="store-sheet__label">FEATURES</p>
               <div className="store-sheet__badges">
                 {BADGES.filter((b) => b.test(selected)).map((b) => (
                   <FeatureBadge key={b.label} label={b.label} filled={b.filled} />
                 ))}
               </div>
             </section>
+
+            {PAYMENTS.some((p) => p.test(selected)) && (
+              <section className="store-sheet__section">
+                <p className="store-sheet__label">ACCEPTS</p>
+                <div className="store-sheet__badges">
+                  {PAYMENTS.filter((p) => p.test(selected)).map((p) => (
+                    <FeatureBadge key={p.label} label={p.label} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {selected.hours_summary && (
+              <section className="store-sheet__section">
+                <div className="store-sheet__hours">
+                  {selected.hours_summary.split(',').map((line) => (
+                    <p key={line}>{line.trim()}</p>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         )}
 
@@ -123,9 +159,16 @@ const StoreDetailSheet: React.FC = () => {
       {selected && (
         <IonFooter className="store-sheet__footer">
           {tab === 'info' ? (
-            <button type="button" className="store-sheet__directions" onClick={openDirections}>
-              DIRECTIONS
-            </button>
+            <div className="store-sheet__actions">
+              {selected.phone && (
+                <a className="store-sheet__call" href={`tel:${selected.phone}`}>
+                  CALL
+                </a>
+              )}
+              <button type="button" className="store-sheet__directions" onClick={openDirections}>
+                DIRECTIONS
+              </button>
+            </div>
           ) : (
             <button
               type="submit"

@@ -114,17 +114,21 @@ ion-modal.store-sheet {
   @include display-caps(14px, 700, 0.08em);
 }
 
+.store-sheet__rating {
+  margin: 8px 0 0;
+  color: var(--brand-orange);
+  @include display-caps(20px, 800, 0.04em);
+}
+
 .store-sheet__section {
   padding: 16px 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.store-sheet__address {
-  margin: 0 0 14px;
-  color: #ffffff;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
+.store-sheet__label {
+  margin: 0 0 12px;
+  color: rgba(255, 255, 255, 0.55);
+  @include display-caps(12px, 700, 0.1em);
 }
 
 .store-sheet__badges {
@@ -133,6 +137,22 @@ ion-modal.store-sheet {
   gap: 8px;
 }
 
+.store-sheet__hours {
+  color: var(--brand-orange);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.store-sheet__actions {
+  display: flex;
+}
+
+.store-sheet__call,
 .store-sheet__directions,
 .store-sheet__submit {
   display: flex;
@@ -154,6 +174,13 @@ ion-modal.store-sheet {
 .store-sheet__directions {
   background: var(--brand-orange);
   color: var(--brand-blue);
+}
+
+.store-sheet__call {
+  background: var(--brand-orange);
+  color: var(--brand-blue) !important;
+  box-shadow: inset -2px 0 0 var(--brand-blue);
+  text-decoration: none;
 }
 
 .store-sheet__submit {

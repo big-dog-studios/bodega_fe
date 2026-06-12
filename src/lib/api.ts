@@ -40,6 +40,20 @@ export interface StoreDetail extends StorePin {
   alc_description: string | null;
   alc_product: string | null;
   has_atm: boolean;
+  has_cat: boolean;
+  /** Google Places enrichment — null when the store hasn't been matched/enriched. */
+  place_id: string | null;
+  display_name: string | null;
+  phone: string | null;
+  rating: number | null;
+  user_rating_count: number | null;
+  accepts_credit_cards: boolean | null;
+  accepts_debit_cards: boolean | null;
+  accepts_cash_only: boolean | null;
+  accepts_nfc: boolean | null;
+  takeout: boolean | null;
+  delivery: boolean | null;
+  hours_summary: string | null;
 }
 
 /** A geographic bbox in API order: west, south, east, north (lon/lat). */
