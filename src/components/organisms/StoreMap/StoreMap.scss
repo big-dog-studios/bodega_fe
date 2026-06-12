@@ -14,6 +14,43 @@
   }
 }
 
+// Re-center button — appears bottom-right once the map has been moved.
+.recenter-btn {
+  position: absolute;
+  right: 16px;
+  bottom: 24px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--brand-orange);
+  border-radius: 12px;
+  background: var(--brand-blue);
+  color: var(--brand-orange);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.12s ease;
+  animation: recenter-in 0.18s ease;
+
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+@keyframes recenter-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 // "You are here" dot — blue core, white ring, soft accuracy halo.
 .user-dot {
   width: 16px;

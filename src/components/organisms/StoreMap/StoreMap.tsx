@@ -47,8 +47,33 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
   const [view, setView] = useState<ViewState | null>(null);
   // The user's coords, only when we have a real in-NYC fix (drives the "you" dot).
   const [me, setMe] = useState<LngLat | null>(null);
+  // Show the re-center button only once the map has moved away from its start.
+  const [moved, setMoved] = useState(false);
   const mapRef = useRef<MapRef>(null);
   const { loadStores, pins, selectStore, selectedId } = useStores();
+
+  // Compare the live viewport to the starting view; flag if it's drifted enough
+  // to be worth offering a re-center (tiny deltas = no real move).
+  const handleMove = useCallback(() => {
+    const map = mapRef.current;
+    if (!map || !view) return;
+    const c = map.getCenter();
+    const drifted =
+      Math.abs(map.getZoom() - view.zoom) > 0.05 ||
+      Math.abs(c.lng - view.longitude) > 0.0005 ||
+      Math.abs(c.lat - view.latitude) > 0.0005;
+    setMoved(drifted);
+  }, [view]);
+
+  // Animate back to the starting location and zoom.
+  const recenter = useCallback(() => {
+    if (!view) return;
+    mapRef.current?.flyTo({
+      center: [view.longitude, view.latitude],
+      zoom: view.zoom,
+      duration: 800,
+    });
+  }, [view]);
 
   // Read the current viewport bbox and fetch pins for it (saved to context).
   const loadStoresForViewport = useCallback(() => {
@@ -130,6 +155,7 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
         maxBounds={NYC_BOUNDS}
         minZoom={MIN_ZOOM}
         onLoad={loadStoresForViewport}
+        onMove={handleMove}
         onMoveEnd={loadStoresForViewport}
       >
         <NavigationControl position="top-right" showCompass={false} />
@@ -149,6 +175,19 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
           </Marker>
         )}
       </Map>
+      {moved && (
+        <button
+          type="button"
+          className="recenter-btn"
+          aria-label="Re-center map"
+          onClick={recenter}
+        >
+          <svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true">
+            <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
+            <circle cx="12" cy="12" r="3" fill="currentColor" />
+          </svg>
+        </button>
+      )}
     </div>
   );
 };
