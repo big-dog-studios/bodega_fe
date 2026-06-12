@@ -39,6 +39,7 @@ export interface StoreDetail extends StorePin {
   estab_type: string;
   alc_description: string | null;
   alc_product: string | null;
+  has_atm: boolean;
 }
 
 /** A geographic bbox in API order: west, south, east, north (lon/lat). */

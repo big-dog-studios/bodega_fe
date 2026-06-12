@@ -14,6 +14,15 @@ const SUBMIT_FIELDS: Record<string, string> = {
   tobacco: 'tobacco',
 };
 
+/** Extra yes/no questions shown only in the report form (not map filters). */
+const EXTRA_QUESTIONS = [
+  { key: 'atm', label: 'ATM', icon: '🏧' },
+  { key: 'cat', label: 'BODEGA CAT', icon: '🐈' },
+];
+
+/** Every yes/no question rendered in the form — map filters plus report-only ones. */
+const QUESTIONS = [...STORE_FILTERS, ...EXTRA_QUESTIONS];
+
 interface ReportFormProps {
   store: StoreDetail;
   /** Reports whether the form has enough to submit (drives the footer button). */
@@ -95,7 +104,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
       <p className="report-form__legend">Does this bodega have…</p>
 
       <div className="report-form__rows">
-        {STORE_FILTERS.map((f) => (
+        {QUESTIONS.map((f) => (
           <div key={f.key} className="report-form__row">
             <span className="report-form__feature">
               <span className="report-form__icon">{f.icon}</span>

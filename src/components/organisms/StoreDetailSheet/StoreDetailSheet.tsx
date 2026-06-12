@@ -21,6 +21,7 @@ const BADGES: { test: (s: StoreDetail) => boolean; label: string; filled?: boole
   { test: (s) => s.alc_class != null, label: 'BEER & WINE' },
   { test: (s) => s.has_snap, label: 'SNAP/EBT' },
   { test: (s) => s.has_quick_draw, label: 'QUICK DRAW' },
+  { test: (s) => s.has_atm, label: 'ATM' },
 ];
 
 /** Bottom-sheet drawer for the selected store. Opens on pin select. */
