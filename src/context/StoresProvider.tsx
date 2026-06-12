@@ -20,6 +20,18 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [selectedLoading, setSelectedLoading] = useState(false);
   const [selectedError, setSelectedError] = useState<Error | null>(null);
 
+  // Active feature filters — multi-select, each key toggles independently.
+  const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
+
+  const toggleFilter = useCallback((key: string) => {
+    setActiveFilters((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
+
   // One in-flight request each — a newer call aborts the previous.
   const pinsCtrl = useRef<AbortController | null>(null);
   const detailCtrl = useRef<AbortController | null>(null);
@@ -86,6 +98,8 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       pinsLoading,
       pinsError,
       loadStores,
+      activeFilters,
+      toggleFilter,
       selectedId,
       selected,
       selectedLoading,
@@ -98,6 +112,8 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       pinsLoading,
       pinsError,
       loadStores,
+      activeFilters,
+      toggleFilter,
       selectedId,
       selected,
       selectedLoading,

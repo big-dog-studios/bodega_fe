@@ -9,6 +9,11 @@ export interface StoresContextValue {
   /** Fetch pins for a viewport (optionally filtered) and save them to context. */
   loadStores: (bbox: Bbox, filters?: StoreFilters) => void;
 
+  /** Active feature-filter keys, shared by the filter bar and the menu drawer. */
+  activeFilters: Set<string>;
+  /** Toggle one filter key on/off. */
+  toggleFilter: (key: string) => void;
+
   /** License number of the selected pin — set immediately on selectStore() for instant UI. */
   selectedId: string | null;
   /** The store whose detail was last fetched via selectStore(). */

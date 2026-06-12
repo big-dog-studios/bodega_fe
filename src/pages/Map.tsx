@@ -1,47 +1,38 @@
-import { useMemo, useState } from 'react';
-import { IonContent, IonFooter, IonPage } from '@ionic/react';
+import { useMemo } from 'react';
+import { IonContent, IonFooter, IonMenuButton, IonPage } from '@ionic/react';
 import AppHeader from '../components/organisms/AppHeader';
 import StoreMap from '../components/organisms/StoreMap';
 import StoreDetailSheet from '../components/organisms/StoreDetailSheet';
+import { APP_MENU_ID, MENU_FILTERS } from '../components/organisms/AppMenu';
 import FilterBar, { STORE_FILTERS } from '../components/molecules/FilterBar';
-import ResultsBadge from '../components/atoms/ResultsBadge';
 import { useStores } from '../context/StoresContext';
 import type { StoreFilters } from '../lib/api';
 
 const Map: React.FC = () => {
-  const { pins } = useStores();
+  // Filter state is shared (filter bar + menu drawer) via the stores context.
+  const { activeFilters, toggleFilter } = useStores();
 
-  // Multi-select: each filter key toggles independently.
-  const [active, setActive] = useState<Set<string>>(new Set());
-
-  const toggle = (key: string) => {
-    setActive((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
-  };
-
-  // Active toggles -> getStores() query params (each active filter requires has_X=true).
+  // Active toggles -> getStores() query params, across both the bar and the menu.
   const filters = useMemo<StoreFilters>(() => {
     const f: StoreFilters = {};
-    for (const def of STORE_FILTERS) {
-      if (active.has(def.key)) f[def.param] = true;
+    for (const def of [...STORE_FILTERS, ...MENU_FILTERS]) {
+      if (activeFilters.has(def.key)) f[def.param] = true;
     }
     return f;
-  }, [active]);
+  }, [activeFilters]);
 
   return (
     <IonPage>
-      <AppHeader end={<ResultsBadge count={pins.length} />} />
+      <AppHeader
+        end={<IonMenuButton menu={APP_MENU_ID} className="app-header__menu-btn" autoHide={false} />}
+      />
 
       <IonContent scrollY={false}>
         <StoreMap filters={filters} />
       </IonContent>
 
       <IonFooter>
-        <FilterBar active={active} onToggle={toggle} />
+        <FilterBar active={activeFilters} onToggle={toggleFilter} />
       </IonFooter>
 
       <StoreDetailSheet />

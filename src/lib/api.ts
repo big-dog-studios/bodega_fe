@@ -71,6 +71,10 @@ export interface StoreFilters {
   has_quick_draw?: boolean;
   has_prepared_food?: boolean;
   has_alcohol?: boolean;
+  has_cat?: boolean;
+  has_atm?: boolean;
+  takeout?: boolean;
+  delivery?: boolean;
 }
 
 async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
