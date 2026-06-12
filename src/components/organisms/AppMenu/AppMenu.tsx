@@ -12,6 +12,8 @@ export const MENU_FILTERS: StoreFilter[] = [
   { key: 'atm', label: 'ATM', icon: '🏧', param: 'has_atm' },
   { key: 'delivery', label: 'DELIVERY', icon: '🛵', param: 'delivery' },
   { key: 'takeout', label: 'TAKEOUT', icon: '🥡', param: 'takeout' },
+  { key: 'snap', label: 'SNAP/EBT', icon: '🛒', param: 'has_snap' },
+  { key: 'quickDraw', label: 'QUICK DRAW', icon: '🎰', param: 'has_quick_draw' },
 ];
 
 /**
