@@ -1,11 +1,26 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import Map, { Marker, NavigationControl, type MapRef } from 'react-map-gl/maplibre';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Map, {
+  Layer,
+  Marker,
+  NavigationControl,
+  Source,
+  type MapLayerMouseEvent,
+  type MapRef,
+} from 'react-map-gl/maplibre';
+import type { GeoJSONSource } from 'maplibre-gl';
+import type { FeatureCollection, Point } from 'geojson';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { IonSpinner } from '@ionic/react';
 import { Geolocation } from '@capacitor/geolocation';
 import { useStores } from '../../../context/StoresContext';
 import type { Bbox, StoreFilters } from '../../../lib/api';
-import BodegaPin from '../../atoms/BodegaPin';
+import {
+  clusterLayer,
+  ensureTileImages,
+  INTERACTIVE_LAYERS,
+  makeUnclusteredLayer,
+  SOURCE_ID,
+} from './storeLayers';
 import './StoreMap.scss';
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
@@ -74,6 +89,45 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
       duration: 800,
     });
   }, [view]);
+
+  // Pins as a GeoJSON FeatureCollection — the source MapLibre clusters for us.
+  const geojson = useMemo<FeatureCollection<Point>>(
+    () => ({
+      type: 'FeatureCollection',
+      features: pins.map((p) => ({
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
+        properties: { license_number: p.license_number, dba: p.dba },
+      })),
+    }),
+    [pins],
+  );
+
+  // Single (unclustered) pin — the brand "B" tile, swapped to red when selected.
+  const unclusteredLayer = useMemo(() => makeUnclusteredLayer(selectedId), [selectedId]);
+
+  // Click a cluster → zoom to where it splits; click a pin → open its sheet.
+  const onMapClick = useCallback(
+    (e: MapLayerMouseEvent) => {
+      const feature = e.features?.[0];
+      if (!feature) return;
+      if (feature.properties?.cluster) {
+        const source = mapRef.current?.getSource(SOURCE_ID) as GeoJSONSource | undefined;
+        if (!source) return;
+        const clusterId = feature.properties.cluster_id as number;
+        void source.getClusterExpansionZoom(clusterId).then((zoom: number) => {
+          const [longitude, latitude] = (feature.geometry as Point).coordinates;
+          mapRef.current?.easeTo({ center: [longitude, latitude], zoom, duration: 500 });
+        });
+      } else {
+        selectStore(feature.properties?.license_number as string);
+      }
+    },
+    [selectStore],
+  );
+
+  // Pointer cursor while hovering a clickable cluster/pin.
+  const [cursor, setCursor] = useState('');
 
   // Read the current viewport bbox and fetch pins for it (saved to context).
   const loadStoresForViewport = useCallback(() => {
@@ -154,21 +208,32 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
         initialViewState={view}
         maxBounds={NYC_BOUNDS}
         minZoom={MIN_ZOOM}
-        onLoad={loadStoresForViewport}
+        onLoad={(e) => {
+          // styleimagemissing is the race-proof fallback; also add up front.
+          e.target.on('styleimagemissing', () => ensureTileImages(e.target));
+          ensureTileImages(e.target);
+          loadStoresForViewport();
+        }}
         onMove={handleMove}
         onMoveEnd={loadStoresForViewport}
+        interactiveLayerIds={INTERACTIVE_LAYERS}
+        cursor={cursor}
+        onClick={onMapClick}
+        onMouseEnter={() => setCursor('pointer')}
+        onMouseLeave={() => setCursor('')}
       >
         <NavigationControl position="top-right" showCompass={false} />
-        {pins.map((p) => (
-          <Marker
-            key={p.license_number}
-            longitude={p.lon}
-            latitude={p.lat}
-            onClick={() => selectStore(p.license_number)}
-          >
-            <BodegaPin selected={p.license_number === selectedId} />
-          </Marker>
-        ))}
+        <Source
+          id={SOURCE_ID}
+          type="geojson"
+          data={geojson}
+          cluster
+          clusterRadius={50}
+          clusterMaxZoom={14}
+        >
+          <Layer {...clusterLayer} />
+          <Layer {...unclusteredLayer} />
+        </Source>
         {me && (
           <Marker longitude={me.longitude} latitude={me.latitude}>
             <div className="user-dot" aria-label="Your location" />
