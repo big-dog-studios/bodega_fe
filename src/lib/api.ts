@@ -103,6 +103,37 @@ export function getStore(licenseNumber: string, signal?: AbortSignal): Promise<S
   return getJson<StoreDetail>(`/stores/${encodeURIComponent(licenseNumber)}`, signal);
 }
 
+/** A single catalog item from `GET /stores/{license_number}/products`. */
+export interface StoreProduct {
+  product_id: number;
+  name: string;
+  description: string | null;
+  /** Price in cents; pair with `price_raw` for the pre-formatted string. */
+  price_cents: number;
+  price_raw: string;
+  /** Where the item was scraped from, e.g. "doordash". */
+  source: string;
+  category_id: number;
+  category: string;
+  category_slug: string;
+  emoji: string;
+  is_packaged: boolean;
+}
+
+/** Response from `GET /stores/{license_number}/products`. */
+export interface StoreProducts {
+  license_number: string;
+  products: StoreProduct[];
+}
+
+/** Fetch a store's product catalog by license number. */
+export function getStoreProducts(
+  licenseNumber: string,
+  signal?: AbortSignal,
+): Promise<StoreProducts> {
+  return getJson<StoreProducts>(`/stores/${encodeURIComponent(licenseNumber)}/products`, signal);
+}
+
 /** A crowd-sourced report posted to `POST /submissions` (multipart/form-data). */
 export interface StoreReport {
   license_number: string;

@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { Bbox, StoreDetail, StoreFilters, StorePin } from '../lib/api';
+import type { Bbox, StoreDetail, StoreFilters, StorePin, StoreProduct } from '../lib/api';
 
 export interface StoresContextValue {
   /** Pins from the last getStores() call. */
@@ -23,6 +23,11 @@ export interface StoresContextValue {
   /** Fetch one store's full record and save it to context. */
   selectStore: (licenseNumber: string) => void;
   clearSelected: () => void;
+
+  /** Catalog for the selected store; reset to [] on every selectStore(). */
+  products: StoreProduct[];
+  productsLoading: boolean;
+  productsError: Error | null;
 }
 
 export const StoresContext = createContext<StoresContextValue | null>(null);

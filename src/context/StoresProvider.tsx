@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   getStore,
+  getStoreProducts,
   getStores,
   type Bbox,
   type StoreDetail,
   type StoreFilters,
   type StorePin,
+  type StoreProduct,
 } from '../lib/api';
 import { StoresContext, type StoresContextValue } from './StoresContext';
 
@@ -19,6 +21,10 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [selected, setSelected] = useState<StoreDetail | null>(null);
   const [selectedLoading, setSelectedLoading] = useState(false);
   const [selectedError, setSelectedError] = useState<Error | null>(null);
+
+  const [products, setProducts] = useState<StoreProduct[]>([]);
+  const [productsLoading, setProductsLoading] = useState(false);
+  const [productsError, setProductsError] = useState<Error | null>(null);
 
   // Active feature filters — multi-select, each key toggles independently.
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
@@ -59,10 +65,14 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const selectStore = useCallback((licenseNumber: string) => {
     // Mark selected immediately so the pin updates without waiting on the fetch.
     setSelectedId(licenseNumber);
+    // Reset the previous store's catalog so it can't flash while the new one loads.
+    setProducts([]);
+    setProductsError(null);
     detailCtrl.current?.abort();
     const ctrl = new AbortController();
     detailCtrl.current = ctrl;
     setSelectedLoading(true);
+    setProductsLoading(true);
     getStore(licenseNumber, ctrl.signal)
       .then((data) => {
         if (ctrl.signal.aborted) return;
@@ -76,11 +86,29 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       .finally(() => {
         if (detailCtrl.current === ctrl) setSelectedLoading(false);
       });
+
+    // Products catalog — fetched on open into state (UI to come).
+    getStoreProducts(licenseNumber, ctrl.signal)
+      .then((data) => {
+        if (ctrl.signal.aborted) return;
+        console.log('store products', licenseNumber, data);
+        setProducts(data.products);
+        setProductsError(null);
+      })
+      .catch((err: unknown) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+        setProductsError(err instanceof Error ? err : new Error(String(err)));
+      })
+      .finally(() => {
+        if (detailCtrl.current === ctrl) setProductsLoading(false);
+      });
   }, []);
 
   const clearSelected = useCallback(() => {
     setSelectedId(null);
     setSelected(null);
+    setProducts([]);
+    setProductsError(null);
   }, []);
 
   // Abort any in-flight requests on unmount.
@@ -106,6 +134,9 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       selectedError,
       selectStore,
       clearSelected,
+      products,
+      productsLoading,
+      productsError,
     }),
     [
       pins,
@@ -120,6 +151,9 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       selectedError,
       selectStore,
       clearSelected,
+      products,
+      productsLoading,
+      productsError,
     ],
   );
 
