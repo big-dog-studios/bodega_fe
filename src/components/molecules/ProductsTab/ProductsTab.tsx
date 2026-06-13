@@ -87,7 +87,7 @@ const ProductsTab: React.FC<ProductsTabProps> = ({ products }) => {
             <div className="products-tab__item-main">
               <p className="products-tab__item-name">{p.name}</p>
               <p className="products-tab__item-cat">
-                {p.emoji} {p.description || p.category}
+                {p.emoji} {p.description || p.friendly_category}
               </p>
             </div>
             {p.price_cents ? (

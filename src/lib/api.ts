@@ -75,6 +75,8 @@ export interface StoreFilters {
   has_atm?: boolean;
   takeout?: boolean;
   delivery?: boolean;
+  /** Only stores with at least one catalog item. */
+  has_products?: boolean;
 }
 
 async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
@@ -116,6 +118,8 @@ export interface StoreProduct {
   category_id: number;
   category: string;
   category_slug: string;
+  /** Human-friendly category label for display (falls back from description). */
+  friendly_category: string;
   emoji: string;
   is_packaged: boolean;
 }
