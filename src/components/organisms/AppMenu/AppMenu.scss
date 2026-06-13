@@ -7,6 +7,8 @@
 
   .app-menu__content {
     --background: var(--brand-blue);
+    // No header on this drawer, so push content below the status bar / notch.
+    --padding-top: env(safe-area-inset-top, 0px);
   }
 }
 
