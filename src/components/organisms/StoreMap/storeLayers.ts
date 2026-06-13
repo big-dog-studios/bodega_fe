@@ -61,8 +61,13 @@ function makeTile(opts: {
     ctx.fillStyle = BRAND_ORANGE;
     ctx.font = `800 ${17 * scale}px 'Barlow Condensed', sans-serif`;
     ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(opts.label, x + s / 2, y + s / 2 + scale);
+    // Center on the glyph's real bounding box rather than textBaseline='middle'
+    // — 'middle' uses the font's em metrics, which differ between WKWebView and
+    // Chrome (and across font fallbacks), making the "B" sit too low on iOS.
+    ctx.textBaseline = 'alphabetic';
+    const m = ctx.measureText(opts.label);
+    const offset = (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2;
+    ctx.fillText(opts.label, x + s / 2, y + s / 2 + offset);
   }
 
   const data = ctx.getImageData(0, 0, W, W);
