@@ -4,14 +4,11 @@ import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import type { StoreDetail } from '../../../lib/api';
 import FeatureBadge from '../../atoms/FeatureBadge';
+import ProductsTab from '../../molecules/ProductsTab';
 import ReportForm, { REPORT_FORM_ID } from '../ReportForm';
 import './StoreDetailSheet.scss';
 
-const TABS = [
-  { key: 'info', icon: '📍', label: 'Info' },
-  { key: 'report', icon: '✏️', label: 'Report' },
-] as const;
-type TabKey = (typeof TABS)[number]['key'];
+type TabKey = 'info' | 'products' | 'report';
 
 /** Feature flags -> badges. `filled` is the bold red treatment. */
 const BADGES: { test: (s: StoreDetail) => boolean; label: string; filled?: boolean }[] = [
@@ -37,11 +34,21 @@ const PAYMENTS: { test: (s: StoreDetail) => boolean; label: string }[] = [
 
 /** Bottom-sheet drawer for the selected store. Opens on pin select. */
 const StoreDetailSheet: React.FC = () => {
-  const { selectedId, selected, selectedLoading, clearSelected } = useStores();
+  const { selectedId, selected, selectedLoading, clearSelected, products } = useStores();
   const [tab, setTab] = useState<TabKey>('info');
   const [reportValid, setReportValid] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [presentToast] = useIonToast();
+
+  // Products tab only exists when this store returned a catalog.
+  const hasProducts = products.length > 0;
+  const tabs: { key: TabKey; icon: string; label: string }[] = [
+    { key: 'info', icon: '📍', label: 'Info' },
+    ...(hasProducts ? [{ key: 'products' as const, icon: '🛒', label: 'Products' }] : []),
+    { key: 'report', icon: '✏️', label: 'Report' },
+  ];
+  // Fall back to Info if the active tab isn't available for this store.
+  const activeTab: TabKey = tab === 'products' && !hasProducts ? 'info' : tab;
 
   const dismiss = () => {
     clearSelected();
@@ -79,11 +86,11 @@ const StoreDetailSheet: React.FC = () => {
 
         {selected && (
           <div className="store-sheet__tabs">
-            {TABS.map((tb) => (
+            {tabs.map((tb) => (
               <button
                 key={tb.key}
                 type="button"
-                className={`store-sheet__tab${tab === tb.key ? ' store-sheet__tab--active' : ''}`}
+                className={`store-sheet__tab${activeTab === tb.key ? ' store-sheet__tab--active' : ''}`}
                 onClick={() => setTab(tb.key)}
               >
                 <span className="store-sheet__tab-icon">{tb.icon}</span>
@@ -93,7 +100,9 @@ const StoreDetailSheet: React.FC = () => {
           </div>
         )}
 
-        {selected && tab === 'info' && (
+        {selected && activeTab === 'products' && <ProductsTab products={products} />}
+
+        {selected && activeTab === 'info' && (
           <div className="store-sheet__body">
             <header className="store-sheet__head">
               <h1 className="store-sheet__name">{selected.display_name || selected.dba}</h1>
@@ -138,7 +147,7 @@ const StoreDetailSheet: React.FC = () => {
           </div>
         )}
 
-        {selected && tab === 'report' && (
+        {selected && activeTab === 'report' && (
           <ReportForm
             store={selected}
             onValidityChange={setReportValid}
@@ -158,7 +167,16 @@ const StoreDetailSheet: React.FC = () => {
 
       {selected && (
         <IonFooter className="store-sheet__footer">
-          {tab === 'info' ? (
+          {activeTab === 'report' ? (
+            <button
+              type="submit"
+              form={REPORT_FORM_ID}
+              className="store-sheet__submit"
+              disabled={!reportValid || submitting}
+            >
+              {submitting ? <IonSpinner name="dots" /> : 'SUBMIT REPORT'}
+            </button>
+          ) : (
             <div className="store-sheet__actions">
               {selected.phone && (
                 <a className="store-sheet__call" href={`tel:${selected.phone}`}>
@@ -169,15 +187,6 @@ const StoreDetailSheet: React.FC = () => {
                 DIRECTIONS
               </button>
             </div>
-          ) : (
-            <button
-              type="submit"
-              form={REPORT_FORM_ID}
-              className="store-sheet__submit"
-              disabled={!reportValid || submitting}
-            >
-              {submitting ? <IonSpinner name="dots" /> : 'SUBMIT REPORT'}
-            </button>
           )}
         </IonFooter>
       )}
