@@ -32,6 +32,7 @@ const AppMenu: React.FC = () => {
       contentId="main-content"
       side="end"
       type="overlay"
+      swipeGesture={false}
     >
       <IonContent className="app-menu__content">
         <p className="app-menu__label">MORE FILTERS</p>

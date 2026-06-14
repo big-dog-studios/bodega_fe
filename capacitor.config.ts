@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.bodega.app',
-  appName: 'Bodega',
+  appName: 'Bodega Finder',
   webDir: 'dist',
   plugins: {
     // The Cloud Run API sends no CORS headers, so a webview fetch from
