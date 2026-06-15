@@ -115,6 +115,11 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
     );
   }, [favorites]);
 
+  // If the last favorite is removed while filtering, drop back to all stores.
+  useEffect(() => {
+    if (favOnly && favorites.length === 0) setFavOnly(false);
+  }, [favOnly, favorites.length]);
+
   // Toggle favorites-only mode; on enable, frame all favorites.
   const toggleFavOnly = useCallback(() => {
     const next = !favOnly;
@@ -275,15 +280,17 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
           </Marker>
         )}
       </Map>
-      <button
-        type="button"
-        className={`fav-toggle${favOnly ? ' fav-toggle--on' : ''}`}
-        aria-label="Show favorites only"
-        aria-pressed={favOnly}
-        onClick={toggleFavOnly}
-      >
-        {favOnly ? '★' : '☆'}
-      </button>
+      {favorites.length > 0 && (
+        <button
+          type="button"
+          className={`fav-toggle${favOnly ? ' fav-toggle--on' : ''}`}
+          aria-label="Show favorites only"
+          aria-pressed={favOnly}
+          onClick={toggleFavOnly}
+        >
+          {favOnly ? '★' : '☆'}
+        </button>
+      )}
       {moved && (
         <button
           type="button"
