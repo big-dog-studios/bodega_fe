@@ -51,6 +51,39 @@
   }
 }
 
+// Favorites-only toggle — sits above the re-center button, always visible.
+.fav-toggle {
+  position: absolute;
+  right: 16px;
+  bottom: 72px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--brand-orange);
+  border-radius: 12px;
+  background: var(--brand-blue);
+  color: var(--brand-orange);
+  cursor: pointer;
+  font-size: 22px;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.12s ease;
+
+  &:active {
+    transform: scale(0.92);
+  }
+
+  // Active: filled star on an orange chip.
+  &--on {
+    background: var(--brand-orange);
+    color: var(--brand-blue);
+  }
+}
+
 // "You are here" dot — blue core, white ring, soft accuracy halo.
 .user-dot {
   width: 16px;

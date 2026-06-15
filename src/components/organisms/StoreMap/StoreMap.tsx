@@ -13,6 +13,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { IonSpinner } from '@ionic/react';
 import { Geolocation } from '@capacitor/geolocation';
 import { useStores } from '../../../context/StoresContext';
+import { useFavorites } from '../../../context/FavoritesContext';
 import type { Bbox, StoreFilters } from '../../../lib/api';
 import {
   clusterLayer,
@@ -64,8 +65,11 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
   const [me, setMe] = useState<LngLat | null>(null);
   // Show the re-center button only once the map has moved away from its start.
   const [moved, setMoved] = useState(false);
+  // When on, only favorited stores are rendered (client-side filter, no fetch).
+  const [favOnly, setFavOnly] = useState(false);
   const mapRef = useRef<MapRef>(null);
   const { loadStores, pins, selectStore, selectedId } = useStores();
+  const { isFavorite, favorites } = useFavorites();
 
   // Compare the live viewport to the starting view; flag if it's drifted enough
   // to be worth offering a re-center (tiny deltas = no real move).
@@ -80,27 +84,58 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
     setMoved(drifted);
   }, [view]);
 
-  // Animate back to the starting location and zoom.
+  // Animate to the user's current location (the live "you" dot); fall back to
+  // the starting view if we don't have a fix yet.
   const recenter = useCallback(() => {
-    if (!view) return;
+    const target = me ?? (view && { longitude: view.longitude, latitude: view.latitude });
+    if (!target) return;
     mapRef.current?.flyTo({
-      center: [view.longitude, view.latitude],
-      zoom: view.zoom,
+      center: [target.longitude, target.latitude],
+      zoom: view?.zoom ?? 16,
       duration: 800,
     });
-  }, [view]);
+  }, [me, view]);
+
+  // Move/zoom the map so every favorite is in view.
+  const fitToFavorites = useCallback(() => {
+    const pts = favorites.filter((f) => Number.isFinite(f.lat) && Number.isFinite(f.lon));
+    if (pts.length === 0) return;
+    if (pts.length === 1) {
+      mapRef.current?.flyTo({ center: [pts[0].lon, pts[0].lat], zoom: 15, duration: 800 });
+      return;
+    }
+    const lons = pts.map((f) => f.lon);
+    const lats = pts.map((f) => f.lat);
+    mapRef.current?.fitBounds(
+      [
+        [Math.min(...lons), Math.min(...lats)],
+        [Math.max(...lons), Math.max(...lats)],
+      ],
+      { padding: 80, maxZoom: 16, duration: 800 },
+    );
+  }, [favorites]);
+
+  // Toggle favorites-only mode; on enable, frame all favorites.
+  const toggleFavOnly = useCallback(() => {
+    const next = !favOnly;
+    setFavOnly(next);
+    if (next) fitToFavorites();
+  }, [favOnly, fitToFavorites]);
 
   // Pins as a GeoJSON FeatureCollection — the source MapLibre clusters for us.
+  // In favorites-only mode, drop everything that isn't favorited.
   const geojson = useMemo<FeatureCollection<Point>>(
     () => ({
       type: 'FeatureCollection',
-      features: pins.map((p) => ({
-        type: 'Feature',
-        geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
-        properties: { license_number: p.license_number, dba: p.dba },
-      })),
+      features: pins
+        .filter((p) => !favOnly || isFavorite(p.license_number))
+        .map((p) => ({
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
+          properties: { license_number: p.license_number, dba: p.dba },
+        })),
     }),
-    [pins],
+    [pins, favOnly, isFavorite],
   );
 
   // Single (unclustered) pin — the brand "B" tile, swapped to red when selected.
@@ -240,6 +275,15 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
           </Marker>
         )}
       </Map>
+      <button
+        type="button"
+        className={`fav-toggle${favOnly ? ' fav-toggle--on' : ''}`}
+        aria-label="Show favorites only"
+        aria-pressed={favOnly}
+        onClick={toggleFavOnly}
+      >
+        {favOnly ? '★' : '☆'}
+      </button>
       {moved && (
         <button
           type="button"

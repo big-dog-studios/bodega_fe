@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { IonContent, IonFooter, IonModal, IonSpinner, useIonToast } from '@ionic/react';
 import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
+import { useFavorites } from '../../../context/FavoritesContext';
 import type { StoreDetail } from '../../../lib/api';
 import FeatureBadge from '../../atoms/FeatureBadge';
 import ProductsTab from '../../molecules/ProductsTab';
@@ -35,6 +36,7 @@ const PAYMENTS: { test: (s: StoreDetail) => boolean; label: string }[] = [
 /** Bottom-sheet drawer for the selected store. Opens on pin select. */
 const StoreDetailSheet: React.FC = () => {
   const { selectedId, selected, selectedLoading, clearSelected, products } = useStores();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [tab, setTab] = useState<TabKey>('info');
   const [reportValid, setReportValid] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -105,7 +107,27 @@ const StoreDetailSheet: React.FC = () => {
         {selected && activeTab === 'info' && (
           <div className="store-sheet__body">
             <header className="store-sheet__head">
-              <h1 className="store-sheet__name">{selected.display_name || selected.dba}</h1>
+              <div className="store-sheet__name-row">
+                <h1 className="store-sheet__name">{selected.display_name || selected.dba}</h1>
+                <button
+                  type="button"
+                  className={`store-sheet__fav${
+                    isFavorite(selected.license_number) ? ' store-sheet__fav--on' : ''
+                  }`}
+                  aria-label="Favorite"
+                  aria-pressed={isFavorite(selected.license_number)}
+                  onClick={() =>
+                    toggleFavorite({
+                      license_number: selected.license_number,
+                      name: selected.display_name || selected.dba,
+                      lat: selected.lat,
+                      lon: selected.lon,
+                    })
+                  }
+                >
+                  {isFavorite(selected.license_number) ? '★' : '☆'}
+                </button>
+              </div>
               {selected.city && <p className="store-sheet__area">{selected.city}</p>}
               <p className="store-sheet__area">
                 {selected.house} {selected.street}, {selected.county}, NY {selected.zip}

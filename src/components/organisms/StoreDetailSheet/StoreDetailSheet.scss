@@ -101,11 +101,35 @@ ion-modal.store-sheet {
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+.store-sheet__name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .store-sheet__name {
   margin: 0;
   color: var(--brand-orange);
   text-shadow: 2px 2px 0 var(--brand-red);
   @include display-caps(34px, 800, 0.02em);
+}
+
+.store-sheet__fav {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--brand-orange);
+  cursor: pointer;
+  font-size: 30px;
+  line-height: 1;
+  transition: color 0.15s ease;
+
+  // Favorited: the filled star's interior turns red, no background highlight.
+  &--on {
+    color: var(--brand-red);
+  }
 }
 
 .store-sheet__area {
