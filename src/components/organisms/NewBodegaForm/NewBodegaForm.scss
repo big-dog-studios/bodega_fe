@@ -1,0 +1,39 @@
+@use '../../../theme/mixins' as *;
+
+// Bottom-sheet modal for adding a bodega — same brand treatment as the detail sheet.
+ion-modal.new-bodega {
+  --background: var(--brand-blue);
+}
+
+.new-bodega__content {
+  --background: var(--brand-blue);
+  --color: #ffffff;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+}
+
+// Orange category bar at the top of the sheet.
+.new-bodega__tag {
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+  padding: 9px 20px;
+  @include display-caps(13px, 700, 0.08em);
+}
+
+.new-bodega__label {
+  margin: 0;
+  padding: 18px 20px 8px;
+  color: var(--brand-orange);
+  text-shadow: 2px 2px 0 var(--brand-red);
+  @include display-caps(28px, 800, 0.02em);
+}
+
+.new-bodega__hint {
+  margin: 0;
+  padding: 0 20px 16px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-body);
+  font-size: 14px;
+}

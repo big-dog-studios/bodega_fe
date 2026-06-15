@@ -65,6 +65,31 @@
   @include display-caps(13px, 700, 0.04em);
 }
 
+// Floating pill action — bottom-right of the drawer.
+.app-menu__add {
+  position: absolute; // slot="fixed" keeps it out of the scroll flow
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 22px;
+  border: 0;
+  border-radius: 999px; // fully rounded ends, still a pill rectangle
+  background: var(--brand-red);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35);
+  @include display-caps(15px, 800, 0.04em);
+}
+
+.app-menu__add-plus {
+  margin-right: 5px;
+  font-size: 24px;
+  line-height: 1;
+  // Optical bump: the taller glyph centers low against the caps text.
+  transform: translateY(-2px);
+}
+
 // Header trigger — orange hamburger glyph on the blue toolbar.
 .app-header__menu-btn {
   --color: var(--brand-orange);

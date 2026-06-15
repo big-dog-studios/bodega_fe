@@ -1,6 +1,7 @@
 import { IonContent, IonMenu } from '@ionic/react';
 import { useStores } from '../../../context/StoresContext';
 import type { StoreFilter } from '../../molecules/FilterBar';
+import { NEW_BODEGA_TRIGGER_ID } from '../NewBodegaForm';
 import './AppMenu.scss';
 
 /** menuId the header's IonMenuButton targets; contentId is the routed outlet. */
@@ -55,6 +56,10 @@ const AppMenu: React.FC = () => {
             );
           })}
         </div>
+
+        <button type="button" id={NEW_BODEGA_TRIGGER_ID} className="app-menu__add" slot="fixed">
+          <span className="app-menu__add-plus">+</span> Add bodega
+        </button>
       </IonContent>
     </IonMenu>
   );
