@@ -138,9 +138,19 @@ export function getStoreProducts(
   return getJson<StoreProducts>(`/stores/${encodeURIComponent(licenseNumber)}/products`, signal);
 }
 
+/** 'report' = update to an existing store; 'new' = a brand-new bodega. */
+export type ReportMode = 'report' | 'new';
+
 /** A crowd-sourced report posted to `POST /submissions` (multipart/form-data). */
 export interface StoreReport {
-  license_number: string;
+  mode: ReportMode;
+  /** Present when reporting on an existing store; omitted for a new bodega. */
+  license_number?: string;
+  name: string;
+  address: string;
+  /** Coordinates for the store — geocoded from the address for a new bodega. */
+  lat?: number;
+  lon?: number;
   /** Feature answers keyed by submission field name (e.g. `lottery`) → 'yes' | 'no'. */
   answers: Record<string, 'yes' | 'no'>;
   hours?: string;
@@ -148,10 +158,15 @@ export interface StoreReport {
   photos?: File[];
 }
 
-/** Submit a crowd-sourced report for a store as multipart form data. */
+/** Submit a crowd-sourced report (or a new bodega) as multipart form data. */
 export async function submitReport(report: StoreReport, signal?: AbortSignal): Promise<void> {
   const form = new FormData();
-  form.set('license_number', report.license_number);
+  form.set('mode', report.mode);
+  if (report.license_number) form.set('license_number', report.license_number);
+  if (report.name.trim()) form.set('name', report.name.trim());
+  if (report.address.trim()) form.set('address', report.address.trim());
+  if (report.lat != null) form.set('lat', String(report.lat));
+  if (report.lon != null) form.set('lon', String(report.lon));
   for (const [field, value] of Object.entries(report.answers)) {
     form.set(field, value);
   }
@@ -163,4 +178,31 @@ export async function submitReport(report: StoreReport, signal?: AbortSignal): P
   if (!res.ok) {
     throw new Error(`API ${res.status} for /submissions`);
   }
+}
+
+/** A geocoded coordinate. */
+export interface GeocodeResult {
+  lat: number;
+  lon: number;
+}
+
+/**
+ * Geocode a free-text address to coordinates via OpenStreetMap's Nominatim
+ * (free, no key). Biased to the US; returns null if nothing matches. Note
+ * Nominatim's usage policy: low volume only, no autocomplete-rate calls.
+ */
+export async function geocodeAddress(
+  address: string,
+  signal?: AbortSignal,
+): Promise<GeocodeResult | null> {
+  const q = encodeURIComponent(address.trim());
+  if (!q) return null;
+  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&q=${q}`;
+  const res = await fetch(url, { signal, headers: { Accept: 'application/json' } });
+  if (!res.ok) {
+    throw new Error(`Geocode ${res.status}`);
+  }
+  const data = (await res.json()) as Array<{ lat: string; lon: string }>;
+  if (!Array.isArray(data) || data.length === 0) return null;
+  return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
 }

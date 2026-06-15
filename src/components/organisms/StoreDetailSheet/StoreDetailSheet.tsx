@@ -165,7 +165,7 @@ const StoreDetailSheet: React.FC = () => {
         )}
       </IonContent>
 
-      {selected && (
+      {selected && activeTab !== 'products' && (
         <IonFooter className="store-sheet__footer">
           {activeTab === 'report' ? (
             <button

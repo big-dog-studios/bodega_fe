@@ -37,3 +37,36 @@ ion-modal.new-bodega {
   font-family: var(--font-body);
   font-size: 14px;
 }
+
+.new-bodega__footer {
+  background: var(--brand-blue);
+
+  &::before {
+    display: none; // drop Ionic's default top hairline
+  }
+}
+
+.new-bodega__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  width: 100%;
+  border: 0;
+  padding: 18px;
+  padding-bottom: calc(18px + env(safe-area-inset-bottom, 0));
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+  cursor: pointer;
+  @include display-caps(20px, 800, 0.06em);
+
+  ion-spinner {
+    height: 24px;
+  }
+
+  &:disabled {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.4);
+    cursor: default;
+  }
+}
