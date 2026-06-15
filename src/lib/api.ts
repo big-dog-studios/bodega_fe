@@ -9,6 +9,14 @@ const API_BASE_URL: string = (import.meta.env.VITE_API_BASE_URL ?? 'http://local
   '',
 );
 
+/** Gateway API key, sent as `x-api-key` on every request to our API. */
+const API_KEY: string | undefined = import.meta.env.VITE_API_KEY;
+
+/** Headers required on every gateway request (merged with any per-call extras). */
+function apiHeaders(extra?: Record<string, string>): Record<string, string> {
+  return { ...(API_KEY ? { 'x-api-key': API_KEY } : {}), ...extra };
+}
+
 /** Feature flags present on both the list and detail responses. */
 export interface StoreFeatureFlags {
   has_snap: boolean;
@@ -80,7 +88,7 @@ export interface StoreFilters {
 }
 
 async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {
-  const res = await fetch(`${API_BASE_URL}${path}`, { signal });
+  const res = await fetch(`${API_BASE_URL}${path}`, { signal, headers: apiHeaders() });
   if (!res.ok) {
     throw new Error(`API ${res.status} for ${path}`);
   }
@@ -186,7 +194,12 @@ export async function submitReport(report: StoreReport, signal?: AbortSignal): P
   if (report.receipt) form.set('receipt', report.receipt);
   for (const photo of report.photos ?? []) form.append('photos', photo);
 
-  const res = await fetch(`${API_BASE_URL}/submissions`, { method: 'POST', body: form, signal });
+  const res = await fetch(`${API_BASE_URL}/submissions`, {
+    method: 'POST',
+    body: form,
+    signal,
+    headers: apiHeaders(),
+  });
   if (!res.ok) {
     throw new Error(`API ${res.status} for /submissions`);
   }
