@@ -31,8 +31,10 @@ const AppMenu: React.FC = () => {
       menuId={APP_MENU_ID}
       contentId="main-content"
       side="end"
-      type="overlay"
+      type="reveal"
       swipeGesture={false}
+      onIonWillOpen={() => document.body.classList.add('app-menu-open')}
+      onIonDidClose={() => document.body.classList.remove('app-menu-open')}
     >
       <IonContent className="app-menu__content">
         <p className="app-menu__label">MORE FILTERS</p>

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { IonContent, IonFooter, IonMenuButton, IonPage } from '@ionic/react';
+import { menuController } from '@ionic/core/components';
 import AppHeader from '../components/organisms/AppHeader';
 import StoreMap from '../components/organisms/StoreMap';
 import StoreDetailSheet from '../components/organisms/StoreDetailSheet';
@@ -7,6 +8,7 @@ import { APP_MENU_ID, MENU_FILTERS } from '../components/organisms/AppMenu';
 import FilterBar, { STORE_FILTERS } from '../components/molecules/FilterBar';
 import { useStores } from '../context/StoresContext';
 import type { StoreFilters } from '../lib/api';
+import './Map.scss';
 
 const Map: React.FC = () => {
   // Filter state is shared (filter bar + menu drawer) via the stores context.
@@ -36,6 +38,15 @@ const Map: React.FC = () => {
       </IonFooter>
 
       <StoreDetailSheet />
+
+      {/* Dims the content while the reveal menu is open (toggled via body class
+          in AppMenu). Sits inside the page so it slides with the content. */}
+      <button
+        type="button"
+        className="map-dim"
+        aria-label="Close menu"
+        onClick={() => menuController.close(APP_MENU_ID)}
+      />
     </IonPage>
   );
 };
