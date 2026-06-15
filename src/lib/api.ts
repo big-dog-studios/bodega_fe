@@ -115,19 +115,31 @@ export interface StoreProduct {
   price_raw: string;
   /** Where the item was scraped from, e.g. "doordash". */
   source: string;
-  category_id: number;
-  category: string;
+  /** Granular type within a category, e.g. "sandwich", "soda". */
+  subtype: string;
+  subtype_label: string;
   category_slug: string;
-  /** Human-friendly category label for display (falls back from description). */
-  friendly_category: string;
+  category_label: string;
+  category_emoji: string;
+  /** Original menu section name from the source, e.g. "Cold Sandwiches". */
+  source_category: string;
+}
+
+/** A category bucket from the products response (counts the whole taxonomy). */
+export interface ProductFacet {
+  category_id: number;
+  slug: string;
+  label: string;
   emoji: string;
-  is_packaged: boolean;
+  sort_order: number;
+  product_count: number;
 }
 
 /** Response from `GET /stores/{license_number}/products`. */
 export interface StoreProducts {
   license_number: string;
   products: StoreProduct[];
+  facets: ProductFacet[];
 }
 
 /** Fetch a store's product catalog by license number. */

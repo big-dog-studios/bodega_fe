@@ -32,8 +32,8 @@ const ProductsTab: React.FC<ProductsTabProps> = ({ products }) => {
       else
         byCat.set(p.category_slug, {
           slug: p.category_slug,
-          label: p.category,
-          emoji: p.emoji,
+          label: p.category_label,
+          emoji: p.category_emoji,
           count: 1,
         });
     }
@@ -87,7 +87,7 @@ const ProductsTab: React.FC<ProductsTabProps> = ({ products }) => {
             <div className="products-tab__item-main">
               <p className="products-tab__item-name">{p.name}</p>
               <p className="products-tab__item-cat">
-                {p.emoji} {p.description || p.friendly_category}
+                {p.category_emoji} {p.description || p.subtype_label}
               </p>
             </div>
             {p.price_cents ? (
