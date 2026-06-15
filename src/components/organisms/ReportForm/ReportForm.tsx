@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { STORE_FILTERS } from '../../molecules/FilterBar';
 import { geocodeAddress, submitReport, type StoreDetail } from '../../../lib/api';
 import './ReportForm.scss';
 
@@ -14,14 +13,15 @@ const SUBMIT_FIELDS: Record<string, string> = {
   tobacco: 'tobacco',
 };
 
-/** Extra yes/no questions shown only in the report form (not map filters). */
-const EXTRA_QUESTIONS = [
+/** The yes/no questions rendered in the form. Hardcoded — independent of the map filters. */
+const QUESTIONS = [
+  { key: 'preparedFood', label: 'HOT FOOD', icon: '🥪' },
+  { key: 'lottery', label: 'LOTTERY', icon: '🎟' },
+  { key: 'alcohol', label: 'BEER & WINE', icon: '🍺' },
+  { key: 'tobacco', label: 'TOBACCO', icon: '🚬' },
   { key: 'atm', label: 'ATM', icon: '🏧' },
   { key: 'cat', label: 'BODEGA CAT', icon: '🐈' },
 ];
-
-/** Every yes/no question rendered in the form — map filters plus report-only ones. */
-const QUESTIONS = [...STORE_FILTERS, ...EXTRA_QUESTIONS];
 
 /** Single-line address string from a store record. */
 const formatAddress = (s: StoreDetail) =>

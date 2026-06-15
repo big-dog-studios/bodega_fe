@@ -1,5 +1,29 @@
 @use '../../../theme/mixins' as *;
 
+// Long-press swap popover — brand-blue surface, orange items.
+.filter-bar__popover {
+  --background: var(--brand-blue);
+  --width: 230px;
+
+  ion-list {
+    background: var(--brand-blue);
+    padding: 0;
+  }
+
+  ion-item {
+    --background: var(--brand-blue);
+    --color: var(--brand-orange);
+    --border-color: rgba(255, 255, 255, 0.15);
+    font-family: var(--font-body);
+    font-weight: 700;
+  }
+}
+
+.filter-bar__popover-icon {
+  margin-inline-end: 10px;
+  font-size: 18px;
+}
+
 .filter-bar {
   display: flex;
   align-items: stretch;

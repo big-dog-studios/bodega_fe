@@ -4,9 +4,10 @@ import { menuController } from '@ionic/core/components';
 import AppHeader from '../components/organisms/AppHeader';
 import StoreMap from '../components/organisms/StoreMap';
 import StoreDetailSheet from '../components/organisms/StoreDetailSheet';
-import { APP_MENU_ID, MENU_FILTERS } from '../components/organisms/AppMenu';
-import FilterBar, { STORE_FILTERS } from '../components/molecules/FilterBar';
+import { APP_MENU_ID } from '../components/organisms/AppMenu';
+import FilterBar from '../components/molecules/FilterBar';
 import { useStores } from '../context/StoresContext';
+import { FILTERS } from '../lib/filters';
 import type { StoreFilters } from '../lib/api';
 import './Map.scss';
 
@@ -17,7 +18,7 @@ const Map: React.FC = () => {
   // Active toggles -> getStores() query params, across both the bar and the menu.
   const filters = useMemo<StoreFilters>(() => {
     const f: StoreFilters = {};
-    for (const def of [...STORE_FILTERS, ...MENU_FILTERS]) {
+    for (const def of FILTERS) {
       if (activeFilters.has(def.key)) f[def.param] = true;
     }
     return f;

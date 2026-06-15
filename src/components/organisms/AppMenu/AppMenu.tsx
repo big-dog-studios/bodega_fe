@@ -1,22 +1,12 @@
 import { IonContent, IonMenu } from '@ionic/react';
 import { useStores } from '../../../context/StoresContext';
-import type { StoreFilter } from '../../molecules/FilterBar';
+import { useHotbar } from '../../../context/HotbarContext';
+import { FILTERS } from '../../../lib/filters';
 import { NEW_BODEGA_TRIGGER_ID } from '../NewBodegaForm';
 import './AppMenu.scss';
 
 /** menuId the header's IonMenuButton targets; contentId is the routed outlet. */
 export const APP_MENU_ID = 'app-menu';
-
-/** Extra filters shown in the drawer — same shape as the filter bar's. */
-export const MENU_FILTERS: StoreFilter[] = [
-  { key: 'cat', label: 'CAT', icon: '🐈', param: 'has_cat' },
-  { key: 'atm', label: 'ATM', icon: '🏧', param: 'has_atm' },
-  { key: 'delivery', label: 'DELIVERY', icon: '🛵', param: 'delivery' },
-  { key: 'takeout', label: 'TAKEOUT', icon: '🥡', param: 'takeout' },
-  { key: 'snap', label: 'SNAP/EBT', icon: '🛒', param: 'has_snap' },
-  { key: 'quickDraw', label: 'QUICK DRAW', icon: '🎰', param: 'has_quick_draw' },
-  { key: 'products', label: 'HAS MENU', icon: '🛍️', param: 'has_products' },
-];
 
 /**
  * Right-side slide-in drawer behind the header hamburger. Rendered once at the
@@ -25,6 +15,10 @@ export const MENU_FILTERS: StoreFilter[] = [
  */
 const AppMenu: React.FC = () => {
   const { activeFilters, toggleFilter } = useStores();
+  const { hotbarKeys } = useHotbar();
+
+  // The drawer shows every filter that isn't already in the bottom bar.
+  const menuFilters = FILTERS.filter((f) => !hotbarKeys.includes(f.key));
 
   return (
     <IonMenu
@@ -40,7 +34,7 @@ const AppMenu: React.FC = () => {
       <IonContent className="app-menu__content">
         <p className="app-menu__label">MORE FILTERS</p>
         <div className="app-menu__filters">
-          {MENU_FILTERS.map((f) => {
+          {menuFilters.map((f) => {
             const isOn = activeFilters.has(f.key);
             return (
               <button
