@@ -158,8 +158,11 @@ export function getStoreProducts(
   return getJson<StoreProducts>(`/stores/${encodeURIComponent(licenseNumber)}/products`, signal);
 }
 
-/** 'report' = update to an existing store; 'new' = a brand-new bodega. */
-export type ReportMode = 'report' | 'new';
+/**
+ * 'report' = update to an existing store; 'new' = a brand-new bodega;
+ * 'delete' = flag an existing store as false/closed (not a real bodega).
+ */
+export type ReportMode = 'report' | 'new' | 'delete';
 
 /** A crowd-sourced report posted to `POST /submissions` (multipart/form-data). */
 export interface StoreReport {

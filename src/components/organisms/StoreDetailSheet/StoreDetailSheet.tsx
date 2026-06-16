@@ -5,12 +5,13 @@ import {
   IonModal,
   IonSpinner,
   useIonActionSheet,
+  useIonAlert,
   useIonToast,
 } from '@ionic/react';
 import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import { useFavorites } from '../../../context/FavoritesContext';
-import type { StoreDetail } from '../../../lib/api';
+import { submitReport, type StoreDetail } from '../../../lib/api';
 import { track } from '../../../lib/analytics';
 import FeatureBadge from '../../atoms/FeatureBadge';
 import ProductsTab from '../../molecules/ProductsTab';
@@ -50,6 +51,7 @@ const StoreDetailSheet: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [presentToast] = useIonToast();
   const [presentActionSheet] = useIonActionSheet();
+  const [presentAlert] = useIonAlert();
 
   // Products tab only exists when this store returned a catalog.
   const hasProducts = products.length > 0;
@@ -64,6 +66,51 @@ const StoreDetailSheet: React.FC = () => {
   const dismiss = () => {
     clearSelected();
     setTab('info');
+  };
+
+  // Flag the store as a false/closed listing via the same /submissions endpoint
+  // (mode: 'delete'). Confirm first since it asks us to remove the pin.
+  const reportFalse = () => {
+    if (!selected) return;
+    const name = selected.display_name || selected.dba;
+    presentAlert({
+      header: 'Not a real bodega?',
+      message: `Report “${name}” as a false or closed listing. We'll review it.`,
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Report',
+          role: 'destructive',
+          handler: () => {
+            void submitReport({
+              mode: 'delete',
+              license_number: selected.license_number,
+              name,
+              address: '',
+              answers: {},
+            })
+              .then(() => {
+                track('False Bodega Reported', { license_number: selected.license_number });
+                presentToast({
+                  message: "Thanks — we'll review this listing.",
+                  duration: 2500,
+                  position: 'top',
+                  color: 'success',
+                });
+                dismiss();
+              })
+              .catch(() => {
+                presentToast({
+                  message: "Couldn't submit. Please try again.",
+                  duration: 3000,
+                  position: 'top',
+                  color: 'danger',
+                });
+              });
+          },
+        },
+      ],
+    });
   };
 
   const selectTab = (key: TabKey) => {
@@ -217,6 +264,10 @@ const StoreDetailSheet: React.FC = () => {
                 </div>
               </section>
             )}
+
+            <button type="button" className="store-sheet__report-false" onClick={reportFalse}>
+              🚩 Not a real bodega? Report it
+            </button>
           </div>
         )}
 
