@@ -12,6 +12,7 @@ const SUBMIT_FIELDS: Record<string, string> = {
   lottery: 'lottery',
   alcohol: 'alcohol',
   tobacco: 'tobacco',
+  snap: 'snap',
 };
 
 /** The yes/no questions rendered in the form. Hardcoded — independent of the map filters. */
@@ -20,6 +21,7 @@ const QUESTIONS = [
   { key: 'lottery', label: 'LOTTERY', icon: '🎟' },
   { key: 'alcohol', label: 'BEER & WINE', icon: '🍺' },
   { key: 'tobacco', label: 'TOBACCO', icon: '🚬' },
+  { key: 'snap', label: 'SNAP/EBT', icon: '🛒' },
   { key: 'atm', label: 'ATM', icon: '🏧' },
   { key: 'cat', label: 'BODEGA CAT', icon: '🐈' },
 ];
@@ -42,6 +44,7 @@ const STORE_FLAG: Record<string, (s: StoreDetail) => boolean> = {
   lottery: (s) => s.has_lottery,
   alcohol: (s) => s.alc_class != null,
   tobacco: (s) => s.has_tobacco,
+  snap: (s) => s.has_snap,
   atm: (s) => s.has_atm,
   cat: (s) => s.has_cat,
 };
