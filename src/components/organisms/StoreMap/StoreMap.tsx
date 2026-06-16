@@ -281,35 +281,40 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
           </Marker>
         )}
       </Map>
-      {/* Right-side control column, anchored to the bottom. Order top→bottom:
-          recenter, favorites, filter FAB. Conditional buttons just drop out and
-          the column collapses (gap-driven), so the rest slides down on its own. */}
+      {/* Bottom-right controls, laid out as an "L": the filter FAB on the left,
+          and a vertical column (recenter over favorites) on the right. Bottom-
+          aligned, gap-driven — conditional buttons just drop out and the layout
+          collapses on its own. The filter's list expands up the empty left side,
+          so it never occludes the column. */}
       <div className="map-controls">
-        {moved && (
-          <button
-            type="button"
-            className="recenter-btn"
-            aria-label="Re-center map"
-            onClick={recenter}
-          >
-            <svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true">
-              <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
-              <circle cx="12" cy="12" r="3" fill="currentColor" />
-            </svg>
-          </button>
-        )}
-        {favorites.length > 0 && (
-          <button
-            type="button"
-            className={`fav-toggle${favOnly ? ' fav-toggle--on' : ''}`}
-            aria-label="Show favorites only"
-            aria-pressed={favOnly}
-            onClick={toggleFavOnly}
-          >
-            {favOnly ? '★' : '☆'}
-          </button>
-        )}
         <FilterFab active={activeFilters} onToggle={toggleFilter} />
+
+        <div className="map-controls__column">
+          {moved && (
+            <button
+              type="button"
+              className="recenter-btn"
+              aria-label="Re-center map"
+              onClick={recenter}
+            >
+              <svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true">
+                <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
+                <circle cx="12" cy="12" r="3" fill="currentColor" />
+              </svg>
+            </button>
+          )}
+          {favorites.length > 0 && (
+            <button
+              type="button"
+              className={`fav-toggle${favOnly ? ' fav-toggle--on' : ''}`}
+              aria-label="Show favorites only"
+              aria-pressed={favOnly}
+              onClick={toggleFavOnly}
+            >
+              {favOnly ? '★' : '☆'}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

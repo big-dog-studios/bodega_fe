@@ -15,14 +15,21 @@
 }
 
 // Re-center button — appears bottom-right once the map has been moved.
-// Right-side control column — bottom-anchored, grows upward. Conditional buttons
-// (recenter / favorites) simply drop out of the column and the gap closes, so
-// everything below them moves down without any hardcoded offsets.
+// Bottom-right controls in an "L": filter FAB (left) + a vertical column (right),
+// bottom-aligned. The gap sets both the horizontal and vertical spacing, so no
+// offsets are hardcoded — conditional buttons just drop out and it collapses.
 .map-controls {
   position: absolute;
   right: 16px;
   bottom: 24px;
   z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+// The vertical stack: recenter over favorites, grows upward.
+.map-controls__column {
   display: flex;
   flex-direction: column;
   align-items: flex-end;

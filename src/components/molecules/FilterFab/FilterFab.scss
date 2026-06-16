@@ -1,7 +1,8 @@
 @use '../../../theme/mixins' as *;
 
-// A flex item in the map's control column — just the 40px trigger's footprint.
-// The expanding list is an absolute overlay (below) so it adds no column height.
+// A flex item in the map controls — just the 48px trigger's footprint. The
+// expanding list is an absolute overlay (below) so it adds no layout size and
+// rises up the empty left side, clear of the control column.
 .filter-fab {
   position: relative;
 }
