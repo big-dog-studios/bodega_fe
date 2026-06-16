@@ -1,0 +1,402 @@
+@use '../../../theme/mixins' as *;
+
+// Full-screen modal, brand-blue surface — same family as the detail/new sheets.
+ion-modal.hours-picker {
+  --background: var(--brand-blue);
+  --width: 100%;
+  --height: 100%;
+}
+
+.hours-picker__content {
+  --background: var(--brand-blue);
+  --color: #ffffff;
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+// Orange category bar at the top, matching the other sheets.
+.hours-picker__tag {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: calc(9px + env(safe-area-inset-top, 0px)) 20px 9px;
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+  @include display-caps(13px, 700, 0.08em);
+}
+
+.hours-picker__body {
+  padding: 18px 20px 24px;
+}
+
+// ---- Day pills ------------------------------------------------------------
+.hours-picker__pills {
+  display: flex;
+  gap: 6px;
+}
+
+.hours-picker__pill {
+  position: relative;
+  flex: 1;
+  height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  @include display-caps(13px, 700, 0.02em);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.08s ease;
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  // Currently being edited — solid orange.
+  &--selected {
+    background: var(--brand-orange);
+    border-color: var(--brand-orange);
+    color: var(--brand-blue);
+  }
+
+  // Already committed to a group — outlined orange with a check.
+  &--set {
+    border-color: var(--brand-orange);
+    color: var(--brand-orange);
+  }
+}
+
+.hours-picker__pill-check {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.hours-picker__status {
+  margin: 14px 2px 4px;
+  min-height: 18px;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+// ---- Dial editing area ----------------------------------------------------
+.hours-picker__dialarea {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.hours-picker__cards {
+  display: flex;
+  gap: 10px;
+}
+
+.hours-picker__card {
+  flex: 1;
+  padding: 11px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  text-align: center;
+
+  &--banner {
+    flex: 1 1 100%;
+  }
+}
+
+.hours-picker__card-label {
+  color: rgba(255, 255, 255, 0.55);
+  @include display-caps(11px, 700, 0.06em);
+}
+
+.hours-picker__card-time {
+  margin-top: 4px;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+
+  &--closed {
+    font-size: 19px;
+    color: var(--brand-orange);
+  }
+}
+
+.hours-picker__card-sub {
+  margin-top: 1px;
+  min-height: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-body);
+  font-size: 11px;
+}
+
+// ---- The radial dial ------------------------------------------------------
+.hours-dial {
+  position: relative;
+  width: min(300px, 82vw);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hours-dial__svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hours-dial__track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 30;
+}
+
+.hours-dial__arc {
+  fill: none;
+  stroke: var(--brand-orange);
+  stroke-width: 30;
+  stroke-linecap: round;
+  pointer-events: stroke;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.hours-dial__face {
+  fill: rgba(0, 0, 0, 0.22);
+}
+
+.hours-dial__tick {
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1;
+
+  &--major {
+    stroke: rgba(255, 255, 255, 0.45);
+    stroke-width: 2;
+  }
+}
+
+.hours-dial__label {
+  fill: rgba(255, 255, 255, 0.5);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+
+  &--major {
+    fill: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+  }
+}
+
+.hours-dial__handle {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: grab;
+  touch-action: none;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+
+  &:active {
+    cursor: grabbing;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+
+  // Inner dot signals which handle is which.
+  &::after {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    margin: 0 auto;
+    border-radius: 50%;
+  }
+
+  &--open::after {
+    background: var(--brand-orange);
+  }
+
+  &--close::after {
+    background: var(--brand-blue);
+  }
+}
+
+// ---- 24h / Closed toggles -------------------------------------------------
+.hours-picker__ghosts {
+  display: flex;
+  gap: 10px;
+}
+
+.hours-picker__ghost {
+  flex: 1;
+  height: 44px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  @include display-caps(13px, 700, 0.04em);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  &--on {
+    color: var(--brand-orange);
+    border-color: var(--brand-orange);
+  }
+
+  &--closed.hours-picker__ghost--on {
+    color: var(--brand-red);
+    border-color: var(--brand-red);
+  }
+}
+
+// "Set <days>" — commits the current selection into a group.
+.hours-picker__set {
+  width: 100%;
+  height: 52px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+  cursor: pointer;
+  @include display-caps(16px, 800, 0.04em);
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+// ---- Committed groups summary --------------------------------------------
+.hours-picker__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.hours-picker__srow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.hours-picker__srow-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.hours-picker__srow-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+  font-size: 13px;
+}
+
+.hours-picker__srow-days {
+  @include display-caps(15px, 700, 0.02em);
+}
+
+.hours-picker__srow-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.hours-picker__srow-hours {
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+.hours-picker__srow-chev {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
+  line-height: 1;
+}
+
+// ---- Footer ---------------------------------------------------------------
+.hours-picker__footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: 12px;
+  padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+  background: var(--brand-blue);
+  box-shadow: 0 -8px 20px rgba(var(--brand-blue-rgb), 0.9);
+}
+
+.hours-picker__cancel {
+  flex: 0 0 auto;
+  padding: 0 18px;
+  height: 52px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  @include display-caps(15px, 700, 0.04em);
+}
+
+.hours-picker__save {
+  flex: 1;
+  height: 52px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--brand-orange);
+  color: var(--brand-blue);
+  cursor: pointer;
+  @include display-caps(17px, 800, 0.04em);
+
+  &:disabled {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.4);
+    cursor: default;
+  }
+}

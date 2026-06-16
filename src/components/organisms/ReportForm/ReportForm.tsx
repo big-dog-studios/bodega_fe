@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { geocodeAddress, submitReport, type StoreDetail } from '../../../lib/api';
+import HoursPicker, { deserialize, serialize, summarize, type HoursGroup } from '../HoursPicker';
 import './ReportForm.scss';
 
 /** Default form id so an external submit button (a sticky footer) can submit it. */
@@ -26,6 +27,12 @@ const QUESTIONS = [
 /** Single-line address string from a store record. */
 const formatAddress = (s: StoreDetail) =>
   `${s.house} ${s.street}, ${s.county}, NY ${s.zip}`;
+
+/** Seed the hours JSON from a store record — only if its value is our format. */
+const initialHours = (s?: StoreDetail): string => {
+  const groups = deserialize(s?.hours_summary);
+  return groups.length > 0 ? serialize(groups) : '';
+};
 
 type Answer = 'yes' | 'no';
 
@@ -80,7 +87,9 @@ const ReportForm: React.FC<ReportFormProps> = ({
   const [name, setName] = useState(store ? store.display_name || store.dba : '');
   const [address, setAddress] = useState(store ? formatAddress(store) : '');
   const [answers, setAnswers] = useState<Record<string, Answer>>(answersFor(store));
-  const [hours, setHours] = useState(store?.hours_summary ?? '');
+  // `hours` holds the picker's JSON (or ''); the picker opens over the form.
+  const [hours, setHours] = useState(() => initialHours(store));
+  const [hoursOpen, setHoursOpen] = useState(false);
   const [receipt, setReceipt] = useState<File | null>(null);
   const [photos, setPhotos] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -91,11 +100,14 @@ const ReportForm: React.FC<ReportFormProps> = ({
     setName(store ? store.display_name || store.dba : '');
     setAddress(store ? formatAddress(store) : '');
     setAnswers(answersFor(store));
-    setHours(store?.hours_summary ?? '');
+    setHours(initialHours(store));
   }, [store?.license_number]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setAnswer = (key: string, value: Answer) =>
     setAnswers((prev) => ({ ...prev, [key]: value }));
+
+  const hoursGroups: HoursGroup[] = deserialize(hours);
+  const hoursLabel = hoursGroups.length > 0 ? summarize(hoursGroups) : '';
 
   const hasReportContent =
     Object.keys(answers).length > 0 || hours.trim() !== '' || !!receipt || photos.length > 0;
@@ -218,16 +230,27 @@ const ReportForm: React.FC<ReportFormProps> = ({
         ))}
       </div>
 
-      <label className="report-form__field">
-        <span className="report-form__label">Correct hours</span>
-        <input
-          className="report-form__input"
-          type="text"
-          placeholder="e.g. Mon–Sun 6AM–11PM"
-          value={hours}
-          onChange={(e) => setHours(e.target.value)}
-        />
-      </label>
+      <div className="report-form__field">
+        <span className="report-form__label">Hours</span>
+        <button
+          type="button"
+          className={`report-form__hours${hoursLabel ? ' report-form__hours--set' : ''}`}
+          onClick={() => setHoursOpen(true)}
+        >
+          <span className="report-form__hours-value">{hoursLabel || 'Set hours'}</span>
+          <span className="report-form__hours-chev">›</span>
+        </button>
+      </div>
+
+      <HoursPicker
+        isOpen={hoursOpen}
+        initialGroups={hoursGroups}
+        onCancel={() => setHoursOpen(false)}
+        onSave={(groups) => {
+          setHours(serialize(groups));
+          setHoursOpen(false);
+        }}
+      />
 
       <div className="report-form__field">
         <span className="report-form__label">Upload a receipt</span>

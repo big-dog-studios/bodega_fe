@@ -95,6 +95,42 @@ $divider: 1px solid rgba(255, 255, 255, 0.15);
   }
 }
 
+// "Set hours" — opens the full-screen hours picker; shows a summary once set.
+.report-form__hours {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 15px;
+
+  &--set {
+    color: #ffffff;
+  }
+}
+
+.report-form__hours-value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.report-form__hours-chev {
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
+  line-height: 1;
+}
+
 .report-form__drop {
   display: flex;
   align-items: center;

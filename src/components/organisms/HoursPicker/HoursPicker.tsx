@@ -1,0 +1,261 @@
+import { useEffect, useState } from 'react';
+import { IonContent, IonModal } from '@ionic/react';
+import HoursDial from './HoursDial';
+import {
+  DAY_LABELS,
+  formatDays,
+  formatGroupHours,
+  formatTime,
+  type HoursGroup,
+  type HoursMode,
+} from './hours';
+import './HoursPicker.scss';
+
+/** Working copy of a group with a stable id so summary rows can be re-edited. */
+interface DraftGroup extends HoursGroup {
+  id: number;
+}
+
+interface PendingHours {
+  open: number;
+  close: number;
+  mode: HoursMode;
+}
+
+const DEFAULT_PENDING: PendingHours = { open: 540, close: 1260, mode: 'hours' }; // 9:00 AM – 9:00 PM
+
+interface HoursPickerProps {
+  isOpen: boolean;
+  /** Groups to start from (e.g. parsed from an existing value). */
+  initialGroups?: HoursGroup[];
+  onCancel: () => void;
+  /** Fired with the finished groups when the user saves. */
+  onSave: (groups: HoursGroup[]) => void;
+}
+
+/**
+ * Full-screen modal for setting a store's weekly hours. The user selects one or
+ * more days, dials in an open/close window (or marks 24h / closed), and commits
+ * that as a group; repeat for the rest of the week. Saving returns the groups,
+ * which the form serializes to JSON.
+ */
+const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCancel, onSave }) => {
+  const [groups, setGroups] = useState<DraftGroup[]>([]);
+  const [nextId, setNextId] = useState(1);
+  // Days currently being edited (empty = nothing selected, dial hidden).
+  const [selection, setSelection] = useState<number[]>([]);
+  const [pending, setPending] = useState<PendingHours>(DEFAULT_PENDING);
+
+  // (Re)seed the working state each time the modal opens.
+  useEffect(() => {
+    if (!isOpen) return;
+    const seeded = (initialGroups ?? []).map((g, i) => ({ ...g, id: i + 1 }));
+    setGroups(seeded);
+    setNextId(seeded.length + 1);
+    setSelection([]);
+    setPending(DEFAULT_PENDING);
+  }, [isOpen, initialGroups]);
+
+  /** Days already committed to a group. */
+  const assigned = new Set(groups.flatMap((g) => g.days));
+  const allDaysSet = assigned.size === 7;
+  const canSave = groups.length > 0 && selection.length === 0;
+
+  const toggleDay = (day: number) => {
+    if (selection.includes(day)) {
+      setSelection((s) => s.filter((d) => d !== day));
+      return;
+    }
+    // Pull the day out of any group it belongs to, adopting that group's hours.
+    const owner = groups.find((g) => g.days.includes(day));
+    if (owner) {
+      setGroups((gs) =>
+        gs
+          .map((g) => (g.id === owner.id ? { ...g, days: g.days.filter((d) => d !== day) } : g))
+          .filter((g) => g.days.length > 0),
+      );
+      setPending({
+        open: owner.open ?? DEFAULT_PENDING.open,
+        close: owner.close ?? DEFAULT_PENDING.close,
+        mode: owner.mode,
+      });
+    }
+    setSelection((s) => [...s, day]);
+  };
+
+  const commitSelection = () => {
+    if (selection.length === 0) return;
+    const group: DraftGroup =
+      pending.mode === 'hours'
+        ? { id: nextId, days: [...selection], mode: 'hours', open: pending.open, close: pending.close }
+        : { id: nextId, days: [...selection], mode: pending.mode };
+    setGroups((gs) => [...gs, group]);
+    setNextId((n) => n + 1);
+    setSelection([]);
+    setPending(DEFAULT_PENDING);
+  };
+
+  const editGroup = (group: DraftGroup) => {
+    setPending({
+      open: group.open ?? DEFAULT_PENDING.open,
+      close: group.close ?? DEFAULT_PENDING.close,
+      mode: group.mode,
+    });
+    setGroups((gs) => gs.filter((g) => g.id !== group.id));
+    setSelection([...group.days]);
+  };
+
+  const setMode = (mode: HoursMode) =>
+    setPending((p) => ({ ...p, mode: p.mode === mode ? 'hours' : mode }));
+
+  const save = () => {
+    if (!canSave) return;
+    onSave(groups.map(({ id: _id, ...g }) => g));
+  };
+
+  const status = (() => {
+    if (selection.length > 0) return `Setting hours for ${formatDays(selection)}`;
+    if (allDaysSet) return 'All days set — save when ready';
+    if (assigned.size > 0) return 'Select the remaining days';
+    return 'Select the days to set';
+  })();
+
+  const sortedGroups = [...groups].sort((a, b) => Math.min(...a.days) - Math.min(...b.days));
+  const overnight = pending.mode === 'hours' && pending.close < pending.open;
+
+  return (
+    <IonModal className="hours-picker" isOpen={isOpen} onDidDismiss={onCancel}>
+      <IonContent className="hours-picker__content">
+        <div className="hours-picker__tag">SET STORE HOURS</div>
+
+        <div className="hours-picker__body">
+          <div className="hours-picker__pills">
+            {DAY_LABELS.map((label, day) => {
+              const selected = selection.includes(day);
+              const isSet = !selected && assigned.has(day);
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  className={`hours-picker__pill${selected ? ' hours-picker__pill--selected' : ''}${
+                    isSet ? ' hours-picker__pill--set' : ''
+                  }`}
+                  aria-pressed={selected}
+                  onClick={() => toggleDay(day)}
+                >
+                  {label}
+                  {isSet && <span className="hours-picker__pill-check">✓</span>}
+                </button>
+              );
+            })}
+          </div>
+
+          <p className="hours-picker__status">{status}</p>
+
+          {selection.length > 0 && (
+            <div className="hours-picker__dialarea">
+              {pending.mode === 'closed' ? (
+                <div className="hours-picker__cards">
+                  <div className="hours-picker__card hours-picker__card--banner">
+                    <div className="hours-picker__card-label">CLOSED</div>
+                    <div className="hours-picker__card-time hours-picker__card-time--closed">
+                      No hours this day
+                    </div>
+                  </div>
+                </div>
+              ) : pending.mode === '24' ? (
+                <div className="hours-picker__cards">
+                  <div className="hours-picker__card hours-picker__card--banner">
+                    <div className="hours-picker__card-label">OPEN 24 HOURS</div>
+                    <div className="hours-picker__card-time">12:00 AM – 12:00 AM</div>
+                  </div>
+                </div>
+              ) : (
+                <div className="hours-picker__cards">
+                  <div className="hours-picker__card">
+                    <div className="hours-picker__card-label">OPENS</div>
+                    <div className="hours-picker__card-time">{formatTime(pending.open)}</div>
+                    <div className="hours-picker__card-sub">&nbsp;</div>
+                  </div>
+                  <div className="hours-picker__card">
+                    <div className="hours-picker__card-label">CLOSES</div>
+                    <div className="hours-picker__card-time">{formatTime(pending.close)}</div>
+                    <div className="hours-picker__card-sub">{overnight ? 'next day' : ' '}</div>
+                  </div>
+                </div>
+              )}
+
+              <HoursDial
+                open={pending.open}
+                close={pending.close}
+                mode={pending.mode}
+                onChange={({ open, close }) => setPending((p) => ({ ...p, open, close }))}
+              />
+
+              <div className="hours-picker__ghosts">
+                <button
+                  type="button"
+                  className={`hours-picker__ghost${pending.mode === '24' ? ' hours-picker__ghost--on' : ''}`}
+                  onClick={() => setMode('24')}
+                >
+                  Open 24 hours
+                </button>
+                <button
+                  type="button"
+                  className={`hours-picker__ghost hours-picker__ghost--closed${
+                    pending.mode === 'closed' ? ' hours-picker__ghost--on' : ''
+                  }`}
+                  onClick={() => setMode('closed')}
+                >
+                  Closed
+                </button>
+              </div>
+
+              <button type="button" className="hours-picker__set" onClick={commitSelection}>
+                Set {formatDays(selection)}
+              </button>
+            </div>
+          )}
+
+          {sortedGroups.length > 0 && (
+            <div className="hours-picker__summary">
+              {sortedGroups.map((g) => (
+                <button
+                  key={g.id}
+                  type="button"
+                  className="hours-picker__srow"
+                  onClick={() => editGroup(g)}
+                >
+                  <span className="hours-picker__srow-left">
+                    <span className="hours-picker__srow-badge">✓</span>
+                    <span className="hours-picker__srow-days">{formatDays(g.days)}</span>
+                  </span>
+                  <span className="hours-picker__srow-right">
+                    <span className="hours-picker__srow-hours">{formatGroupHours(g)}</span>
+                    <span className="hours-picker__srow-chev">›</span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="hours-picker__footer">
+          <button type="button" className="hours-picker__cancel" onClick={onCancel}>
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="hours-picker__save"
+            disabled={!canSave}
+            onClick={save}
+          >
+            Save hours
+          </button>
+        </div>
+      </IonContent>
+    </IonModal>
+  );
+};
+
+export default HoursPicker;
