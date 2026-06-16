@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { IonContent, IonFooter, IonModal, IonSpinner, useIonToast } from '@ionic/react';
+import {
+  IonContent,
+  IonFooter,
+  IonModal,
+  IonSpinner,
+  useIonActionSheet,
+  useIonToast,
+} from '@ionic/react';
 import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import { useFavorites } from '../../../context/FavoritesContext';
@@ -41,6 +48,7 @@ const StoreDetailSheet: React.FC = () => {
   const [reportValid, setReportValid] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [presentToast] = useIonToast();
+  const [presentActionSheet] = useIonActionSheet();
 
   // Products tab only exists when this store returned a catalog.
   const hasProducts = products.length > 0;
@@ -57,15 +65,43 @@ const StoreDetailSheet: React.FC = () => {
     setTab('info');
   };
 
+  // Let the user pick their maps app. Options are platform-aware: Apple Maps only
+  // where it exists (iOS/desktop), and an Android "default app" option via a geo:
+  // URI that triggers the system maps chooser (Google, Waze, whatever they have).
   const openDirections = () => {
     if (!selected) return;
     const dest = `${selected.lat},${selected.lon}`;
-    const isIOS =
-      Capacitor.getPlatform() === 'ios' || /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const url = isIOS
-      ? `https://maps.apple.com/?daddr=${dest}`
-      : `https://www.google.com/maps/dir/?api=1&destination=${dest}`;
-    window.open(url, '_blank');
+    const label = selected.dba ? `(${encodeURIComponent(selected.dba)})` : '';
+    const open = (url: string) => {
+      // Custom schemes (geo:) need a top-level navigation to hand off to the OS;
+      // http(s) links open in a new tab / their associated native app.
+      if (/^https?:/.test(url)) window.open(url, '_blank');
+      else window.location.href = url;
+    };
+
+    const appleMaps = {
+      text: 'Apple Maps',
+      handler: () => open(`https://maps.apple.com/?daddr=${dest}`),
+    };
+    const googleMaps = {
+      text: 'Google Maps',
+      handler: () => open(`https://www.google.com/maps/dir/?api=1&destination=${dest}`),
+    };
+    const defaultApp = {
+      text: 'Default maps app',
+      handler: () => open(`geo:${dest}?q=${dest}${label}`),
+    };
+    const cancel = { text: 'Cancel', role: 'cancel' as const };
+
+    const platform = Capacitor.getPlatform();
+    const buttons =
+      platform === 'ios'
+        ? [appleMaps, googleMaps, cancel]
+        : platform === 'android'
+          ? [defaultApp, googleMaps, cancel]
+          : [googleMaps, appleMaps, cancel];
+
+    presentActionSheet({ header: 'Get directions', buttons });
   };
 
   return (
