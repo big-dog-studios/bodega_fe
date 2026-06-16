@@ -95,8 +95,9 @@ $divider: 1px solid rgba(255, 255, 255, 0.15);
   }
 }
 
-// "Set hours" — opens the full-screen hours picker; shows a summary once set.
-.report-form__hours {
+// Picker trigger (Location, Hours) — opens a full-screen modal; shows a summary
+// once set. Shared by the location and hours fields.
+.report-form__picker {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -117,14 +118,14 @@ $divider: 1px solid rgba(255, 255, 255, 0.15);
   }
 }
 
-.report-form__hours-value {
+.report-form__picker-value {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.report-form__hours-chev {
+.report-form__picker-chev {
   flex: 0 0 auto;
   color: rgba(255, 255, 255, 0.5);
   font-size: 20px;

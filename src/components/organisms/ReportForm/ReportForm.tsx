@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useIonToast } from '@ionic/react';
-import { geocodeAddress, submitReport, type StoreDetail } from '../../../lib/api';
+import {
+  formatReverseAddress,
+  submitReport,
+  type ReverseAddress,
+  type StoreDetail,
+} from '../../../lib/api';
 import HoursPicker, { deserialize, serialize, summarize, type HoursGroup } from '../HoursPicker';
+import LocationPicker from '../LocationPicker';
+import { useStores } from '../../../context/StoresContext';
 import { track } from '../../../lib/analytics';
 import './ReportForm.scss';
 
@@ -28,9 +35,11 @@ const QUESTIONS = [
   { key: 'cat', label: 'BODEGA CAT', icon: '🐈' },
 ];
 
-/** Single-line address string from a store record. */
-const formatAddress = (s: StoreDetail) =>
-  `${s.house} ${s.street}, ${s.county}, NY ${s.zip}`;
+const EMPTY_ADDRESS: ReverseAddress = { house: '', street: '', city: '', zip: '' };
+
+/** Structured address parts from a store record (for report prefill). */
+const addressFor = (s?: StoreDetail): ReverseAddress =>
+  s ? { house: s.house, street: s.street, city: s.city, zip: s.zip } : EMPTY_ADDRESS;
 
 /** Seed the hours JSON from a store record — only if its value is our format. */
 const initialHours = (s?: StoreDetail): string => {
@@ -88,9 +97,15 @@ const ReportForm: React.FC<ReportFormProps> = ({
   onSubmitted,
 }) => {
   const isNew = !store;
+  const { userLocation } = useStores();
 
   const [name, setName] = useState(store ? store.display_name || store.dba : '');
-  const [address, setAddress] = useState(store ? formatAddress(store) : '');
+  // Location is picked on a map; addr holds the reverse-geocoded structured parts.
+  const [addr, setAddr] = useState<ReverseAddress>(addressFor(store));
+  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(
+    store ? { lat: store.lat, lon: store.lon } : null,
+  );
+  const [locOpen, setLocOpen] = useState(false);
   const [answers, setAnswers] = useState<Record<string, Answer>>(answersFor(store));
   // `hours` holds the picker's JSON (or ''); the picker opens over the form.
   const [hours, setHours] = useState(() => initialHours(store));
@@ -107,7 +122,8 @@ const ReportForm: React.FC<ReportFormProps> = ({
   // Re-prefill if the store identity changes while the form is mounted.
   useEffect(() => {
     setName(store ? store.display_name || store.dba : '');
-    setAddress(store ? formatAddress(store) : '');
+    setAddr(addressFor(store));
+    setCoords(store ? { lat: store.lat, lon: store.lon } : null);
     setAnswers(answersFor(store));
     setHours(initialHours(store));
   }, [store?.license_number]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -117,13 +133,14 @@ const ReportForm: React.FC<ReportFormProps> = ({
 
   const hoursGroups: HoursGroup[] = deserialize(hours);
   const hoursLabel = hoursGroups.length > 0 ? summarize(hoursGroups) : '';
+  const addressLabel = formatReverseAddress(addr);
 
   const hasReportContent =
     Object.keys(answers).length > 0 || hours.trim() !== '' || !!receipt || photos.length > 0;
 
-  // Name + address are always required; a report also needs some actual input.
-  const hasNameAddress = name.trim() !== '' && address.trim() !== '';
-  const canSubmit = !submitting && hasNameAddress && (isNew || hasReportContent);
+  // Name + a picked location are always required; a report also needs some input.
+  const hasNameLocation = name.trim() !== '' && coords != null;
+  const canSubmit = !submitting && hasNameLocation && (isNew || hasReportContent);
 
   useEffect(() => {
     onValidityChange?.(canSubmit);
@@ -135,7 +152,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSubmit) return;
+    if (!canSubmit || !coords) return;
 
     // Re-key feature answers by their API field name (e.g. preparedFood → prepared_food).
     const fields: Record<string, Answer> = {};
@@ -145,31 +162,19 @@ const ReportForm: React.FC<ReportFormProps> = ({
 
     setSubmitting(true);
     try {
-      // Existing stores already have coords; a new bodega is geocoded from its
-      // typed address (no coords = nothing to put on the map, so block submit).
-      let lat = store?.lat;
-      let lon = store?.lon;
-      if (isNew) {
-        // Try name + address first (matches the store's OSM POI when it exists,
-        // which is more precise), then fall back to the address alone.
-        const geo =
-          (await geocodeAddress(`${name}, ${address}`)) ?? (await geocodeAddress(address));
-        if (!geo) {
-          showError("Couldn't find that address — please check it and try again.");
-          setSubmitting(false);
-          return;
-        }
-        lat = geo.lat;
-        lon = geo.lon;
-      }
-
+      // Coords come straight from the map picker (or the existing store) — no
+      // geocoding needed at submit time.
       await submitReport({
         mode: isNew ? 'new' : 'report',
         license_number: store?.license_number,
         name,
-        address,
-        lat,
-        lon,
+        address: addressLabel,
+        house: addr.house,
+        street: addr.street,
+        city: addr.city,
+        zip: addr.zip,
+        lat: coords.lat,
+        lon: coords.lon,
         answers: fields,
         hours,
         receipt,
@@ -201,17 +206,28 @@ const ReportForm: React.FC<ReportFormProps> = ({
         />
       </label>
 
-      <label className="report-form__field">
-        <span className="report-form__label">Address</span>
-        <input
-          className="report-form__input"
-          type="text"
-          placeholder="123 Main St, Brooklyn, NY 11211"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          required
-        />
-      </label>
+      <div className="report-form__field">
+        <span className="report-form__label">Location</span>
+        <button
+          type="button"
+          className={`report-form__picker${addressLabel ? ' report-form__picker--set' : ''}`}
+          onClick={() => setLocOpen(true)}
+        >
+          <span className="report-form__picker-value">{addressLabel || 'Set location on map'}</span>
+          <span className="report-form__picker-chev">›</span>
+        </button>
+      </div>
+
+      <LocationPicker
+        isOpen={locOpen}
+        initial={coords ?? userLocation}
+        onCancel={() => setLocOpen(false)}
+        onSelect={({ lat, lon, house, street, city, zip }) => {
+          setCoords({ lat, lon });
+          setAddr({ house, street, city, zip });
+          setLocOpen(false);
+        }}
+      />
 
       <p className="report-form__legend">Does this bodega have…</p>
 
@@ -244,11 +260,11 @@ const ReportForm: React.FC<ReportFormProps> = ({
         <span className="report-form__label">Hours</span>
         <button
           type="button"
-          className={`report-form__hours${hoursLabel ? ' report-form__hours--set' : ''}`}
+          className={`report-form__picker${hoursLabel ? ' report-form__picker--set' : ''}`}
           onClick={() => setHoursOpen(true)}
         >
-          <span className="report-form__hours-value">{hoursLabel || 'Set hours'}</span>
-          <span className="report-form__hours-chev">›</span>
+          <span className="report-form__picker-value">{hoursLabel || 'Set hours'}</span>
+          <span className="report-form__picker-chev">›</span>
         </button>
       </div>
 

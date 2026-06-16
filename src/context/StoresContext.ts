@@ -14,6 +14,10 @@ export interface StoresContextValue {
   /** Toggle one filter key on/off. */
   toggleFilter: (key: string) => void;
 
+  /** The user's last known in-NYC location, set by the map and reused elsewhere. */
+  userLocation: { lat: number; lon: number } | null;
+  setUserLocation: (loc: { lat: number; lon: number } | null) => void;
+
   /** License number of the selected pin — set immediately on selectStore() for instant UI. */
   selectedId: string | null;
   /** The store whose detail was last fetched via selectStore(). */

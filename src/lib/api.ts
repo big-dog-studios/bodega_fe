@@ -167,8 +167,14 @@ export interface StoreReport {
   /** Present when reporting on an existing store; omitted for a new bodega. */
   license_number?: string;
   name: string;
+  /** Combined single-line address (kept for back-compat with the string field). */
   address: string;
-  /** Coordinates for the store — geocoded from the address for a new bodega. */
+  /** Structured address parts from the location picker's reverse geocode. */
+  house?: string;
+  street?: string;
+  city?: string;
+  zip?: string;
+  /** Coordinates for the store, taken from the map location picker. */
   lat?: number;
   lon?: number;
   /** Feature answers keyed by submission field name (e.g. `lottery`) → 'yes' | 'no'. */
@@ -185,6 +191,10 @@ export async function submitReport(report: StoreReport, signal?: AbortSignal): P
   if (report.license_number) form.set('license_number', report.license_number);
   if (report.name.trim()) form.set('name', report.name.trim());
   if (report.address.trim()) form.set('address', report.address.trim());
+  if (report.house?.trim()) form.set('house', report.house.trim());
+  if (report.street?.trim()) form.set('street', report.street.trim());
+  if (report.city?.trim()) form.set('city', report.city.trim());
+  if (report.zip?.trim()) form.set('zip', report.zip.trim());
   if (report.lat != null) form.set('lat', String(report.lat));
   if (report.lon != null) form.set('lon', String(report.lon));
   for (const [field, value] of Object.entries(report.answers)) {
@@ -205,29 +215,42 @@ export async function submitReport(report: StoreReport, signal?: AbortSignal): P
   }
 }
 
-/** A geocoded coordinate. */
-export interface GeocodeResult {
-  lat: number;
-  lon: number;
+/** Structured address parts from a reverse geocode (any may be empty). */
+export interface ReverseAddress {
+  house: string;
+  street: string;
+  city: string;
+  zip: string;
+}
+
+/** Single-line string built from the structured parts (empty parts dropped). */
+export function formatReverseAddress(a: ReverseAddress): string {
+  const street = [a.house, a.street].filter(Boolean).join(' ');
+  return [street, a.city, a.zip].filter(Boolean).join(', ');
 }
 
 /**
- * Geocode a free-text address to coordinates via OpenStreetMap's Nominatim
- * (free, no key). Biased to the US; returns null if nothing matches. Note
- * Nominatim's usage policy: low volume only, no autocomplete-rate calls.
+ * Reverse-geocode a coordinate to structured address parts (house, street, city,
+ * zip) via Nominatim. Used by the map location picker so a tapped point yields a
+ * fillable address. Returns null if nothing matches. Low-volume usage only.
  */
-export async function geocodeAddress(
-  address: string,
+export async function reverseGeocode(
+  lat: number,
+  lon: number,
   signal?: AbortSignal,
-): Promise<GeocodeResult | null> {
-  const q = encodeURIComponent(address.trim());
-  if (!q) return null;
-  const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=us&q=${q}`;
+): Promise<ReverseAddress | null> {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
   const res = await fetch(url, { signal, headers: { Accept: 'application/json' } });
   if (!res.ok) {
-    throw new Error(`Geocode ${res.status}`);
+    throw new Error(`Reverse geocode ${res.status}`);
   }
-  const data = (await res.json()) as Array<{ lat: string; lon: string }>;
-  if (!Array.isArray(data) || data.length === 0) return null;
-  return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+  const data = (await res.json()) as { address?: Record<string, string> };
+  const a = data.address;
+  if (!a) return null;
+  return {
+    house: a.house_number ?? '',
+    street: a.road ?? '',
+    city: a.city || a.town || a.village || a.suburb || a.neighbourhood || '',
+    zip: a.postcode ?? '',
+  };
 }

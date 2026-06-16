@@ -24,18 +24,11 @@ import {
 } from './storeLayers';
 import FilterFab from '../../molecules/FilterFab';
 import { track } from '../../../lib/analytics';
+import { MAP_STYLE, MIN_ZOOM, NYC_BOUNDS, NYC_CENTER } from '../../../lib/mapConfig';
 import './StoreMap.scss';
 
-const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
 // Fallback view (NYC) if geolocation is denied or unavailable.
-const DEFAULT_VIEW = { longitude: -73.9857, latitude: 40.7484, zoom: 13 };
-
-// Lock the map to NYC (five boroughs) — users can't pan or zoom out of the city.
-const NYC_BOUNDS: [[number, number], [number, number]] = [
-  [-74.2591, 40.4774], // SW
-  [-73.7004, 40.9176], // NE
-];
-const MIN_ZOOM = 10;
+const DEFAULT_VIEW = { ...NYC_CENTER, zoom: 13 };
 
 /** True if a coordinate falls within the NYC bounding box. */
 function inNyc(longitude: number, latitude: number): boolean {
@@ -70,7 +63,8 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
   // When on, only favorited stores are rendered (client-side filter, no fetch).
   const [favOnly, setFavOnly] = useState(false);
   const mapRef = useRef<MapRef>(null);
-  const { loadStores, pins, selectStore, selectedId, activeFilters, toggleFilter } = useStores();
+  const { loadStores, pins, selectStore, selectedId, activeFilters, toggleFilter, setUserLocation } =
+    useStores();
   const { isFavorite, favorites } = useFavorites();
 
   // Compare the live viewport to the starting view; flag if it's drifted enough
@@ -212,10 +206,12 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
             // Live dot follows every fix; center only on the FIRST one (zoom 16,
             // ~a few walkable blocks) so the map doesn't yank around as you move.
             setMe({ longitude, latitude });
+            setUserLocation({ lat: latitude, lon: longitude });
             setView((v) => v ?? { longitude, latitude, zoom: 16 });
           } else {
             // Outside NYC — hide the dot, fall back to the default view.
             setMe(null);
+            setUserLocation(null);
             setView((v) => v ?? DEFAULT_VIEW);
           }
         });
