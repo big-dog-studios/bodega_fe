@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Preferences } from '@capacitor/preferences';
+import { track } from '../lib/analytics';
 import {
   FavoritesContext,
   type FavoriteStore,
@@ -55,12 +56,17 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [favorites]);
 
   const toggleFavorite = useCallback((store: FavoriteStore) => {
+    let on = false;
     setFavorites((prev) => {
       const base = prev ?? [];
-      return base.some((f) => f.license_number === store.license_number)
+      const exists = base.some((f) => f.license_number === store.license_number);
+      on = !exists;
+      return exists
         ? base.filter((f) => f.license_number !== store.license_number)
         : [...base, store];
     });
+    // Outside the updater so it fires once (StrictMode double-invokes updaters).
+    track('Favorite Toggled', { license_number: store.license_number, on });
   }, []);
 
   const list = favorites ?? [];

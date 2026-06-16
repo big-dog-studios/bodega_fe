@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { geocodeAddress, submitReport, type StoreDetail } from '../../../lib/api';
 import HoursPicker, { deserialize, serialize, summarize, type HoursGroup } from '../HoursPicker';
+import { track } from '../../../lib/analytics';
 import './ReportForm.scss';
 
 /** Default form id so an external submit button (a sticky footer) can submit it. */
@@ -170,6 +171,8 @@ const ReportForm: React.FC<ReportFormProps> = ({
         receipt,
         photos,
       });
+      if (isNew) track('Bodega Submitted');
+      else track('Report Submitted', { license_number: store?.license_number });
       // No field reset needed: the form unmounts on success (tab switch / modal
       // dismiss) and re-initializes fresh the next time it's shown.
       onSubmitted?.();

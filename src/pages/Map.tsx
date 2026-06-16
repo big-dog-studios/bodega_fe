@@ -5,6 +5,7 @@ import StoreMap from '../components/organisms/StoreMap';
 import StoreDetailSheet from '../components/organisms/StoreDetailSheet';
 import NewBodegaForm from '../components/organisms/NewBodegaForm';
 import { useStores } from '../context/StoresContext';
+import { track } from '../lib/analytics';
 import { FILTERS } from '../lib/filters';
 import type { StoreFilters } from '../lib/api';
 
@@ -31,7 +32,10 @@ const Map: React.FC = () => {
             type="button"
             className="app-header__add-btn"
             aria-label="Add bodega"
-            onClick={() => setAddOpen(true)}
+            onClick={() => {
+              track('Add Bodega Opened');
+              setAddOpen(true);
+            }}
           >
             + Bodega
           </button>

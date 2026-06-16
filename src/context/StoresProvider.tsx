@@ -9,6 +9,7 @@ import {
   type StorePin,
   type StoreProduct,
 } from '../lib/api';
+import { track } from '../lib/analytics';
 import { StoresContext, type StoresContextValue } from './StoresContext';
 
 /** Owns the shared stores state and the API calls that populate it. */
@@ -30,12 +31,16 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
 
   const toggleFilter = useCallback((key: string) => {
+    let on = false;
     setActiveFilters((prev) => {
+      on = !prev.has(key);
       const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
+      if (on) next.add(key);
+      else next.delete(key);
       return next;
     });
+    // Outside the updater so it fires once (StrictMode double-invokes updaters).
+    track('Filter Toggled', { filter: key, on });
   }, []);
 
   // One in-flight request each — a newer call aborts the previous.
@@ -63,6 +68,7 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   const selectStore = useCallback((licenseNumber: string) => {
+    track('Store Selected', { license_number: licenseNumber });
     // Mark selected immediately so the pin updates without waiting on the fetch.
     setSelectedId(licenseNumber);
     // Reset the previous store's catalog so it can't flash while the new one loads.

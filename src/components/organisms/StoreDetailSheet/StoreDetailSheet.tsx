@@ -11,6 +11,7 @@ import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import { useFavorites } from '../../../context/FavoritesContext';
 import type { StoreDetail } from '../../../lib/api';
+import { track } from '../../../lib/analytics';
 import FeatureBadge from '../../atoms/FeatureBadge';
 import ProductsTab from '../../molecules/ProductsTab';
 import ReportForm, { REPORT_FORM_ID } from '../ReportForm';
@@ -65,6 +66,16 @@ const StoreDetailSheet: React.FC = () => {
     setTab('info');
   };
 
+  const selectTab = (key: TabKey) => {
+    if (key === 'products' && selected) {
+      track('Products Viewed', {
+        license_number: selected.license_number,
+        product_count: products.length,
+      });
+    }
+    setTab(key);
+  };
+
   // Let the user pick their maps app. Options are platform-aware: Apple Maps only
   // where it exists (iOS/desktop), and an Android "default app" option via a geo:
   // URI that triggers the system maps chooser (Google, Waze, whatever they have).
@@ -79,17 +90,21 @@ const StoreDetailSheet: React.FC = () => {
       else window.location.href = url;
     };
 
+    const go = (app: string, url: string) => {
+      track('Directions Opened', { app, license_number: selected.license_number });
+      open(url);
+    };
     const appleMaps = {
       text: 'Apple Maps',
-      handler: () => open(`https://maps.apple.com/?daddr=${dest}`),
+      handler: () => go('apple', `https://maps.apple.com/?daddr=${dest}`),
     };
     const googleMaps = {
       text: 'Google Maps',
-      handler: () => open(`https://www.google.com/maps/dir/?api=1&destination=${dest}`),
+      handler: () => go('google', `https://www.google.com/maps/dir/?api=1&destination=${dest}`),
     };
     const defaultApp = {
       text: 'Default maps app',
-      handler: () => open(`geo:${dest}?q=${dest}${label}`),
+      handler: () => go('default', `geo:${dest}?q=${dest}${label}`),
     };
     const cancel = { text: 'Cancel', role: 'cancel' as const };
 
@@ -129,7 +144,7 @@ const StoreDetailSheet: React.FC = () => {
                 key={tb.key}
                 type="button"
                 className={`store-sheet__tab${activeTab === tb.key ? ' store-sheet__tab--active' : ''}`}
-                onClick={() => setTab(tb.key)}
+                onClick={() => selectTab(tb.key)}
               >
                 <span className="store-sheet__tab-icon">{tb.icon}</span>
                 {tb.label}
@@ -237,7 +252,11 @@ const StoreDetailSheet: React.FC = () => {
           ) : (
             <div className="store-sheet__actions">
               {selected.phone && (
-                <a className="store-sheet__call" href={`tel:${selected.phone}`}>
+                <a
+                  className="store-sheet__call"
+                  href={`tel:${selected.phone}`}
+                  onClick={() => track('Call Tapped', { license_number: selected.license_number })}
+                >
                   CALL
                 </a>
               )}

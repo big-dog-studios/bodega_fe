@@ -23,6 +23,7 @@ import {
   SOURCE_ID,
 } from './storeLayers';
 import FilterFab from '../../molecules/FilterFab';
+import { track } from '../../../lib/analytics';
 import './StoreMap.scss';
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
@@ -124,6 +125,7 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
   // Toggle favorites-only mode; on enable, frame all favorites.
   const toggleFavOnly = useCallback(() => {
     const next = !favOnly;
+    track('Favorites-Only Toggled', { on: next });
     setFavOnly(next);
     if (next) fitToFavorites();
   }, [favOnly, fitToFavorites]);
