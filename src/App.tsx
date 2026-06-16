@@ -3,7 +3,6 @@ import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { StoresProvider } from './context/StoresProvider';
 import { FavoritesProvider } from './context/FavoritesProvider';
-import NewBodegaForm from './components/organisms/NewBodegaForm';
 import Map from './pages/Map';
 
 /* Core CSS required for Ionic components to work properly */
@@ -43,7 +42,6 @@ const App: React.FC = () => (
     <StoresProvider>
       <FavoritesProvider>
         <IonReactRouter>
-          <NewBodegaForm />
           <IonRouterOutlet id="main-content">
             <Route exact path="/map">
               <Map />

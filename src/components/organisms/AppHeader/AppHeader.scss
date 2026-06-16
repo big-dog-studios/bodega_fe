@@ -10,3 +10,21 @@
 .app-header__end {
   padding-inline-end: 16px;
 }
+
+// "+ Bodega" — plain orange signage-style text CTA where the hamburger used to sit.
+.app-header__add-btn {
+  padding: 0 4px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--brand-orange);
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  @include display-caps(18px, 800, 0.04em);
+  transition: transform 0.12s ease;
+
+  &:active {
+    transform: scale(0.94);
+  }
+}
