@@ -16,19 +16,57 @@ ion-modal.hours-picker {
   --padding-bottom: 0;
 }
 
-// Orange category bar at the top, matching the other sheets.
-.hours-picker__tag {
+// Sticky top bar: X (cancel) on the left, check (save) on the right.
+.hours-picker__header {
   position: sticky;
   top: 0;
   z-index: 2;
-  padding: calc(9px + env(safe-area-inset-top, 0px)) 20px 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 14px 10px;
+  background: var(--brand-blue);
+}
+
+.hours-picker__icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease;
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+// Save (check) — orange once the hours are complete, muted while disabled.
+.hours-picker__save {
   background: var(--brand-orange);
   color: var(--brand-blue);
-  @include display-caps(13px, 700, 0.08em);
+
+  &:disabled {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.35);
+    cursor: default;
+  }
 }
 
 .hours-picker__body {
-  padding: 18px 20px 24px;
+  padding: 6px 20px 28px;
 }
 
 // ---- Day pills ------------------------------------------------------------
@@ -361,42 +399,3 @@ ion-modal.hours-picker {
   line-height: 1;
 }
 
-// ---- Footer ---------------------------------------------------------------
-.hours-picker__footer {
-  position: sticky;
-  bottom: 0;
-  display: flex;
-  gap: 12px;
-  padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px));
-  background: var(--brand-blue);
-  box-shadow: 0 -8px 20px rgba(var(--brand-blue-rgb), 0.9);
-}
-
-.hours-picker__cancel {
-  flex: 0 0 auto;
-  padding: 0 18px;
-  height: 52px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
-  background: transparent;
-  color: #ffffff;
-  cursor: pointer;
-  @include display-caps(15px, 700, 0.04em);
-}
-
-.hours-picker__save {
-  flex: 1;
-  height: 52px;
-  border: 0;
-  border-radius: 12px;
-  background: var(--brand-orange);
-  color: var(--brand-blue);
-  cursor: pointer;
-  @include display-caps(17px, 800, 0.04em);
-
-  &:disabled {
-    background: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.4);
-    cursor: default;
-  }
-}

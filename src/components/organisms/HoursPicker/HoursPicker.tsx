@@ -59,7 +59,8 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
   /** Days already committed to a group. */
   const assigned = new Set(groups.flatMap((g) => g.days));
   const allDaysSet = assigned.size === 7;
-  const canSave = groups.length > 0 && selection.length === 0;
+  // Save only once every day has a schedule and nothing is mid-edit.
+  const canSave = allDaysSet && selection.length === 0;
 
   const toggleDay = (day: number) => {
     if (selection.includes(day)) {
@@ -126,7 +127,42 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
   return (
     <IonModal className="hours-picker" isOpen={isOpen} onDidDismiss={onCancel}>
       <IonContent className="hours-picker__content">
-        <div className="hours-picker__tag">SET STORE HOURS</div>
+        <div className="hours-picker__header">
+          <button
+            type="button"
+            className="hours-picker__icon-btn"
+            aria-label="Cancel"
+            onClick={onCancel}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M6 6l12 12M18 6L6 18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className="hours-picker__icon-btn hours-picker__save"
+            aria-label="Save hours"
+            disabled={!canSave}
+            onClick={save}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M20 6 9 17l-5-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
 
         <div className="hours-picker__body">
           <div className="hours-picker__pills">
@@ -238,20 +274,6 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
               ))}
             </div>
           )}
-        </div>
-
-        <div className="hours-picker__footer">
-          <button type="button" className="hours-picker__cancel" onClick={onCancel}>
-            Cancel
-          </button>
-          <button
-            type="button"
-            className="hours-picker__save"
-            disabled={!canSave}
-            onClick={save}
-          >
-            Save hours
-          </button>
         </div>
       </IonContent>
     </IonModal>
