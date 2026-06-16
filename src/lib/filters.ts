@@ -10,9 +10,8 @@ export interface StoreFilter {
 }
 
 /**
- * Master list of every feature filter. The bottom bar shows a user-chosen
- * subset (the "hotbar"); the menu drawer shows the rest. Order here is the
- * default order.
+ * Master list of every feature filter, shown in the menu drawer. Order here is
+ * the display order.
  */
 export const FILTERS: StoreFilter[] = [
   { key: 'preparedFood', label: 'HOT FOOD', icon: '🥪', param: 'has_prepared_food' },
@@ -27,9 +26,6 @@ export const FILTERS: StoreFilter[] = [
   { key: 'quickDraw', label: 'QUICK DRAW', icon: '🎰', param: 'has_quick_draw' },
   { key: 'products', label: 'HAS MENU', icon: '🛍️', param: 'has_products' },
 ];
-
-/** Default bottom-bar contents: the top four filters. */
-export const DEFAULT_HOTBAR_KEYS: string[] = FILTERS.slice(0, 4).map((f) => f.key);
 
 /** Look up a filter definition by key. */
 export const getFilter = (key: string): StoreFilter | undefined =>

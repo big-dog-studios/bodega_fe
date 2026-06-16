@@ -22,6 +22,7 @@ import {
   makeUnclusteredLayer,
   SOURCE_ID,
 } from './storeLayers';
+import FilterFab from '../../molecules/FilterFab';
 import './StoreMap.scss';
 
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty';
@@ -68,7 +69,7 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
   // When on, only favorited stores are rendered (client-side filter, no fetch).
   const [favOnly, setFavOnly] = useState(false);
   const mapRef = useRef<MapRef>(null);
-  const { loadStores, pins, selectStore, selectedId } = useStores();
+  const { loadStores, pins, selectStore, selectedId, activeFilters, toggleFilter } = useStores();
   const { isFavorite, favorites } = useFavorites();
 
   // Compare the live viewport to the starting view; flag if it's drifted enough
@@ -280,30 +281,36 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
           </Marker>
         )}
       </Map>
-      {favorites.length > 0 && (
-        <button
-          type="button"
-          className={`fav-toggle${favOnly ? ' fav-toggle--on' : ''}`}
-          aria-label="Show favorites only"
-          aria-pressed={favOnly}
-          onClick={toggleFavOnly}
-        >
-          {favOnly ? '★' : '☆'}
-        </button>
-      )}
-      {moved && (
-        <button
-          type="button"
-          className="recenter-btn"
-          aria-label="Re-center map"
-          onClick={recenter}
-        >
-          <svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true">
-            <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
-            <circle cx="12" cy="12" r="3" fill="currentColor" />
-          </svg>
-        </button>
-      )}
+      {/* Right-side control column, anchored to the bottom. Order top→bottom:
+          recenter, favorites, filter FAB. Conditional buttons just drop out and
+          the column collapses (gap-driven), so the rest slides down on its own. */}
+      <div className="map-controls">
+        {moved && (
+          <button
+            type="button"
+            className="recenter-btn"
+            aria-label="Re-center map"
+            onClick={recenter}
+          >
+            <svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true">
+              <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" strokeWidth="2" />
+              <circle cx="12" cy="12" r="3" fill="currentColor" />
+            </svg>
+          </button>
+        )}
+        {favorites.length > 0 && (
+          <button
+            type="button"
+            className={`fav-toggle${favOnly ? ' fav-toggle--on' : ''}`}
+            aria-label="Show favorites only"
+            aria-pressed={favOnly}
+            onClick={toggleFavOnly}
+          >
+            {favOnly ? '★' : '☆'}
+          </button>
+        )}
+        <FilterFab active={activeFilters} onToggle={toggleFilter} />
+      </div>
     </div>
   );
 };

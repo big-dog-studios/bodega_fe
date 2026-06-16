@@ -15,19 +15,29 @@
 }
 
 // Re-center button — appears bottom-right once the map has been moved.
-.recenter-btn {
+// Right-side control column — bottom-anchored, grows upward. Conditional buttons
+// (recenter / favorites) simply drop out of the column and the gap closes, so
+// everything below them moves down without any hardcoded offsets.
+.map-controls {
   position: absolute;
   right: 16px;
   bottom: 24px;
   z-index: 2;
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.recenter-btn {
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border: 2px solid var(--brand-orange);
-  border-radius: 12px;
+  border-radius: 14px;
   background: var(--brand-blue);
   color: var(--brand-orange);
   cursor: pointer;
@@ -51,24 +61,20 @@
   }
 }
 
-// Favorites-only toggle — sits above the re-center button, always visible.
+// Favorites-only toggle — sits in the control column when any favorites exist.
 .fav-toggle {
-  position: absolute;
-  right: 16px;
-  bottom: 72px;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border: 2px solid var(--brand-orange);
-  border-radius: 12px;
+  border-radius: 14px;
   background: var(--brand-blue);
   color: var(--brand-orange);
   cursor: pointer;
-  font-size: 22px;
+  font-size: 26px;
   line-height: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   transition: transform 0.12s ease;

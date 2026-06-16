@@ -1,6 +1,5 @@
 import { IonContent, IonMenu } from '@ionic/react';
 import { useStores } from '../../../context/StoresContext';
-import { useHotbar } from '../../../context/HotbarContext';
 import { FILTERS } from '../../../lib/filters';
 import { NEW_BODEGA_TRIGGER_ID } from '../NewBodegaForm';
 import './AppMenu.scss';
@@ -15,10 +14,6 @@ export const APP_MENU_ID = 'app-menu';
  */
 const AppMenu: React.FC = () => {
   const { activeFilters, toggleFilter } = useStores();
-  const { hotbarKeys } = useHotbar();
-
-  // The drawer shows every filter that isn't already in the bottom bar.
-  const menuFilters = FILTERS.filter((f) => !hotbarKeys.includes(f.key));
 
   return (
     <IonMenu
@@ -32,9 +27,9 @@ const AppMenu: React.FC = () => {
       onIonDidClose={() => document.body.classList.remove('app-menu-open')}
     >
       <IonContent className="app-menu__content">
-        <p className="app-menu__label">MORE FILTERS</p>
+        <p className="app-menu__label">FILTERS</p>
         <div className="app-menu__filters">
-          {menuFilters.map((f) => {
+          {FILTERS.map((f) => {
             const isOn = activeFilters.has(f.key);
             return (
               <button

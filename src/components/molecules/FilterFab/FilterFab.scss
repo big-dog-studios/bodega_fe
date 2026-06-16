@@ -1,0 +1,137 @@
+@use '../../../theme/mixins' as *;
+
+// A flex item in the map's control column — just the 40px trigger's footprint.
+// The expanding list is an absolute overlay (below) so it adds no column height.
+.filter-fab {
+  position: relative;
+}
+
+// Full-screen tap-catcher; only active while open so it doesn't block the map.
+.filter-fab__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: -1; // behind the cluster, above the map
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.filter-fab--open .filter-fab__scrim {
+  pointer-events: auto;
+}
+
+// The rising column of filter pills — an absolute overlay anchored just above
+// the trigger, right-aligned to it. Collapsed = hidden + non-interactive.
+.filter-fab__list {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.filter-fab--open .filter-fab__list {
+  pointer-events: auto;
+}
+
+// Each pill: label + emoji, white surface, lifts in from the trigger.
+.filter-fab__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--brand-white);
+  color: var(--brand-blue);
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.28);
+  -webkit-tap-highlight-color: transparent;
+
+  // Collapsed state: dropped toward the trigger, faded, scaled down.
+  opacity: 0;
+  transform: translateY(16px) scale(0.85);
+  transform-origin: bottom right;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  // Selected: orange fill so active filters read at a glance.
+  &--active {
+    border-color: var(--brand-orange);
+    background: var(--brand-orange);
+    color: #000000;
+  }
+}
+
+.filter-fab--open .filter-fab__item {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.filter-fab__item-label {
+  @include display-caps(14px, 700, 0.04em);
+}
+
+.filter-fab__item-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+// Trigger button — matches the map's other controls (.recenter-btn / .fav-toggle):
+// 48px square, 14px radius, orange border on brand blue.
+.filter-fab__trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid var(--brand-orange);
+  border-radius: 14px;
+  background: var(--brand-blue);
+  color: var(--brand-orange);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease;
+
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+.filter-fab__glyph {
+  width: 26px;
+  height: 26px;
+}
+
+// Active-count bubble on the trigger when collapsed.
+.filter-fab__badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--brand-red);
+  color: #ffffff;
+  box-shadow: 0 0 0 2px var(--brand-blue);
+  @include display-caps(12px, 800, 0);
+}

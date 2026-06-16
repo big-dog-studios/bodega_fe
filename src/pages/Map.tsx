@@ -1,21 +1,20 @@
 import { useMemo } from 'react';
-import { IonContent, IonFooter, IonMenuButton, IonPage } from '@ionic/react';
+import { IonContent, IonMenuButton, IonPage } from '@ionic/react';
 import { menuController } from '@ionic/core/components';
 import AppHeader from '../components/organisms/AppHeader';
 import StoreMap from '../components/organisms/StoreMap';
 import StoreDetailSheet from '../components/organisms/StoreDetailSheet';
 import { APP_MENU_ID } from '../components/organisms/AppMenu';
-import FilterBar from '../components/molecules/FilterBar';
 import { useStores } from '../context/StoresContext';
 import { FILTERS } from '../lib/filters';
 import type { StoreFilters } from '../lib/api';
 import './Map.scss';
 
 const Map: React.FC = () => {
-  // Filter state is shared (filter bar + menu drawer) via the stores context.
-  const { activeFilters, toggleFilter } = useStores();
+  // Active filter keys -> getStores() query params (the FAB + menu toggle them).
+  const { activeFilters } = useStores();
 
-  // Active toggles -> getStores() query params, across both the bar and the menu.
+  // Active toggles -> getStores() query params.
   const filters = useMemo<StoreFilters>(() => {
     const f: StoreFilters = {};
     for (const def of FILTERS) {
@@ -33,10 +32,6 @@ const Map: React.FC = () => {
       <IonContent scrollY={false}>
         <StoreMap filters={filters} />
       </IonContent>
-
-      <IonFooter>
-        <FilterBar active={activeFilters} onToggle={toggleFilter} />
-      </IonFooter>
 
       <StoreDetailSheet />
 
