@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useIonToast } from '@ionic/react';
 import { geocodeAddress, submitReport, type StoreDetail } from '../../../lib/api';
 import HoursPicker, { deserialize, serialize, summarize, type HoursGroup } from '../HoursPicker';
 import { track } from '../../../lib/analytics';
@@ -97,7 +98,11 @@ const ReportForm: React.FC<ReportFormProps> = ({
   const [receipt, setReceipt] = useState<File | null>(null);
   const [photos, setPhotos] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [presentToast] = useIonToast();
+
+  // Surface submission errors as a red toast (matches the success toast).
+  const showError = (message: string) =>
+    presentToast({ message, duration: 3500, position: 'top', color: 'danger' });
 
   // Re-prefill if the store identity changes while the form is mounted.
   useEffect(() => {
@@ -139,7 +144,6 @@ const ReportForm: React.FC<ReportFormProps> = ({
     }
 
     setSubmitting(true);
-    setError(null);
     try {
       // Existing stores already have coords; a new bodega is geocoded from its
       // typed address (no coords = nothing to put on the map, so block submit).
@@ -151,7 +155,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
         const geo =
           (await geocodeAddress(`${name}, ${address}`)) ?? (await geocodeAddress(address));
         if (!geo) {
-          setError("Couldn't find that address — please check it and try again.");
+          showError("Couldn't find that address — please check it and try again.");
           setSubmitting(false);
           return;
         }
@@ -177,7 +181,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
       // dismiss) and re-initializes fresh the next time it's shown.
       onSubmitted?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Submission failed. Please try again.');
+      showError(err instanceof Error ? err.message : 'Submission failed. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -288,8 +292,6 @@ const ReportForm: React.FC<ReportFormProps> = ({
             : '📸 Choose photos'}
         </label>
       </div>
-
-      {error && <p className="report-form__error">{error}</p>}
     </form>
   );
 };

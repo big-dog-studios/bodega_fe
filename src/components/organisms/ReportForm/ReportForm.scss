@@ -143,10 +143,3 @@ $divider: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
   @include display-caps(13px, 700, 0.06em);
 }
-
-.report-form__error {
-  margin: 0;
-  color: #ff6b6b;
-  font-family: var(--font-body);
-  font-size: 14px;
-}
