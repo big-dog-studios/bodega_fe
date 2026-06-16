@@ -3,7 +3,11 @@ import { IonContent, IonFooter, IonModal, IonSpinner, useIonToast } from '@ionic
 import ReportForm from '../ReportForm';
 import './NewBodegaForm.scss';
 
-/** id of the trigger element (the "+ Add bodega" button) that opens this sheet. */
+/**
+ * id of the trigger element that opens this sheet. The sidebar that held the
+ * "+ Add bodega" button was removed, so nothing currently renders this id — the
+ * form stays wired up and reachable again as soon as a new trigger is added.
+ */
 export const NEW_BODEGA_TRIGGER_ID = 'add-bodega-trigger';
 
 /** Form id linking the footer submit button to the shared ReportForm. */
@@ -12,7 +16,7 @@ const NEW_BODEGA_FORM_ID = 'new-bodega-form';
 /**
  * Bottom-sheet modal for adding a new bodega — same style as the detail sheet.
  * Reuses ReportForm with no `store`, so its name/address start blank and it
- * submits in "new" mode. Opened via the IonModal `trigger` from AppMenu.
+ * submits in "new" mode. Opened via the IonModal `trigger` (see the id above).
  */
 const NewBodegaForm: React.FC = () => {
   const modal = useRef<HTMLIonModalElement>(null);

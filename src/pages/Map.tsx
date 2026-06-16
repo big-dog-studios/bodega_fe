@@ -1,14 +1,11 @@
 import { useMemo } from 'react';
-import { IonContent, IonMenuButton, IonPage } from '@ionic/react';
-import { menuController } from '@ionic/core/components';
+import { IonContent, IonPage } from '@ionic/react';
 import AppHeader from '../components/organisms/AppHeader';
 import StoreMap from '../components/organisms/StoreMap';
 import StoreDetailSheet from '../components/organisms/StoreDetailSheet';
-import { APP_MENU_ID } from '../components/organisms/AppMenu';
 import { useStores } from '../context/StoresContext';
 import { FILTERS } from '../lib/filters';
 import type { StoreFilters } from '../lib/api';
-import './Map.scss';
 
 const Map: React.FC = () => {
   // Active filter keys -> getStores() query params (the FAB + menu toggle them).
@@ -25,24 +22,13 @@ const Map: React.FC = () => {
 
   return (
     <IonPage>
-      <AppHeader
-        end={<IonMenuButton menu={APP_MENU_ID} className="app-header__menu-btn" autoHide={false} />}
-      />
+      <AppHeader />
 
       <IonContent scrollY={false}>
         <StoreMap filters={filters} />
       </IonContent>
 
       <StoreDetailSheet />
-
-      {/* Dims the content while the reveal menu is open (toggled via body class
-          in AppMenu). Sits inside the page so it slides with the content. */}
-      <button
-        type="button"
-        className="map-dim"
-        aria-label="Close menu"
-        onClick={() => menuController.close(APP_MENU_ID)}
-      />
     </IonPage>
   );
 };

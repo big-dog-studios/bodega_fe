@@ -29,6 +29,7 @@
   position: absolute;
   right: 0;
   bottom: 100%;
+  width: max-content; // size to the widest pill, not the 48px trigger box
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
@@ -82,6 +83,7 @@
 
 .filter-fab__item-label {
   @include display-caps(14px, 700, 0.04em);
+  white-space: nowrap; // keep multi-word labels (e.g. "Beer & Wine") on one line
 }
 
 .filter-fab__item-icon {
