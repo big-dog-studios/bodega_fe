@@ -1,7 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Preferences } from '@capacitor/preferences';
 import { FILTERS } from '../../../lib/filters';
 import './FilterFab.scss';
+
+/** Preferences flag marking that the one-time filter intro has played. */
+const INTRO_SEEN_KEY = 'filterFabIntroSeen';
+/** Beat before the intro opens (lets the map settle), and how long it dwells open. */
+const INTRO_DELAY_MS = 600;
+const INTRO_DWELL_MS = 1900;
 
 interface FilterFabProps {
   /** Set of active filter keys. */
@@ -18,6 +25,25 @@ interface FilterFabProps {
 const FilterFab: React.FC<FilterFabProps> = ({ active, onToggle }) => {
   const [open, setOpen] = useState(false);
   const activeCount = active.size;
+
+  // First launch only: animate the list open then closed so the user discovers
+  // the filters. Persisted via Preferences so it plays exactly once.
+  useEffect(() => {
+    let cancelled = false;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    Preferences.get({ key: INTRO_SEEN_KEY })
+      .then(({ value }) => {
+        if (cancelled || value) return;
+        void Preferences.set({ key: INTRO_SEEN_KEY, value: '1' });
+        timers.push(setTimeout(() => setOpen(true), INTRO_DELAY_MS));
+        timers.push(setTimeout(() => setOpen(false), INTRO_DELAY_MS + INTRO_DWELL_MS));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+    };
+  }, []);
 
   const toggleOpen = () => {
     setOpen((o) => !o);
