@@ -171,8 +171,10 @@ const StoreDetailSheet: React.FC = () => {
       className="store-sheet"
       isOpen={selectedId !== null}
       onDidDismiss={dismiss}
+      // Open at the large detent (like the "+ Bodega" sheet); content scrolls
+      // within it. A 0.6 snap lets you drag down to peek the map underneath.
       breakpoints={[0, 0.6, 0.9]}
-      initialBreakpoint={0.6}
+      initialBreakpoint={0.9}
       expandToScroll={false}
     >
       <IonContent className="store-sheet__content">
