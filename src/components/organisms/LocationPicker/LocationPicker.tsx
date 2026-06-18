@@ -33,6 +33,10 @@ interface LocationPickerProps {
  */
 const LocationPicker: React.FC<LocationPickerProps> = ({ isOpen, initial, onCancel, onSelect }) => {
   const start = initial ? { longitude: initial.lon, latitude: initial.lat } : NYC_CENTER;
+  // Snapshot of where the map opened. Captured once per open and held fixed —
+  // `initial` (often the live, watchPosition-updated user location) keeps
+  // changing as you walk, but the picker must stay where you placed it.
+  const [viewStart, setViewStart] = useState(start);
   const [center, setCenter] = useState(start);
   const [confirming, setConfirming] = useState(false);
   // Only mount the map once the modal is fully presented, so it initializes at
@@ -40,11 +44,15 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ isOpen, initial, onCanc
   // the map mounts into an already-laid-out container.
   const [presented, setPresented] = useState(false);
 
-  // Recenter when the picker (re)opens for a new point.
+  // Recenter only when the picker opens — snapshot the current point and stop
+  // tracking `initial` after that, so live location updates don't drag the map.
   useEffect(() => {
-    if (isOpen) setCenter(start);
+    if (!isOpen) return;
+    const s = initial ? { longitude: initial.lon, latitude: initial.lat } : NYC_CENTER;
+    setViewStart(s);
+    setCenter(s);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, initial?.lat, initial?.lon]);
+  }, [isOpen]);
 
   // Reverse-geocode only on confirm — one request, when the user commits.
   const confirm = async () => {
@@ -110,10 +118,11 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ isOpen, initial, onCanc
           {presented && (
             <>
               <Map
-                // Remount (re-apply initialViewState) when the opening point changes.
-                key={`${start.longitude},${start.latitude}`}
+                // Remount (re-apply initialViewState) only when a new open snapshots
+                // a different point — not on every live location update.
+                key={`${viewStart.longitude},${viewStart.latitude}`}
                 mapStyle={MAP_STYLE}
-                initialViewState={{ ...start, zoom: 19 }}
+                initialViewState={{ ...viewStart, zoom: 19 }}
                 maxBounds={NYC_BOUNDS}
                 minZoom={MIN_ZOOM}
                 onMoveEnd={(e) => {
