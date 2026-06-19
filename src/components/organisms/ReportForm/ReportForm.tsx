@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useIonToast } from '@ionic/react';
 import {
   formatReverseAddress,
@@ -8,7 +8,7 @@ import {
 } from '../../../lib/api';
 import HoursPicker, { deserialize, serialize, summarize, type HoursGroup } from '../HoursPicker';
 import LocationPicker from '../LocationPicker';
-import { useStores } from '../../../context/StoresContext';
+import { useUserLocation } from '../../../context/LocationContext';
 import { track } from '../../../lib/analytics';
 import './ReportForm.scss';
 
@@ -97,7 +97,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
   onSubmitted,
 }) => {
   const isNew = !store;
-  const { userLocation } = useStores();
+  const userLocation = useUserLocation();
 
   const [name, setName] = useState(store ? store.display_name || store.dba : '');
   // Location is picked on a map; addr holds the reverse-geocoded structured parts.
@@ -131,7 +131,10 @@ const ReportForm: React.FC<ReportFormProps> = ({
   const setAnswer = (key: string, value: Answer) =>
     setAnswers((prev) => ({ ...prev, [key]: value }));
 
-  const hoursGroups: HoursGroup[] = deserialize(hours);
+  // Memoized so the array reference is stable while `hours` is unchanged — the
+  // HoursPicker only re-seeds on open, but a stable prop also avoids re-parsing
+  // and keeps the contract clean for any future ref-sensitive consumer.
+  const hoursGroups: HoursGroup[] = useMemo(() => deserialize(hours), [hours]);
   const hoursLabel = hoursGroups.length > 0 ? summarize(hoursGroups) : '';
   const addressLabel = formatReverseAddress(addr);
 

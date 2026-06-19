@@ -13,6 +13,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { IonSpinner } from '@ionic/react';
 import { Geolocation } from '@capacitor/geolocation';
 import { useStores } from '../../../context/StoresContext';
+import { useSetUserLocation } from '../../../context/LocationContext';
 import { useFavorites } from '../../../context/FavoritesContext';
 import type { Bbox, StoreFilters } from '../../../lib/api';
 import {
@@ -63,8 +64,8 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
   // When on, only favorited stores are rendered (client-side filter, no fetch).
   const [favOnly, setFavOnly] = useState(false);
   const mapRef = useRef<MapRef>(null);
-  const { loadStores, pins, selectStore, selectedId, activeFilters, toggleFilter, setUserLocation } =
-    useStores();
+  const { loadStores, pins, selectStore, selectedId, activeFilters, toggleFilter } = useStores();
+  const setUserLocation = useSetUserLocation();
   const { isFavorite, favorites } = useFavorites();
 
   // Compare the live viewport to the starting view; flag if it's drifted enough
@@ -229,7 +230,7 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
       cancelled = true;
       if (watchId) Geolocation.clearWatch({ id: watchId });
     };
-  }, []);
+  }, [setUserLocation]);
 
   if (!view) {
     return (

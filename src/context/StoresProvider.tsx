@@ -30,9 +30,6 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // Active feature filters — multi-select, each key toggles independently.
   const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
 
-  // User's last known in-NYC location (set by the map, reused by the picker).
-  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
-
   const toggleFilter = useCallback((key: string) => {
     let on = false;
     setActiveFilters((prev) => {
@@ -137,8 +134,6 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       loadStores,
       activeFilters,
       toggleFilter,
-      userLocation,
-      setUserLocation,
       selectedId,
       selected,
       selectedLoading,
@@ -156,7 +151,6 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       loadStores,
       activeFilters,
       toggleFilter,
-      userLocation,
       selectedId,
       selected,
       selectedLoading,

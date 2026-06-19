@@ -2,6 +2,7 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { StoresProvider } from './context/StoresProvider';
+import { LocationProvider } from './context/LocationProvider';
 import { FavoritesProvider } from './context/FavoritesProvider';
 import Map from './pages/Map';
 
@@ -40,18 +41,20 @@ setupIonicReact();
 const App: React.FC = () => (
   <IonApp>
     <StoresProvider>
-      <FavoritesProvider>
-        <IonReactRouter>
-          <IonRouterOutlet id="main-content">
-            <Route exact path="/map">
-              <Map />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/map" />
-            </Route>
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </FavoritesProvider>
+      <LocationProvider>
+        <FavoritesProvider>
+          <IonReactRouter>
+            <IonRouterOutlet id="main-content">
+              <Route exact path="/map">
+                <Map />
+              </Route>
+              <Route exact path="/">
+                <Redirect to="/map" />
+              </Route>
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </FavoritesProvider>
+      </LocationProvider>
     </StoresProvider>
   </IonApp>
 );
