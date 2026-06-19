@@ -46,7 +46,10 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
   const [selection, setSelection] = useState<number[]>([]);
   const [pending, setPending] = useState<PendingHours>(DEFAULT_PENDING);
 
-  // (Re)seed the working state each time the modal opens.
+  // Seed the working state only when the modal opens. We deliberately ignore
+  // later `initialGroups` changes: the parent re-derives that array on every
+  // render (and re-renders on every live-location update), so depending on it
+  // would wipe your in-progress edits on each tick.
   useEffect(() => {
     if (!isOpen) return;
     const seeded = (initialGroups ?? []).map((g, i) => ({ ...g, id: i + 1 }));
@@ -54,7 +57,8 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
     setNextId(seeded.length + 1);
     setSelection([]);
     setPending(DEFAULT_PENDING);
-  }, [isOpen, initialGroups]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   /** Days already committed to a group. */
   const assigned = new Set(groups.flatMap((g) => g.days));
