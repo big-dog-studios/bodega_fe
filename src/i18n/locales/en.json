@@ -19,6 +19,7 @@
     "count_other": "{{count}} BODEGAS"
   },
   "features": {
+    "openNow": "OPEN NOW",
     "preparedFood": "HOT FOOD",
     "lottery": "LOTTERY",
     "alcohol": "BEER & WINE",

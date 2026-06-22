@@ -88,6 +88,8 @@ export interface StoreFilters {
   delivery?: boolean;
   /** Only stores with at least one catalog item. */
   has_products?: boolean;
+  /** Only stores open right now (server evaluates hours; unknown-hours stores excluded). */
+  is_open?: boolean;
 }
 
 async function getJson<T>(path: string, signal?: AbortSignal): Promise<T> {

@@ -19,6 +19,7 @@
     "count_other": "{{count}}টি বোদেগা"
   },
   "features": {
+    "openNow": "এখন খোলা",
     "preparedFood": "গরম খাবার",
     "lottery": "লটারি",
     "alcohol": "বিয়ার ও ওয়াইন",

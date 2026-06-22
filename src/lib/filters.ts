@@ -15,6 +15,7 @@ export interface StoreFilter {
  * the display order.
  */
 export const FILTERS: StoreFilter[] = [
+  { key: 'openNow', labelKey: 'features.openNow', icon: '🕑', param: 'is_open' },
   { key: 'preparedFood', labelKey: 'features.preparedFood', icon: '🥪', param: 'has_prepared_food' },
   { key: 'lottery', labelKey: 'features.lottery', icon: '🎟', param: 'has_lottery' },
   { key: 'alcohol', labelKey: 'features.alcohol', icon: '🍺', param: 'has_alcohol' },

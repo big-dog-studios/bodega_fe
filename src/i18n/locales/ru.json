@@ -21,6 +21,7 @@
     "count_other": "{{count}} БОДЕГИ"
   },
   "features": {
+    "openNow": "ОТКРЫТО СЕЙЧАС",
     "preparedFood": "ГОРЯЧАЯ ЕДА",
     "lottery": "ЛОТЕРЕЯ",
     "alcohol": "ПИВО И ВИНО",

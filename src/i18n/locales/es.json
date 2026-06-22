@@ -19,6 +19,7 @@
     "count_other": "{{count}} BODEGAS"
   },
   "features": {
+    "openNow": "ABIERTO AHORA",
     "preparedFood": "COMIDA CALIENTE",
     "lottery": "LOTERÍA",
     "alcohol": "CERVEZA Y VINO",

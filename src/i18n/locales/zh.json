@@ -19,6 +19,7 @@
     "count_other": "{{count}} 家 Bodega"
   },
   "features": {
+    "openNow": "现在营业",
     "preparedFood": "热食",
     "lottery": "彩票",
     "alcohol": "啤酒和葡萄酒",

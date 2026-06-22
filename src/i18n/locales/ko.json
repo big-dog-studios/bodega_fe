@@ -19,6 +19,7 @@
     "count_other": "보데가 {{count}}곳"
   },
   "features": {
+    "openNow": "지금 영업 중",
     "preparedFood": "따뜻한 음식",
     "lottery": "복권",
     "alcohol": "맥주 & 와인",
