@@ -1,14 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  getStore,
-  getStoreProducts,
-  getStores,
-  type Bbox,
-  type StoreDetail,
-  type StoreFilters,
-  type StorePin,
-  type StoreProduct,
-} from '../lib/api';
+import { getStore, getStoreProducts, getStores } from '../lib/api';
+import type { Bbox, Product, Store, StoreFilters, StorePin } from '../lib/types';
 import { track } from '../lib/analytics';
 import { StoresContext, type StoresContextValue } from './StoresContext';
 
@@ -19,11 +11,11 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [pinsError, setPinsError] = useState<Error | null>(null);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selected, setSelected] = useState<StoreDetail | null>(null);
+  const [selected, setSelected] = useState<Store | null>(null);
   const [selectedLoading, setSelectedLoading] = useState(false);
   const [selectedError, setSelectedError] = useState<Error | null>(null);
 
-  const [products, setProducts] = useState<StoreProduct[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [productsLoading, setProductsLoading] = useState(false);
   const [productsError, setProductsError] = useState<Error | null>(null);
 

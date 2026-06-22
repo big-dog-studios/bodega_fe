@@ -13,7 +13,8 @@ import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import { useFavorites } from '../../../context/FavoritesContext';
 import { useUserId } from '../../../context/UserContext';
-import { submitReport, type StoreDetail } from '../../../lib/api';
+import { submitReport } from '../../../lib/api';
+import type { Store } from '../../../lib/types';
 import { track } from '../../../lib/analytics';
 import FeatureBadge from '../../atoms/FeatureBadge';
 import ProductsTab from '../../molecules/ProductsTab';
@@ -24,7 +25,7 @@ import './StoreDetailSheet.scss';
 type TabKey = 'info' | 'products' | 'report';
 
 /** Feature flags -> badges. `labelKey` is an i18n key; `filled` is the bold red treatment. */
-const BADGES: { test: (s: StoreDetail) => boolean; labelKey: string; filled?: boolean }[] = [
+const BADGES: { test: (s: Store) => boolean; labelKey: string; filled?: boolean }[] = [
   { test: (s) => s.has_prepared_food, labelKey: 'features.preparedFood' },
   { test: (s) => s.has_tobacco, labelKey: 'features.tobacco' },
   { test: (s) => s.has_lottery, labelKey: 'features.lottery' },
@@ -39,7 +40,7 @@ const BADGES: { test: (s: StoreDetail) => boolean; labelKey: string; filled?: bo
 ];
 
 /** Payment methods -> badge. Nullable; only shown when explicitly true. */
-const PAYMENTS: { test: (s: StoreDetail) => boolean; labelKey: string }[] = [
+const PAYMENTS: { test: (s: Store) => boolean; labelKey: string }[] = [
   { test: (s) => s.accepts_credit_cards === true, labelKey: 'payments.credit' },
   { test: (s) => s.accepts_debit_cards === true, labelKey: 'payments.debit' },
   { test: (s) => s.accepts_cash_only === true, labelKey: 'payments.cashOnly' },

@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { IonContent, IonModal } from '@ionic/react';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { reverseGeocode, type ReverseAddress } from '../../../lib/api';
+import { reverseGeocode } from '../../../lib/api';
+import type { ReverseAddress } from '../../../lib/types';
 import { MAP_STYLE, MIN_ZOOM, NYC_BOUNDS, NYC_CENTER } from '../../../lib/mapConfig';
 import './LocationPicker.scss';
 

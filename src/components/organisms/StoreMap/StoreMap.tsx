@@ -16,7 +16,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { useStores } from '../../../context/StoresContext';
 import { useSetUserLocation } from '../../../context/LocationContext';
 import { useFavorites } from '../../../context/FavoritesContext';
-import type { Bbox, StoreFilters } from '../../../lib/api';
+import type { Bbox, StoreFilters } from '../../../lib/types';
 import {
   clusterLayer,
   ensureTileImages,

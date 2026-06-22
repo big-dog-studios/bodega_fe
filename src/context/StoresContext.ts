@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { Bbox, StoreDetail, StoreFilters, StorePin, StoreProduct } from '../lib/api';
+import type { Bbox, Product, Store, StoreFilters, StorePin } from '../lib/types';
 
 export interface StoresContextValue {
   /** Pins from the last getStores() call. */
@@ -17,7 +17,7 @@ export interface StoresContextValue {
   /** License number of the selected pin — set immediately on selectStore() for instant UI. */
   selectedId: string | null;
   /** The store whose detail was last fetched via selectStore(). */
-  selected: StoreDetail | null;
+  selected: Store | null;
   selectedLoading: boolean;
   selectedError: Error | null;
   /** Fetch one store's full record and save it to context. */
@@ -25,7 +25,7 @@ export interface StoresContextValue {
   clearSelected: () => void;
 
   /** Catalog for the selected store; reset to [] on every selectStore(). */
-  products: StoreProduct[];
+  products: Product[];
   productsLoading: boolean;
   productsError: Error | null;
 }

@@ -1,4 +1,4 @@
-import type { StoreFilters } from './api';
+import type { StoreFilters } from './types';
 
 /** One feature filter: a UI chip mapped to a `GET /stores` query param. */
 export interface StoreFilter {
