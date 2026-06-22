@@ -12,6 +12,7 @@ import {
 import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import { useFavorites } from '../../../context/FavoritesContext';
+import { useUserId } from '../../../context/UserContext';
 import { submitReport, type StoreDetail } from '../../../lib/api';
 import { track } from '../../../lib/analytics';
 import FeatureBadge from '../../atoms/FeatureBadge';
@@ -50,6 +51,7 @@ const StoreDetailSheet: React.FC = () => {
   const { t } = useTranslation();
   const { selectedId, selected, selectedLoading, clearSelected, products } = useStores();
   const { isFavorite, toggleFavorite } = useFavorites();
+  const userId = useUserId();
   const [tab, setTab] = useState<TabKey>('info');
   const [reportValid, setReportValid] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -92,6 +94,7 @@ const StoreDetailSheet: React.FC = () => {
               name,
               address: '',
               answers: {},
+              user_id: userId ?? undefined,
             })
               .then(() => {
                 track('False Bodega Reported', { license_number: selected.license_number });

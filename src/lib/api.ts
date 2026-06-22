@@ -190,6 +190,8 @@ export interface StoreReport {
   hours?: string;
   receipt?: File | null;
   photos?: File[];
+  /** Anonymous user id (device-derived) to attribute the submission. */
+  user_id?: string;
 }
 
 /** Submit a crowd-sourced report (or a new bodega) as multipart form data. */
@@ -209,6 +211,7 @@ export async function submitReport(report: StoreReport, signal?: AbortSignal): P
     form.set(field, value);
   }
   if (report.hours?.trim()) form.set('hours', report.hours.trim());
+  if (report.user_id) form.set('user_id', report.user_id);
   if (report.receipt) form.set('receipt', report.receipt);
   for (const photo of report.photos ?? []) form.append('photos', photo);
 

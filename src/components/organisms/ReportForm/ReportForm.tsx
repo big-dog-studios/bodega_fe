@@ -10,6 +10,7 @@ import {
 import HoursPicker, { deserialize, serialize, summarize, type HoursGroup } from '../HoursPicker';
 import LocationPicker from '../LocationPicker';
 import { useUserLocation } from '../../../context/LocationContext';
+import { useUserId } from '../../../context/UserContext';
 import { track } from '../../../lib/analytics';
 import './ReportForm.scss';
 
@@ -102,6 +103,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
   const isNew = !store;
   const { t } = useTranslation();
   const userLocation = useUserLocation();
+  const userId = useUserId();
 
   const [name, setName] = useState(store ? store.display_name || store.dba : '');
   // Location is picked on a map; addr holds the reverse-geocoded structured parts.
@@ -186,6 +188,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
         hours,
         receipt,
         photos,
+        user_id: userId ?? undefined,
       });
       if (isNew) track('Bodega Submitted');
       else track('Report Submitted', { license_number: store?.license_number });

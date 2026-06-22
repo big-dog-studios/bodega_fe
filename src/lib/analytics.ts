@@ -7,15 +7,23 @@
  * VITE_AMPLITUDE_API_KEY in the env files, same pattern as the API config.
  */
 import * as amplitude from '@amplitude/analytics-browser';
+import { getDeviceId } from './device';
 
 const AMPLITUDE_API_KEY: string | undefined = import.meta.env.VITE_AMPLITUDE_API_KEY;
 
 let enabled = false;
 
-/** Initialize Amplitude once at app start. No-ops if no key is set. */
-export function initAnalytics(): void {
+/**
+ * Initialize Amplitude once at app start. No-ops if no key is set. Resolves the
+ * user id first and passes it as Amplitude's userId so every event is attributed
+ * from the start (no anonymous→identified switch mid-session). Events fired
+ * before this resolves are dropped by the `enabled` guard in track().
+ */
+export async function initAnalytics(): Promise<void> {
   if (enabled || !AMPLITUDE_API_KEY) return;
+  const userId = await getDeviceId();
   amplitude.init(AMPLITUDE_API_KEY, {
+    userId,
     // Auto-capture sessions + install/attribution; skip noisy DOM autocapture
     // (this is a single-page map app — we emit our own meaningful events below).
     autocapture: {

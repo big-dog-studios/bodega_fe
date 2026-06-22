@@ -4,7 +4,7 @@ import App from './App';
 import './i18n';
 import { initAnalytics } from './lib/analytics';
 
-initAnalytics();
+void initAnalytics();
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
