@@ -6,6 +6,7 @@ import { CapacitorSQLite, SQLiteConnection } from '@capacitor-community/sqlite';
 import App from './App';
 import './i18n';
 import { initAnalytics } from './lib/analytics';
+import { initDb } from './lib/db';
 
 void initAnalytics();
 
@@ -15,6 +16,9 @@ if (Capacitor.getPlatform() === 'web') {
   document.body.appendChild(document.createElement('jeep-sqlite'));
   await new SQLiteConnection(CapacitorSQLite).initWebStore();
 }
+
+// Open the local DB + run the schema before anything renders/queries it.
+await initDb();
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
