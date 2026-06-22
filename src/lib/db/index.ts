@@ -61,43 +61,75 @@ export async function storeCount(): Promise<number> {
   return (res.values?.[0]?.n as number | undefined) ?? 0;
 }
 
+/** Build IN(?, ?, …) statements to delete a set of licenses, chunked by param limit. */
+function deleteByLicense(table: string, licenses: string[], chunk: number) {
+  const set: { statement: string; values: unknown[] }[] = [];
+  for (let i = 0; i < licenses.length; i += chunk) {
+    const ids = licenses.slice(i, i + chunk);
+    set.push({
+      statement: `DELETE FROM ${table} WHERE license_number IN (${ids.map(() => '?').join(',')});`,
+      values: ids,
+    });
+  }
+  return set;
+}
+
+const STORE_COLUMNS =
+  'license_number, dba, lat, lon, has_snap, has_tobacco, has_lottery, has_quick_draw, ' +
+  'has_prepared_food, has_wic, has_atm, has_cat, alc_class, takeout, delivery, updated_at, data';
+
 /**
  * Apply a batch of stores from sync: upsert visible ones (and their hours),
- * delete any flagged `is_hidden`. Chunked so a full 8k pull isn't one giant
- * transaction. Writes are flushed to IndexedDB once at the end (web only).
+ * delete any flagged `is_hidden`. Uses multi-row INSERTs (a few hundred
+ * statements for a full 8k pull, not ~72k) so the wasm write doesn't lock the
+ * main thread. Flushed to IndexedDB once at the end (web only).
  */
 export async function saveStores(stores: Store[]): Promise<void> {
-  const CHUNK = 500;
-  for (let i = 0; i < stores.length; i += CHUNK) {
-    const set: { statement: string; values: unknown[] }[] = [];
-    for (const s of stores.slice(i, i + CHUNK)) {
-      if (s.is_hidden) {
-        set.push({ statement: 'DELETE FROM stores WHERE license_number = ?;', values: [s.license_number] });
-        set.push({ statement: 'DELETE FROM store_hours WHERE license_number = ?;', values: [s.license_number] });
-        continue;
-      }
-      set.push({
-        statement: `INSERT OR REPLACE INTO stores
-          (license_number, dba, lat, lon, has_snap, has_tobacco, has_lottery, has_quick_draw,
-           has_prepared_food, has_wic, has_atm, has_cat, alc_class, takeout, delivery, updated_at, data)
-          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);`,
-        values: [
-          s.license_number, s.dba, s.lat, s.lon,
-          bit(s.has_snap), bit(s.has_tobacco), bit(s.has_lottery), bit(s.has_quick_draw),
-          bit(s.has_prepared_food), bit(s.has_wic), bit(s.has_atm), bit(s.has_cat),
-          s.alc_class, bit(s.takeout), bit(s.delivery), s.updated_at, JSON.stringify(s),
-        ],
-      });
-      set.push({ statement: 'DELETE FROM store_hours WHERE license_number = ?;', values: [s.license_number] });
-      for (const h of s.hours ?? []) {
-        set.push({
-          statement: 'INSERT INTO store_hours (license_number, dow, open_min, close_min) VALUES (?,?,?,?);',
-          values: [s.license_number, h.dow, h.open_min, h.close_min],
-        });
-      }
-    }
-    if (set.length) await db.executeSet(set, true);
+  const visible = stores.filter((s) => !s.is_hidden);
+  const hidden = stores.filter((s) => s.is_hidden);
+  const set: { statement: string; values: unknown[] }[] = [];
+
+  // Prune hidden stores and their hours.
+  if (hidden.length) {
+    const ids = hidden.map((s) => s.license_number);
+    set.push(...deleteByLicense('stores', ids, 400), ...deleteByLicense('store_hours', ids, 400));
   }
+
+  // Stores: multi-row upsert. 17 cols × 200 rows = 3400 binds, well under SQLite's limit.
+  const STORE_CHUNK = 200;
+  for (let i = 0; i < visible.length; i += STORE_CHUNK) {
+    const chunk = visible.slice(i, i + STORE_CHUNK);
+    const values: unknown[] = [];
+    for (const s of chunk) {
+      values.push(
+        s.license_number, s.dba, s.lat, s.lon,
+        bit(s.has_snap), bit(s.has_tobacco), bit(s.has_lottery), bit(s.has_quick_draw),
+        bit(s.has_prepared_food), bit(s.has_wic), bit(s.has_atm), bit(s.has_cat),
+        s.alc_class, bit(s.takeout), bit(s.delivery), s.updated_at, JSON.stringify(s),
+      );
+    }
+    const rows = chunk.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
+    set.push({ statement: `INSERT OR REPLACE INTO stores (${STORE_COLUMNS}) VALUES ${rows};`, values });
+  }
+
+  // Hours: clear the stores we're touching, then bulk-insert their rows.
+  set.push(...deleteByLicense('store_hours', visible.map((s) => s.license_number), 400));
+  const hourRows = visible.flatMap((s) =>
+    (s.hours ?? []).map((h) => [s.license_number, h.dow, h.open_min, h.close_min] as const),
+  );
+  const HOUR_CHUNK = 400; // 4 cols × 400 = 1600 binds
+  for (let i = 0; i < hourRows.length; i += HOUR_CHUNK) {
+    const chunk = hourRows.slice(i, i + HOUR_CHUNK);
+    set.push({
+      // OR REPLACE: the feed can carry a duplicate (license, dow) — overwrite, don't throw.
+      statement: `INSERT OR REPLACE INTO store_hours (license_number, dow, open_min, close_min) VALUES ${chunk
+        .map(() => '(?,?,?,?)')
+        .join(',')};`,
+      values: chunk.flat(),
+    });
+  }
+
+  if (set.length) await db.executeSet(set, true);
   await persist();
 }
 

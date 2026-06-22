@@ -65,11 +65,8 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
   const [moved, setMoved] = useState(false);
   // When on, only favorited stores are rendered (client-side filter, no fetch).
   const [favOnly, setFavOnly] = useState(false);
-  // True once the first viewport fetch has resolved — gates the loading pill so
-  // it only shows on the cold-start initial load, not on every later pan/filter.
-  const [hadFirstLoad, setHadFirstLoad] = useState(false);
   const mapRef = useRef<MapRef>(null);
-  const { loadStores, pins, pinsLoading, selectStore, selectedId, activeFilters, toggleFilter } =
+  const { loadStores, pins, hydrating, selectStore, selectedId, activeFilters, toggleFilter } =
     useStores();
   const setUserLocation = useSetUserLocation();
   const { isFavorite, favorites } = useFavorites();
@@ -186,15 +183,6 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
     loadStoresForViewport();
   }, [loadStoresForViewport]);
 
-  // Latch the first completed fetch (a loading→done transition) so the loading
-  // pill never returns after it. Guarding on the transition avoids the initial
-  // pinsLoading=false (before any fetch starts) prematurely latching it.
-  const wasLoading = useRef(false);
-  useEffect(() => {
-    if (wasLoading.current && !pinsLoading) setHadFirstLoad(true);
-    wasLoading.current = pinsLoading;
-  }, [pinsLoading]);
-
   useEffect(() => {
     let cancelled = false;
     let watchId: string | null = null;
@@ -295,9 +283,9 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
           </Marker>
         )}
       </Map>
-      {/* Loading pill — top-center while a viewport fetch is in flight (notably
-          the cold-start first load, when the map would otherwise sit empty). */}
-      {pinsLoading && !hadFirstLoad && (
+      {/* Loading pill — top-center while the local DB is still empty and the
+          first sync is populating it (cold start, when the map would sit empty). */}
+      {hydrating && (
         <div className="store-map__loading-pill" role="status" aria-live="polite">
           <IonSpinner name="crescent" />
           <span>{t('map.loading')}</span>

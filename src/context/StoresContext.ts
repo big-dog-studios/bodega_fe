@@ -6,6 +6,8 @@ export interface StoresContextValue {
   pins: StorePin[];
   pinsLoading: boolean;
   pinsError: Error | null;
+  /** True until the local DB has stores — drives the cold-start sync loader. */
+  hydrating: boolean;
   /** Fetch pins for a viewport (optionally filtered) and save them to context. */
   loadStores: (bbox: Bbox, filters?: StoreFilters) => void;
 

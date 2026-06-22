@@ -21,6 +21,13 @@ const MIN_SYNC_INTERVAL_MS = 10 * 60 * 1000;
  * pruned). Throws on network/HTTP failure — callers offline should catch and
  * fall back to whatever's already cached.
  */
+/** Listeners notified after a real sync pass lands (so the UI can re-query the DB). */
+const listeners = new Set<() => void>();
+export function onSynced(cb: () => void): () => void {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+}
+
 export async function syncStores(signal?: AbortSignal): Promise<number> {
   // No cached rows ⇒ force a full pull even if a stale cursor lingers (web reset).
   const cursor = (await storeCount()) > 0 ? await getCursor() : null;
@@ -32,6 +39,7 @@ export async function syncStores(signal?: AbortSignal): Promise<number> {
   const { stores, server_time } = await getSyncStores(since, signal);
   if (stores.length) await saveStores(stores);
   await setCursor(server_time);
+  listeners.forEach((cb) => cb());
   return stores.length;
 }
 

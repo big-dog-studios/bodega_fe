@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { getStore, getStoreProducts, getStores } from '../lib/api';
+import { getStoreProducts } from '../lib/api';
+import { getPins, getStore, storeCount } from '../lib/db';
+import { onSynced } from '../lib/sync';
 import type { Bbox, Product, Store, StoreFilters, StorePin } from '../lib/types';
 import { track } from '../lib/analytics';
 import { StoresContext, type StoresContextValue } from './StoresContext';
@@ -35,29 +37,63 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     track('Filter Toggled', { filter: key, on });
   }, []);
 
-  // One in-flight request each — a newer call aborts the previous.
-  const pinsCtrl = useRef<AbortController | null>(null);
+  // True until the local DB has stores — drives the cold-start loader while the
+  // first sync populates it. (Empty DB ≠ "no bodegas here"; it means not-yet-synced.)
+  const [hydrating, setHydrating] = useState(true);
+
+  // Pins come from the local DB now; a monotonic id discards stale async results.
+  // The last viewport is remembered so a finished sync can re-query it in place.
+  const pinsReq = useRef(0);
+  const lastBbox = useRef<Bbox | null>(null);
+  const lastFilters = useRef<StoreFilters | undefined>(undefined);
+  // One in-flight detail request — products are still network, so keep aborting.
   const detailCtrl = useRef<AbortController | null>(null);
 
-  const loadStores = useCallback((bbox: Bbox, filters?: StoreFilters) => {
-    pinsCtrl.current?.abort();
-    const ctrl = new AbortController();
-    pinsCtrl.current = ctrl;
+  const loadStores = useCallback((bbox: Bbox, filters?: StoreFilters): Promise<void> => {
+    lastBbox.current = bbox;
+    lastFilters.current = filters;
+    const id = ++pinsReq.current;
     setPinsLoading(true);
-    getStores(bbox, filters, ctrl.signal)
+    return getPins(bbox, filters)
       .then((data) => {
-        if (ctrl.signal.aborted) return;
+        if (pinsReq.current !== id) return; // a newer query superseded this one
         setPins(data);
         setPinsError(null);
       })
       .catch((err: unknown) => {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
+        if (pinsReq.current !== id) return;
         setPinsError(err instanceof Error ? err : new Error(String(err)));
       })
       .finally(() => {
-        if (pinsCtrl.current === ctrl) setPinsLoading(false);
+        if (pinsReq.current === id) setPinsLoading(false);
       });
   }, []);
+
+  // Empty on a fresh install; show the loader until the first sync lands. After
+  // any sync, drop the loader and re-query the current viewport so new pins
+  // appear without the user having to nudge the map.
+  useEffect(() => {
+    let active = true;
+    void storeCount().then((c) => {
+      if (active && c > 0) setHydrating(false);
+    });
+    const off = onSynced(() => {
+      if (!active) return;
+      // Re-query the current viewport, and only drop the loader once the pins are
+      // actually in — otherwise the loader vanishes a beat before the first pin.
+      if (lastBbox.current) {
+        void loadStores(lastBbox.current, lastFilters.current).then(() => {
+          if (active) setHydrating(false);
+        });
+      } else {
+        setHydrating(false);
+      }
+    });
+    return () => {
+      active = false;
+      off();
+    };
+  }, [loadStores]);
 
   const selectStore = useCallback((licenseNumber: string) => {
     track('Store Selected', { license_number: licenseNumber });
@@ -71,14 +107,14 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     detailCtrl.current = ctrl;
     setSelectedLoading(true);
     setProductsLoading(true);
-    getStore(licenseNumber, ctrl.signal)
+    getStore(licenseNumber)
       .then((data) => {
-        if (ctrl.signal.aborted) return;
-        setSelected(data);
-        setSelectedError(null);
+        if (detailCtrl.current !== ctrl) return; // a newer selection superseded this
+        if (data) setSelected(data);
+        else setSelectedError(new Error(`Store ${licenseNumber} not in local cache`));
       })
       .catch((err: unknown) => {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
+        if (detailCtrl.current !== ctrl) return;
         setSelectedError(err instanceof Error ? err : new Error(String(err)));
       })
       .finally(() => {
@@ -109,20 +145,15 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setProductsError(null);
   }, []);
 
-  // Abort any in-flight requests on unmount.
-  useEffect(
-    () => () => {
-      pinsCtrl.current?.abort();
-      detailCtrl.current?.abort();
-    },
-    [],
-  );
+  // Abort any in-flight detail request on unmount.
+  useEffect(() => () => detailCtrl.current?.abort(), []);
 
   const value = useMemo<StoresContextValue>(
     () => ({
       pins,
       pinsLoading,
       pinsError,
+      hydrating,
       loadStores,
       activeFilters,
       toggleFilter,
@@ -140,6 +171,7 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       pins,
       pinsLoading,
       pinsError,
+      hydrating,
       loadStores,
       activeFilters,
       toggleFilter,
