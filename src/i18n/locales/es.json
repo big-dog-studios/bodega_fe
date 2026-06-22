@@ -64,7 +64,9 @@
     "getDirections": "Cómo llegar",
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
-    "defaultMaps": "App de mapas predeterminada"
+    "defaultMaps": "App de mapas predeterminada",
+    "walkTime_one": "🚶 {{count}} min a pie",
+    "walkTime_other": "🚶 {{count}} min a pie"
   },
   "newBodega": {
     "tag": "NUEVA BODEGA",

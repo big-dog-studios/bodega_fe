@@ -64,7 +64,9 @@
     "getDirections": "দিকনির্দেশ পান",
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
-    "defaultMaps": "ডিফল্ট মানচিত্র অ্যাপ"
+    "defaultMaps": "ডিফল্ট মানচিত্র অ্যাপ",
+    "walkTime_one": "🚶 {{count}} মিনিট হাঁটা",
+    "walkTime_other": "🚶 {{count}} মিনিট হাঁটা"
   },
   "newBodega": {
     "tag": "নতুন বোদেগা",

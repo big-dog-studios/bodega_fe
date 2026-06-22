@@ -16,6 +16,7 @@ import { submitReport, type StoreDetail } from '../../../lib/api';
 import { track } from '../../../lib/analytics';
 import FeatureBadge from '../../atoms/FeatureBadge';
 import ProductsTab from '../../molecules/ProductsTab';
+import WalkTimeTag from '../../molecules/WalkTimeTag';
 import ReportForm, { REPORT_FORM_ID } from '../ReportForm';
 import './StoreDetailSheet.scss';
 
@@ -235,9 +236,12 @@ const StoreDetailSheet: React.FC = () => {
               <p className="store-sheet__area">
                 {selected.house} {selected.street}, {selected.county}, NY {selected.zip}
               </p>
-              {selected.rating != null && (
-                <p className="store-sheet__rating">★ {selected.rating.toFixed(1)}</p>
-              )}
+              <div className="store-sheet__rating-row">
+                {selected.rating != null && (
+                  <p className="store-sheet__rating">★ {selected.rating.toFixed(1)}</p>
+                )}
+                <WalkTimeTag lat={selected.lat} lon={selected.lon} />
+              </div>
             </header>
 
             <section className="store-sheet__section">

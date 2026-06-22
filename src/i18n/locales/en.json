@@ -64,7 +64,9 @@
     "getDirections": "Get directions",
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
-    "defaultMaps": "Default maps app"
+    "defaultMaps": "Default maps app",
+    "walkTime_one": "🚶 {{count}} min walk",
+    "walkTime_other": "🚶 {{count}} min walk"
   },
   "newBodega": {
     "tag": "NEW BODEGA",

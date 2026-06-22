@@ -64,7 +64,9 @@
     "getDirections": "Jwenn direksyon",
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
-    "defaultMaps": "Aplikasyon kat pa defo"
+    "defaultMaps": "Aplikasyon kat pa defo",
+    "walkTime_one": "🚶 {{count}} min apye",
+    "walkTime_other": "🚶 {{count}} min apye"
   },
   "newBodega": {
     "tag": "NOUVO BODEGA",

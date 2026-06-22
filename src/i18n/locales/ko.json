@@ -64,7 +64,8 @@
     "getDirections": "길찾기 시작",
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
-    "defaultMaps": "기본 지도 앱"
+    "defaultMaps": "기본 지도 앱",
+    "walkTime_other": "🚶 도보 {{count}}분"
   },
   "newBodega": {
     "tag": "새 보데가",

@@ -64,7 +64,8 @@
     "getDirections": "获取导航",
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
-    "defaultMaps": "默认地图应用"
+    "defaultMaps": "默认地图应用",
+    "walkTime_other": "🚶 步行 {{count}} 分钟"
   },
   "newBodega": {
     "tag": "新 BODEGA",

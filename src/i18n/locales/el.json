@@ -64,7 +64,9 @@
     "getDirections": "Λήψη οδηγιών",
     "appleMaps": "Apple Maps",
     "googleMaps": "Google Maps",
-    "defaultMaps": "Προεπιλεγμένη εφαρμογή χαρτών"
+    "defaultMaps": "Προεπιλεγμένη εφαρμογή χαρτών",
+    "walkTime_one": "🚶 {{count}} λεπτό με τα πόδια",
+    "walkTime_other": "🚶 {{count}} λεπτά με τα πόδια"
   },
   "newBodega": {
     "tag": "ΝΕΑ ΜΠΟΝΤΕΓΚΑ",

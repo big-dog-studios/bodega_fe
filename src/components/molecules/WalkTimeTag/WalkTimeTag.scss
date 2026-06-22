@@ -1,0 +1,13 @@
+@use '../../../theme/mixins' as *;
+
+// "🚶 N min walk" hint — sits in the detail-sheet header under the address.
+.walk-time-tag {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--brand-blue);
+  color: #ffffff;
+  @include display-caps(13px, 700, 0.04em);
+}

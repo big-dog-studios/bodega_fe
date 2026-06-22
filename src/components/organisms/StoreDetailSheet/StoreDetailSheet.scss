@@ -138,8 +138,17 @@ ion-modal.store-sheet {
   @include display-caps(14px, 700, 0.08em);
 }
 
-.store-sheet__rating {
+// Rating + walk-time on one line, pushed to opposite ends.
+.store-sheet__rating-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin: 8px 0 0;
+}
+
+.store-sheet__rating {
+  margin: 0;
   color: var(--brand-orange);
   @include display-caps(20px, 800, 0.04em);
 }
