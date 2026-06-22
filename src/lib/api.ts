@@ -12,6 +12,7 @@ import type {
   StoreFilters,
   StorePin,
   StoreProducts,
+  SyncResponse,
 } from './types';
 
 /** Base URL of the Map API — one config value (CLAUDE.md), never inline at the call. */
@@ -52,6 +53,16 @@ export function getStores(
 /** Fetch one store's full record by license number. */
 export function getStore(licenseNumber: string, signal?: AbortSignal): Promise<Store> {
   return getJson<Store>(`/stores/${encodeURIComponent(licenseNumber)}`, signal);
+}
+
+/**
+ * Pull the store sync feed. `since` is an ISO timestamp; pass an epoch-old value
+ * for a full snapshot, or the saved cursor for an incremental delta. The
+ * response includes hidden/removed stores so the client can prune them.
+ */
+export function getSyncStores(since: string, signal?: AbortSignal): Promise<SyncResponse> {
+  const params = new URLSearchParams({ since });
+  return getJson<SyncResponse>(`/sync/stores?${params}`, signal);
 }
 
 /** Fetch a store's product catalog by license number. */
