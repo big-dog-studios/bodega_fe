@@ -1,4 +1,4 @@
-package com.bodega.app;
+package com.jacknichols.bodegafinder;
 
 import com.getcapacitor.BridgeActivity;
 

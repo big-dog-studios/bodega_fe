@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.bodega.app',
+  appId: 'com.jacknichols.bodegafinder',
   appName: 'Bodega Finder',
   webDir: 'dist',
   plugins: {

@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">Bodega</string>
     <string name="title_activity_main">Bodega</string>
-    <string name="package_name">com.bodega.app</string>
-    <string name="custom_url_scheme">com.bodega.app</string>
+    <string name="package_name">com.jacknichols.bodegafinder</string>
+    <string name="custom_url_scheme">com.jacknichols.bodegafinder</string>
 </resources>
