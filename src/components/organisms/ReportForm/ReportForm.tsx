@@ -31,6 +31,7 @@ const QUESTIONS = [
   { key: 'alcohol', label: 'BEER & WINE', icon: '🍺' },
   { key: 'tobacco', label: 'TOBACCO', icon: '🚬' },
   { key: 'snap', label: 'SNAP/EBT', icon: '🛒' },
+  { key: 'wic', label: 'WIC', icon: '🍼' },
   { key: 'atm', label: 'ATM', icon: '🏧' },
   { key: 'cat', label: 'BODEGA CAT', icon: '🐈' },
 ];
@@ -56,6 +57,7 @@ const STORE_FLAG: Record<string, (s: StoreDetail) => boolean> = {
   alcohol: (s) => s.alc_class != null,
   tobacco: (s) => s.has_tobacco,
   snap: (s) => s.has_snap,
+  wic: (s) => s.has_wic,
   atm: (s) => s.has_atm,
   cat: (s) => s.has_cat,
 };

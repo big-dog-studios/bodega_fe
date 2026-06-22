@@ -24,6 +24,8 @@ export interface StoreFeatureFlags {
   has_lottery: boolean;
   has_quick_draw: boolean;
   has_prepared_food: boolean;
+  /** WIC acceptance. Nullable in the DB; null = unknown (treated as not-WIC for badges). */
+  has_wic: boolean;
 }
 
 /** Pin from `GET /stores?bbox=...` — coords + flags + alcohol class. */
@@ -81,6 +83,7 @@ export interface StoreFilters {
   has_alcohol?: boolean;
   has_cat?: boolean;
   has_atm?: boolean;
+  has_wic?: boolean;
   takeout?: boolean;
   delivery?: boolean;
   /** Only stores with at least one catalog item. */

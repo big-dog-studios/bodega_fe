@@ -23,6 +23,7 @@ export const FILTERS: StoreFilter[] = [
   { key: 'delivery', label: 'DELIVERY', icon: '🛵', param: 'delivery' },
   { key: 'takeout', label: 'TAKEOUT', icon: '🥡', param: 'takeout' },
   { key: 'snap', label: 'SNAP/EBT', icon: '🛒', param: 'has_snap' },
+  { key: 'wic', label: 'WIC', icon: '🍼', param: 'has_wic' },
   { key: 'quickDraw', label: 'QUICK DRAW', icon: '🎰', param: 'has_quick_draw' },
   { key: 'products', label: 'HAS MENU', icon: '🛍️', param: 'has_products' },
 ];
