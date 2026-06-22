@@ -11,7 +11,8 @@
     "addBodegaAria": "Ajoute bodega",
     "recenterAria": "Remete kat la nan sant",
     "favOnlyAria": "Montre sèlman favori yo",
-    "youLocationAria": "Kote ou ye"
+    "youLocationAria": "Kote ou ye",
+    "loading": "Y ap chaje bodega yo…"
   },
   "results": {
     "count_one": "{{count}} BODEGA",

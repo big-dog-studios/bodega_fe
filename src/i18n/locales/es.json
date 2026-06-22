@@ -11,7 +11,8 @@
     "addBodegaAria": "Agregar bodega",
     "recenterAria": "Recentrar mapa",
     "favOnlyAria": "Mostrar solo favoritos",
-    "youLocationAria": "Tu ubicación"
+    "youLocationAria": "Tu ubicación",
+    "loading": "Cargando bodegas…"
   },
   "results": {
     "count_one": "{{count}} BODEGA",

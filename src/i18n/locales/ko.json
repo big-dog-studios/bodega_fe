@@ -11,7 +11,8 @@
     "addBodegaAria": "보데가 추가",
     "recenterAria": "지도 다시 중앙 정렬",
     "favOnlyAria": "즐겨찾기만 보기",
-    "youLocationAria": "내 위치"
+    "youLocationAria": "내 위치",
+    "loading": "보데가 불러오는 중…"
   },
   "results": {
     "count_one": "보데가 {{count}}곳",

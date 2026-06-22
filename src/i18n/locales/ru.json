@@ -11,7 +11,8 @@
     "addBodegaAria": "Добавить бодегу",
     "recenterAria": "Отцентрировать карту",
     "favOnlyAria": "Показать только избранное",
-    "youLocationAria": "Ваше местоположение"
+    "youLocationAria": "Ваше местоположение",
+    "loading": "Загрузка бодег…"
   },
   "results": {
     "count_one": "{{count}} БОДЕГА",

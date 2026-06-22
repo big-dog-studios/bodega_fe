@@ -12,6 +12,45 @@
     align-items: center;
     justify-content: center;
   }
+
+  // Loading pill — floats at the top-center while a viewport fetch is in flight.
+  // Non-interactive: it's a status hint, not a control.
+  &__loading-pill {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--brand-blue);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    animation: loading-pill-in 0.18s ease;
+
+    ion-spinner {
+      width: 18px;
+      height: 18px;
+      color: var(--brand-orange);
+    }
+  }
+}
+
+@keyframes loading-pill-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
 // Re-center button — appears bottom-right once the map has been moved.

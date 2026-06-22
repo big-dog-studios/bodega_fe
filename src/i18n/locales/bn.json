@@ -11,7 +11,8 @@
     "addBodegaAria": "বোদেগা যোগ করুন",
     "recenterAria": "মানচিত্র পুনরায় কেন্দ্র করুন",
     "favOnlyAria": "শুধু পছন্দের দেখান",
-    "youLocationAria": "আপনার অবস্থান"
+    "youLocationAria": "আপনার অবস্থান",
+    "loading": "বোদেগা লোড হচ্ছে…"
   },
   "results": {
     "count_one": "{{count}}টি বোদেগা",

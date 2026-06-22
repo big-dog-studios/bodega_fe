@@ -11,7 +11,8 @@
     "addBodegaAria": "Προσθήκη μποντέγκα",
     "recenterAria": "Επανακεντράρισμα χάρτη",
     "favOnlyAria": "Εμφάνιση μόνο αγαπημένων",
-    "youLocationAria": "Η τοποθεσία σας"
+    "youLocationAria": "Η τοποθεσία σας",
+    "loading": "Φόρτωση μποντέγκα…"
   },
   "results": {
     "count_one": "{{count}} ΜΠΟΝΤΕΓΚΑ",

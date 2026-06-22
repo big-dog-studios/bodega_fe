@@ -11,7 +11,8 @@
     "addBodegaAria": "添加 Bodega",
     "recenterAria": "重新居中地图",
     "favOnlyAria": "仅显示收藏",
-    "youLocationAria": "您的位置"
+    "youLocationAria": "您的位置",
+    "loading": "正在加载 Bodega…"
   },
   "results": {
     "count_one": "{{count}} 家 Bodega",
