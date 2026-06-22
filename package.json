@@ -40,7 +40,7 @@
     "react-map-gl": "^8.1.1",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
-    "sql.js": "^1.14.1"
+    "sql.js": "^1.11.0"
   },
   "devDependencies": {
     "@capacitor/cli": "8.4.0",

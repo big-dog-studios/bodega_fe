@@ -93,8 +93,8 @@ importers:
         specifier: ^5.3.4
         version: 5.3.4(react@19.0.0)
       sql.js:
-        specifier: ^1.14.1
-        version: 1.14.1
+        specifier: ^1.11.0
+        version: 1.11.0
     devDependencies:
       '@capacitor/cli':
         specifier: 8.4.0
@@ -4248,6 +4248,9 @@ packages:
 
   split@1.0.1:
     resolution: {integrity: sha512-mTyOoPbrivtXnwnIxZRFYRrPNtEFKlpB2fvjSnCQUiAA6qAZzqwna5envK4uk6OIeP17CsdF3rSBGYVBsU0Tkg==}
+
+  sql.js@1.11.0:
+    resolution: {integrity: sha512-GsLUDU3vhOo14Pd5ME0y2te49JQyby6HuoCuadevEV+CGgTUjmYRrm7B7lhRyzOgrmcWmspUfyjNb6sOAEqdsA==}
 
   sql.js@1.14.1:
     resolution: {integrity: sha512-gcj8zBWU5cFsi9WUP+4bFNXAyF1iRpA3LLyS/DP5xlrNzGmPIizUeBggKa8DbDwdqaKwUcTEnChtd2grWo/x/A==}
@@ -9614,6 +9617,8 @@ snapshots:
   split@1.0.1:
     dependencies:
       through: 2.3.8
+
+  sql.js@1.11.0: {}
 
   sql.js@1.14.1: {}
 

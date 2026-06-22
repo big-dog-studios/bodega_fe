@@ -7,6 +7,7 @@ import App from './App';
 import './i18n';
 import { initAnalytics } from './lib/analytics';
 import { initDb } from './lib/db';
+import { startSync } from './lib/sync';
 
 void initAnalytics();
 
@@ -19,6 +20,10 @@ if (Capacitor.getPlatform() === 'web') {
 
 // Open the local DB + run the schema before anything renders/queries it.
 await initDb();
+
+// Populate/refresh the cache in the background, and re-sync on reconnect.
+// Not awaited — the app renders immediately on whatever's already cached.
+void startSync();
 
 const container = document.getElementById('root');
 const root = createRoot(container!);
