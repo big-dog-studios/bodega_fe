@@ -1,0 +1,138 @@
+{
+  "common": {
+    "cancel": "取消",
+    "submitError": "提交失败，请重试。"
+  },
+  "app": {
+    "title": "Bodega 查找器"
+  },
+  "map": {
+    "addBodega": "+ Bodega",
+    "addBodegaAria": "添加 Bodega",
+    "recenterAria": "重新居中地图",
+    "favOnlyAria": "仅显示收藏",
+    "youLocationAria": "您的位置"
+  },
+  "results": {
+    "count_one": "{{count}} 家 Bodega",
+    "count_other": "{{count}} 家 Bodega"
+  },
+  "features": {
+    "preparedFood": "热食",
+    "lottery": "彩票",
+    "alcohol": "啤酒和葡萄酒",
+    "tobacco": "烟草",
+    "cat": "猫",
+    "catReport": "Bodega 猫",
+    "catBadge": "🐈",
+    "atm": "ATM",
+    "delivery": "外送",
+    "takeout": "外带",
+    "snap": "SNAP/EBT",
+    "wic": "WIC",
+    "quickDraw": "QUICK DRAW",
+    "products": "有菜单"
+  },
+  "payments": {
+    "credit": "💳 信用卡",
+    "debit": "🏧 借记卡",
+    "cashOnly": "💵 仅收现金",
+    "nfc": "📲 一触即付"
+  },
+  "filters": {
+    "openAria": "筛选",
+    "closeAria": "关闭筛选"
+  },
+  "detail": {
+    "tag": "BODEGA",
+    "tabInfo": "信息",
+    "tabProducts": "商品",
+    "tabReport": "举报",
+    "featuresLabel": "特色",
+    "acceptsLabel": "支持付款",
+    "favoriteAria": "收藏",
+    "reportFalse": "🚩 不是真正的 Bodega？举报它",
+    "submitReport": "提交举报",
+    "call": "拨打电话",
+    "directions": "导航",
+    "reportSubmitted": "谢谢！您的举报已提交。",
+    "falseHeader": "不是真正的 Bodega？",
+    "falseMessage": "举报“{{name}}”为虚假或已关闭的商家。我们会进行审核。",
+    "falseConfirm": "举报",
+    "falseThanks": "谢谢——我们会审核此商家。",
+    "getDirections": "获取导航",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "defaultMaps": "默认地图应用"
+  },
+  "newBodega": {
+    "tag": "新 BODEGA",
+    "title": "添加一家 Bodega",
+    "hint": "知道我们遗漏的地方吗？告诉我们吧。",
+    "submit": "提交 Bodega",
+    "submitted": "谢谢！您的 Bodega 已提交。"
+  },
+  "report": {
+    "name": "名称",
+    "namePlaceholder": "Bodega 名称",
+    "location": "位置",
+    "setLocation": "在地图上设置位置",
+    "legend": "这家 Bodega 是否有……",
+    "yes": "有",
+    "no": "没有",
+    "hours": "营业时间",
+    "setHours": "设置营业时间",
+    "receiptLabel": "上传一张小票",
+    "receiptHint": "帮助我们核实这家 Bodega 销售的商品",
+    "receiptChoose": "📷 选择照片",
+    "receiptAdded": "✓ 小票已添加",
+    "photosLabel": "上传照片",
+    "photosHint": "给我们看看这家 Bodega——店面、货架、冰柜",
+    "photosChoose": "📸 选择照片",
+    "photosAdded_one": "✓ 已添加 {{count}} 张照片",
+    "photosAdded_other": "✓ 已添加 {{count}} 张照片",
+    "submitFailed": "提交失败，请重试。"
+  },
+  "locationPicker": {
+    "cancelAria": "取消",
+    "confirmAria": "使用此位置"
+  },
+  "hoursPicker": {
+    "cancelAria": "取消",
+    "saveAria": "保存营业时间",
+    "statusSetting": "正在设置{{days}}的营业时间",
+    "statusAllSet": "所有日期已设置——准备好后即可保存",
+    "statusRemaining": "选择剩余的日期",
+    "statusSelect": "选择要设置的日期",
+    "closed": "休息",
+    "closedSub": "当天不营业",
+    "open24": "24 小时营业",
+    "open24Time": "12:00 AM – 12:00 AM",
+    "opens": "开门",
+    "closes": "关门",
+    "nextDay": "次日",
+    "open24Btn": "24 小时营业",
+    "closedBtn": "休息",
+    "set": "设置{{days}}",
+    "openingTimeAria": "开门时间",
+    "closingTimeAria": "关门时间"
+  },
+  "hours": {
+    "open24": "24 小时营业",
+    "closed": "休息"
+  },
+  "days": {
+    "mon": "周一",
+    "tue": "周二",
+    "wed": "周三",
+    "thu": "周四",
+    "fri": "周五",
+    "sat": "周六",
+    "sun": "周日"
+  },
+  "products": {
+    "searchPlaceholder": "搜索商品……",
+    "all": "全部",
+    "empty": "没有匹配的商品。"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "submitError": "Couldn't submit. Please try again."
+  },
+  "app": {
+    "title": "BODEGA FINDER"
+  },
+  "map": {
+    "addBodega": "+ Bodega",
+    "addBodegaAria": "Add bodega",
+    "recenterAria": "Re-center map",
+    "favOnlyAria": "Show favorites only",
+    "youLocationAria": "Your location"
+  },
+  "results": {
+    "count_one": "{{count}} BODEGA",
+    "count_other": "{{count}} BODEGAS"
+  },
+  "features": {
+    "preparedFood": "HOT FOOD",
+    "lottery": "LOTTERY",
+    "alcohol": "BEER & WINE",
+    "tobacco": "TOBACCO",
+    "cat": "CAT",
+    "catReport": "BODEGA CAT",
+    "catBadge": "🐈",
+    "atm": "ATM",
+    "delivery": "DELIVERY",
+    "takeout": "TAKEOUT",
+    "snap": "SNAP/EBT",
+    "wic": "WIC",
+    "quickDraw": "QUICK DRAW",
+    "products": "HAS MENU"
+  },
+  "payments": {
+    "credit": "💳 CREDIT",
+    "debit": "🏧 DEBIT",
+    "cashOnly": "💵 CASH ONLY",
+    "nfc": "📲 TAP TO PAY"
+  },
+  "filters": {
+    "openAria": "Filters",
+    "closeAria": "Close filters"
+  },
+  "detail": {
+    "tag": "BODEGA",
+    "tabInfo": "Info",
+    "tabProducts": "Products",
+    "tabReport": "Report",
+    "featuresLabel": "FEATURES",
+    "acceptsLabel": "ACCEPTS",
+    "favoriteAria": "Favorite",
+    "reportFalse": "🚩 Not a real bodega? Report it",
+    "submitReport": "SUBMIT REPORT",
+    "call": "CALL",
+    "directions": "DIRECTIONS",
+    "reportSubmitted": "Thanks! Your report was submitted.",
+    "falseHeader": "Not a real bodega?",
+    "falseMessage": "Report “{{name}}” as a false or closed listing. We'll review it.",
+    "falseConfirm": "Report",
+    "falseThanks": "Thanks — we'll review this listing.",
+    "getDirections": "Get directions",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "defaultMaps": "Default maps app"
+  },
+  "newBodega": {
+    "tag": "NEW BODEGA",
+    "title": "ADD A BODEGA",
+    "hint": "Know a spot we're missing? Tell us about it.",
+    "submit": "SUBMIT BODEGA",
+    "submitted": "Thanks! Your bodega was submitted."
+  },
+  "report": {
+    "name": "Name",
+    "namePlaceholder": "Bodega name",
+    "location": "Location",
+    "setLocation": "Set location on map",
+    "legend": "Does this bodega have…",
+    "yes": "yes",
+    "no": "no",
+    "hours": "Hours",
+    "setHours": "Set hours",
+    "receiptLabel": "Upload a receipt",
+    "receiptHint": "Help us verify what this bodega sells",
+    "receiptChoose": "📷 Choose photo",
+    "receiptAdded": "✓ Receipt added",
+    "photosLabel": "Upload photos",
+    "photosHint": "Show us the bodega — storefront, shelves, fridges",
+    "photosChoose": "📸 Choose photos",
+    "photosAdded_one": "✓ {{count}} photo added",
+    "photosAdded_other": "✓ {{count}} photos added",
+    "submitFailed": "Submission failed. Please try again."
+  },
+  "locationPicker": {
+    "cancelAria": "Cancel",
+    "confirmAria": "Use this location"
+  },
+  "hoursPicker": {
+    "cancelAria": "Cancel",
+    "saveAria": "Save hours",
+    "openingTimeAria": "Opening time",
+    "closingTimeAria": "Closing time",
+    "statusSetting": "Setting hours for {{days}}",
+    "statusAllSet": "All days set — save when ready",
+    "statusRemaining": "Select the remaining days",
+    "statusSelect": "Select the days to set",
+    "closed": "CLOSED",
+    "closedSub": "No hours this day",
+    "open24": "OPEN 24 HOURS",
+    "open24Time": "12:00 AM – 12:00 AM",
+    "opens": "OPENS",
+    "closes": "CLOSES",
+    "nextDay": "next day",
+    "open24Btn": "Open 24 hours",
+    "closedBtn": "Closed",
+    "set": "Set {{days}}"
+  },
+  "hours": {
+    "open24": "Open 24 hours",
+    "closed": "Closed"
+  },
+  "days": {
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun"
+  },
+  "products": {
+    "searchPlaceholder": "Search products...",
+    "all": "ALL",
+    "empty": "No products match."
+  }
+}

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { IonContent, IonPage } from '@ionic/react';
 import AppHeader from '../components/organisms/AppHeader';
 import StoreMap from '../components/organisms/StoreMap';
@@ -10,6 +11,7 @@ import { FILTERS } from '../lib/filters';
 import type { StoreFilters } from '../lib/api';
 
 const Map: React.FC = () => {
+  const { t } = useTranslation();
   // Active filter keys -> getStores() query params (the FAB toggles them).
   const { activeFilters } = useStores();
   // The "add bodega" sheet, opened from the header "+" button.
@@ -31,13 +33,13 @@ const Map: React.FC = () => {
           <button
             type="button"
             className="app-header__add-btn"
-            aria-label="Add bodega"
+            aria-label={t('map.addBodegaAria')}
             onClick={() => {
               track('Add Bodega Opened');
               setAddOpen(true);
             }}
           >
-            + Bodega
+            {t('map.addBodega')}
           </button>
         }
       />

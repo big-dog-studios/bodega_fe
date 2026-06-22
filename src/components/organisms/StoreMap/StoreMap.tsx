@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Map, {
   Layer,
   Marker,
@@ -54,6 +55,7 @@ interface StoreMapProps {
 }
 
 const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
+  const { t } = useTranslation();
   // Hold rendering until we've resolved a location, so the map's initial view
   // is the device location (not a default we then animate away from).
   const [view, setView] = useState<ViewState | null>(null);
@@ -276,7 +278,7 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
         </Source>
         {me && (
           <Marker longitude={me.longitude} latitude={me.latitude}>
-            <div className="user-dot" aria-label="Your location" />
+            <div className="user-dot" aria-label={t('map.youLocationAria')} />
           </Marker>
         )}
       </Map>
@@ -293,7 +295,7 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
             <button
               type="button"
               className="recenter-btn"
-              aria-label="Re-center map"
+              aria-label={t('map.recenterAria')}
               onClick={recenter}
             >
               <svg viewBox="0 0 24 24" width="23" height="23" aria-hidden="true">
@@ -306,7 +308,7 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
             <button
               type="button"
               className={`fav-toggle${favOnly ? ' fav-toggle--on' : ''}`}
-              aria-label="Show favorites only"
+              aria-label={t('map.favOnlyAria')}
               aria-pressed={favOnly}
               onClick={toggleFavOnly}
             >

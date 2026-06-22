@@ -4,8 +4,13 @@
  * JSON string that rides along in the report's existing `hours` field.
  */
 
-/** Day labels, Monday-first. Index 0 = Mon … 6 = Sun. */
-export const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const;
+import i18n from '../../../i18n';
+
+/** i18n key suffixes for each weekday, Monday-first. Index 0 = Mon … 6 = Sun. */
+export const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
+
+/** Localized short label for a weekday index (0 = Mon … 6 = Sun). */
+export const dayLabel = (i: number): string => i18n.t(`days.${DAY_KEYS[i]}`);
 
 /** Minutes in a day; times are stored as minutes past midnight (0–1440). */
 export const MINUTES_IN_DAY = 1440;
@@ -47,7 +52,7 @@ export function formatDays(days: number[]): string {
   let start = sorted[0];
   let prev = sorted[0];
   const flush = () => {
-    parts.push(start === prev ? DAY_LABELS[start] : `${DAY_LABELS[start]}–${DAY_LABELS[prev]}`);
+    parts.push(start === prev ? dayLabel(start) : `${dayLabel(start)}–${dayLabel(prev)}`);
   };
   for (let i = 1; i < sorted.length; i++) {
     if (sorted[i] === prev + 1) {
@@ -63,8 +68,8 @@ export function formatDays(days: number[]): string {
 
 /** Human label for a group's schedule, e.g. "9:00 AM – 9:00 PM" / "Open 24 hours". */
 export function formatGroupHours(group: HoursGroup): string {
-  if (group.mode === '24') return 'Open 24 hours';
-  if (group.mode === 'closed') return 'Closed';
+  if (group.mode === '24') return i18n.t('hours.open24');
+  if (group.mode === 'closed') return i18n.t('hours.closed');
   return `${formatTime(group.open ?? 0)} – ${formatTime(group.close ?? 0)}`;
 }
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   IonContent,
   IonFooter,
@@ -20,31 +21,32 @@ import './StoreDetailSheet.scss';
 
 type TabKey = 'info' | 'products' | 'report';
 
-/** Feature flags -> badges. `filled` is the bold red treatment. */
-const BADGES: { test: (s: StoreDetail) => boolean; label: string; filled?: boolean }[] = [
-  { test: (s) => s.has_prepared_food, label: 'HOT FOOD' },
-  { test: (s) => s.has_tobacco, label: 'TOBACCO' },
-  { test: (s) => s.has_lottery, label: 'LOTTERY' },
-  { test: (s) => s.alc_class != null, label: 'BEER & WINE' },
-  { test: (s) => s.has_snap, label: 'SNAP/EBT' },
-  { test: (s) => s.has_wic, label: 'WIC' },
-  { test: (s) => s.has_quick_draw, label: 'QUICK DRAW' },
-  { test: (s) => s.has_atm, label: 'ATM' },
-  { test: (s) => s.has_cat, label: '🐈' },
-  { test: (s) => s.takeout === true, label: 'TAKEOUT' },
-  { test: (s) => s.delivery === true, label: 'DELIVERY' },
+/** Feature flags -> badges. `labelKey` is an i18n key; `filled` is the bold red treatment. */
+const BADGES: { test: (s: StoreDetail) => boolean; labelKey: string; filled?: boolean }[] = [
+  { test: (s) => s.has_prepared_food, labelKey: 'features.preparedFood' },
+  { test: (s) => s.has_tobacco, labelKey: 'features.tobacco' },
+  { test: (s) => s.has_lottery, labelKey: 'features.lottery' },
+  { test: (s) => s.alc_class != null, labelKey: 'features.alcohol' },
+  { test: (s) => s.has_snap, labelKey: 'features.snap' },
+  { test: (s) => s.has_wic, labelKey: 'features.wic' },
+  { test: (s) => s.has_quick_draw, labelKey: 'features.quickDraw' },
+  { test: (s) => s.has_atm, labelKey: 'features.atm' },
+  { test: (s) => s.has_cat, labelKey: 'features.catBadge' },
+  { test: (s) => s.takeout === true, labelKey: 'features.takeout' },
+  { test: (s) => s.delivery === true, labelKey: 'features.delivery' },
 ];
 
 /** Payment methods -> badge. Nullable; only shown when explicitly true. */
-const PAYMENTS: { test: (s: StoreDetail) => boolean; label: string }[] = [
-  { test: (s) => s.accepts_credit_cards === true, label: '💳 CREDIT' },
-  { test: (s) => s.accepts_debit_cards === true, label: '🏧 DEBIT' },
-  { test: (s) => s.accepts_cash_only === true, label: '💵 CASH ONLY' },
-  { test: (s) => s.accepts_nfc === true, label: '📲 TAP TO PAY' },
+const PAYMENTS: { test: (s: StoreDetail) => boolean; labelKey: string }[] = [
+  { test: (s) => s.accepts_credit_cards === true, labelKey: 'payments.credit' },
+  { test: (s) => s.accepts_debit_cards === true, labelKey: 'payments.debit' },
+  { test: (s) => s.accepts_cash_only === true, labelKey: 'payments.cashOnly' },
+  { test: (s) => s.accepts_nfc === true, labelKey: 'payments.nfc' },
 ];
 
 /** Bottom-sheet drawer for the selected store. Opens on pin select. */
 const StoreDetailSheet: React.FC = () => {
+  const { t } = useTranslation();
   const { selectedId, selected, selectedLoading, clearSelected, products } = useStores();
   const { isFavorite, toggleFavorite } = useFavorites();
   const [tab, setTab] = useState<TabKey>('info');
@@ -57,9 +59,9 @@ const StoreDetailSheet: React.FC = () => {
   // Products tab only exists when this store returned a catalog.
   const hasProducts = products.length > 0;
   const tabs: { key: TabKey; icon: string; label: string }[] = [
-    { key: 'info', icon: '📍', label: 'Info' },
-    ...(hasProducts ? [{ key: 'products' as const, icon: '🛒', label: 'Products' }] : []),
-    { key: 'report', icon: '✏️', label: 'Report' },
+    { key: 'info', icon: '📍', label: t('detail.tabInfo') },
+    ...(hasProducts ? [{ key: 'products' as const, icon: '🛒', label: t('detail.tabProducts') }] : []),
+    { key: 'report', icon: '✏️', label: t('detail.tabReport') },
   ];
   // Fall back to Info if the active tab isn't available for this store.
   const activeTab: TabKey = tab === 'products' && !hasProducts ? 'info' : tab;
@@ -75,12 +77,12 @@ const StoreDetailSheet: React.FC = () => {
     if (!selected) return;
     const name = selected.display_name || selected.dba;
     presentAlert({
-      header: 'Not a real bodega?',
-      message: `Report “${name}” as a false or closed listing. We'll review it.`,
+      header: t('detail.falseHeader'),
+      message: t('detail.falseMessage', { name }),
       buttons: [
-        { text: 'Cancel', role: 'cancel' },
+        { text: t('common.cancel'), role: 'cancel' },
         {
-          text: 'Report',
+          text: t('detail.falseConfirm'),
           role: 'destructive',
           handler: () => {
             void submitReport({
@@ -93,7 +95,7 @@ const StoreDetailSheet: React.FC = () => {
               .then(() => {
                 track('False Bodega Reported', { license_number: selected.license_number });
                 presentToast({
-                  message: "Thanks — we'll review this listing.",
+                  message: t('detail.falseThanks'),
                   duration: 2500,
                   position: 'top',
                   color: 'success',
@@ -102,7 +104,7 @@ const StoreDetailSheet: React.FC = () => {
               })
               .catch(() => {
                 presentToast({
-                  message: "Couldn't submit. Please try again.",
+                  message: t('common.submitError'),
                   duration: 3000,
                   position: 'top',
                   color: 'danger',
@@ -143,18 +145,18 @@ const StoreDetailSheet: React.FC = () => {
       open(url);
     };
     const appleMaps = {
-      text: 'Apple Maps',
+      text: t('detail.appleMaps'),
       handler: () => go('apple', `https://maps.apple.com/?daddr=${dest}`),
     };
     const googleMaps = {
-      text: 'Google Maps',
+      text: t('detail.googleMaps'),
       handler: () => go('google', `https://www.google.com/maps/dir/?api=1&destination=${dest}`),
     };
     const defaultApp = {
-      text: 'Default maps app',
+      text: t('detail.defaultMaps'),
       handler: () => go('default', `geo:${dest}?q=${dest}${label}`),
     };
-    const cancel = { text: 'Cancel', role: 'cancel' as const };
+    const cancel = { text: t('common.cancel'), role: 'cancel' as const };
 
     const platform = Capacitor.getPlatform();
     const buttons =
@@ -164,7 +166,7 @@ const StoreDetailSheet: React.FC = () => {
           ? [defaultApp, googleMaps, cancel]
           : [googleMaps, appleMaps, cancel];
 
-    presentActionSheet({ header: 'Get directions', buttons });
+    presentActionSheet({ header: t('detail.getDirections'), buttons });
   };
 
   return (
@@ -179,7 +181,7 @@ const StoreDetailSheet: React.FC = () => {
       expandToScroll={false}
     >
       <IonContent className="store-sheet__content">
-        <div className="store-sheet__tag">BODEGA</div>
+        <div className="store-sheet__tag">{t('detail.tag')}</div>
 
         {selectedLoading && !selected && (
           <div className="store-sheet__loading">
@@ -215,7 +217,7 @@ const StoreDetailSheet: React.FC = () => {
                   className={`store-sheet__fav${
                     isFavorite(selected.license_number) ? ' store-sheet__fav--on' : ''
                   }`}
-                  aria-label="Favorite"
+                  aria-label={t('detail.favoriteAria')}
                   aria-pressed={isFavorite(selected.license_number)}
                   onClick={() =>
                     toggleFavorite({
@@ -239,20 +241,20 @@ const StoreDetailSheet: React.FC = () => {
             </header>
 
             <section className="store-sheet__section">
-              <p className="store-sheet__label">FEATURES</p>
+              <p className="store-sheet__label">{t('detail.featuresLabel')}</p>
               <div className="store-sheet__badges">
                 {BADGES.filter((b) => b.test(selected)).map((b) => (
-                  <FeatureBadge key={b.label} label={b.label} filled={b.filled} />
+                  <FeatureBadge key={b.labelKey} label={t(b.labelKey)} filled={b.filled} />
                 ))}
               </div>
             </section>
 
             {PAYMENTS.some((p) => p.test(selected)) && (
               <section className="store-sheet__section">
-                <p className="store-sheet__label">ACCEPTS</p>
+                <p className="store-sheet__label">{t('detail.acceptsLabel')}</p>
                 <div className="store-sheet__badges">
                   {PAYMENTS.filter((p) => p.test(selected)).map((p) => (
-                    <FeatureBadge key={p.label} label={p.label} />
+                    <FeatureBadge key={p.labelKey} label={t(p.labelKey)} />
                   ))}
                 </div>
               </section>
@@ -269,7 +271,7 @@ const StoreDetailSheet: React.FC = () => {
             )}
 
             <button type="button" className="store-sheet__report-false" onClick={reportFalse}>
-              🚩 Not a real bodega? Report it
+              {t('detail.reportFalse')}
             </button>
           </div>
         )}
@@ -281,7 +283,7 @@ const StoreDetailSheet: React.FC = () => {
             onSubmittingChange={setSubmitting}
             onSubmitted={() => {
               presentToast({
-                message: 'Thanks! Your report was submitted.',
+                message: t('detail.reportSubmitted'),
                 duration: 2500,
                 position: 'top',
                 color: 'success',
@@ -301,7 +303,7 @@ const StoreDetailSheet: React.FC = () => {
               className="store-sheet__submit"
               disabled={!reportValid || submitting}
             >
-              {submitting ? <IonSpinner name="dots" /> : 'SUBMIT REPORT'}
+              {submitting ? <IonSpinner name="dots" /> : t('detail.submitReport')}
             </button>
           ) : (
             <div className="store-sheet__actions">
@@ -311,11 +313,11 @@ const StoreDetailSheet: React.FC = () => {
                   href={`tel:${selected.phone}`}
                   onClick={() => track('Call Tapped', { license_number: selected.license_number })}
                 >
-                  CALL
+                  {t('detail.call')}
                 </a>
               )}
               <button type="button" className="store-sheet__directions" onClick={openDirections}>
-                DIRECTIONS
+                {t('detail.directions')}
               </button>
             </div>
           )}

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { IonContent, IonModal } from '@ionic/react';
 import HoursDial from './HoursDial';
 import {
-  DAY_LABELS,
+  DAY_KEYS,
+  dayLabel,
   formatDays,
   formatGroupHours,
   formatTime,
@@ -40,6 +42,7 @@ interface HoursPickerProps {
  * which the form serializes to JSON.
  */
 const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCancel, onSave }) => {
+  const { t } = useTranslation();
   const [groups, setGroups] = useState<DraftGroup[]>([]);
   const [nextId, setNextId] = useState(1);
   // Days currently being edited (empty = nothing selected, dial hidden).
@@ -119,10 +122,10 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
   };
 
   const status = (() => {
-    if (selection.length > 0) return `Setting hours for ${formatDays(selection)}`;
-    if (allDaysSet) return 'All days set — save when ready';
-    if (assigned.size > 0) return 'Select the remaining days';
-    return 'Select the days to set';
+    if (selection.length > 0) return t('hoursPicker.statusSetting', { days: formatDays(selection) });
+    if (allDaysSet) return t('hoursPicker.statusAllSet');
+    if (assigned.size > 0) return t('hoursPicker.statusRemaining');
+    return t('hoursPicker.statusSelect');
   })();
 
   const sortedGroups = [...groups].sort((a, b) => Math.min(...a.days) - Math.min(...b.days));
@@ -135,7 +138,7 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
           <button
             type="button"
             className="hours-picker__icon-btn"
-            aria-label="Cancel"
+            aria-label={t('hoursPicker.cancelAria')}
             onClick={onCancel}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -151,7 +154,7 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
           <button
             type="button"
             className="hours-picker__icon-btn hours-picker__save"
-            aria-label="Save hours"
+            aria-label={t('hoursPicker.saveAria')}
             disabled={!canSave}
             onClick={save}
           >
@@ -170,12 +173,12 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
 
         <div className="hours-picker__body">
           <div className="hours-picker__pills">
-            {DAY_LABELS.map((label, day) => {
+            {DAY_KEYS.map((dayKey, day) => {
               const selected = selection.includes(day);
               const isSet = !selected && assigned.has(day);
               return (
                 <button
-                  key={label}
+                  key={dayKey}
                   type="button"
                   className={`hours-picker__pill${selected ? ' hours-picker__pill--selected' : ''}${
                     isSet ? ' hours-picker__pill--set' : ''
@@ -183,7 +186,7 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
                   aria-pressed={selected}
                   onClick={() => toggleDay(day)}
                 >
-                  {label}
+                  {dayLabel(day)}
                   {isSet && <span className="hours-picker__pill-check">✓</span>}
                 </button>
               );
@@ -197,30 +200,30 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
               {pending.mode === 'closed' ? (
                 <div className="hours-picker__cards">
                   <div className="hours-picker__card hours-picker__card--banner">
-                    <div className="hours-picker__card-label">CLOSED</div>
+                    <div className="hours-picker__card-label">{t('hoursPicker.closed')}</div>
                     <div className="hours-picker__card-time hours-picker__card-time--closed">
-                      No hours this day
+                      {t('hoursPicker.closedSub')}
                     </div>
                   </div>
                 </div>
               ) : pending.mode === '24' ? (
                 <div className="hours-picker__cards">
                   <div className="hours-picker__card hours-picker__card--banner">
-                    <div className="hours-picker__card-label">OPEN 24 HOURS</div>
-                    <div className="hours-picker__card-time">12:00 AM – 12:00 AM</div>
+                    <div className="hours-picker__card-label">{t('hoursPicker.open24')}</div>
+                    <div className="hours-picker__card-time">{t('hoursPicker.open24Time')}</div>
                   </div>
                 </div>
               ) : (
                 <div className="hours-picker__cards">
                   <div className="hours-picker__card">
-                    <div className="hours-picker__card-label">OPENS</div>
+                    <div className="hours-picker__card-label">{t('hoursPicker.opens')}</div>
                     <div className="hours-picker__card-time">{formatTime(pending.open)}</div>
                     <div className="hours-picker__card-sub">&nbsp;</div>
                   </div>
                   <div className="hours-picker__card">
-                    <div className="hours-picker__card-label">CLOSES</div>
+                    <div className="hours-picker__card-label">{t('hoursPicker.closes')}</div>
                     <div className="hours-picker__card-time">{formatTime(pending.close)}</div>
-                    <div className="hours-picker__card-sub">{overnight ? 'next day' : ' '}</div>
+                    <div className="hours-picker__card-sub">{overnight ? t('hoursPicker.nextDay') : ' '}</div>
                   </div>
                 </div>
               )}
@@ -238,7 +241,7 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
                   className={`hours-picker__ghost${pending.mode === '24' ? ' hours-picker__ghost--on' : ''}`}
                   onClick={() => setMode('24')}
                 >
-                  Open 24 hours
+                  {t('hoursPicker.open24Btn')}
                 </button>
                 <button
                   type="button"
@@ -247,12 +250,12 @@ const HoursPicker: React.FC<HoursPickerProps> = ({ isOpen, initialGroups, onCanc
                   }`}
                   onClick={() => setMode('closed')}
                 >
-                  Closed
+                  {t('hoursPicker.closedBtn')}
                 </button>
               </div>
 
               <button type="button" className="hours-picker__set" onClick={commitSelection}>
-                Set {formatDays(selection)}
+                {t('hoursPicker.set', { days: formatDays(selection) })}
               </button>
             </div>
           )}

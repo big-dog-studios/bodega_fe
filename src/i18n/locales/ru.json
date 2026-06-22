@@ -1,0 +1,142 @@
+{
+  "common": {
+    "cancel": "Отмена",
+    "submitError": "Не удалось отправить. Пожалуйста, попробуйте снова."
+  },
+  "app": {
+    "title": "ПОИСК БОДЕГ"
+  },
+  "map": {
+    "addBodega": "+ Бодега",
+    "addBodegaAria": "Добавить бодегу",
+    "recenterAria": "Отцентрировать карту",
+    "favOnlyAria": "Показать только избранное",
+    "youLocationAria": "Ваше местоположение"
+  },
+  "results": {
+    "count_one": "{{count}} БОДЕГА",
+    "count_few": "{{count}} БОДЕГИ",
+    "count_many": "{{count}} БОДЕГ",
+    "count_other": "{{count}} БОДЕГИ"
+  },
+  "features": {
+    "preparedFood": "ГОРЯЧАЯ ЕДА",
+    "lottery": "ЛОТЕРЕЯ",
+    "alcohol": "ПИВО И ВИНО",
+    "tobacco": "ТАБАК",
+    "cat": "КОТ",
+    "catReport": "КОТ БОДЕГИ",
+    "catBadge": "🐈",
+    "atm": "ATM",
+    "delivery": "ДОСТАВКА",
+    "takeout": "НА ВЫНОС",
+    "snap": "SNAP/EBT",
+    "wic": "WIC",
+    "quickDraw": "QUICK DRAW",
+    "products": "ЕСТЬ МЕНЮ"
+  },
+  "payments": {
+    "credit": "💳 КРЕДИТНАЯ КАРТА",
+    "debit": "🏧 ДЕБЕТОВАЯ КАРТА",
+    "cashOnly": "💵 ТОЛЬКО НАЛИЧНЫЕ",
+    "nfc": "📲 ОПЛАТА КАСАНИЕМ"
+  },
+  "filters": {
+    "openAria": "Фильтры",
+    "closeAria": "Закрыть фильтры"
+  },
+  "detail": {
+    "tag": "БОДЕГА",
+    "tabInfo": "Информация",
+    "tabProducts": "Товары",
+    "tabReport": "Жалоба",
+    "featuresLabel": "ОСОБЕННОСТИ",
+    "acceptsLabel": "ПРИНИМАЕТ",
+    "favoriteAria": "В избранное",
+    "reportFalse": "🚩 Не настоящая бодега? Сообщите об этом",
+    "submitReport": "ОТПРАВИТЬ ЖАЛОБУ",
+    "call": "ПОЗВОНИТЬ",
+    "directions": "МАРШРУТ",
+    "reportSubmitted": "Спасибо! Ваша жалоба отправлена.",
+    "falseHeader": "Не настоящая бодега?",
+    "falseMessage": "Сообщить, что «{{name}}» — ложное или закрытое заведение. Мы проверим это.",
+    "falseConfirm": "Сообщить",
+    "falseThanks": "Спасибо — мы проверим это заведение.",
+    "getDirections": "Построить маршрут",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "defaultMaps": "Приложение карт по умолчанию"
+  },
+  "newBodega": {
+    "tag": "НОВАЯ БОДЕГА",
+    "title": "ДОБАВИТЬ БОДЕГУ",
+    "hint": "Знаете место, которого у нас нет? Расскажите нам о нём.",
+    "submit": "ОТПРАВИТЬ БОДЕГУ",
+    "submitted": "Спасибо! Ваша бодега отправлена."
+  },
+  "report": {
+    "name": "Название",
+    "namePlaceholder": "Название бодеги",
+    "location": "Местоположение",
+    "setLocation": "Указать местоположение на карте",
+    "legend": "Есть ли в этой бодеге…",
+    "yes": "да",
+    "no": "нет",
+    "hours": "Часы работы",
+    "setHours": "Указать часы работы",
+    "receiptLabel": "Загрузить чек",
+    "receiptHint": "Помогите нам проверить, что продаёт эта бодега",
+    "receiptChoose": "📷 Выбрать фото",
+    "receiptAdded": "✓ Чек добавлен",
+    "photosLabel": "Загрузить фотографии",
+    "photosHint": "Покажите нам бодегу — витрину, полки, холодильники",
+    "photosChoose": "📸 Выбрать фотографии",
+    "photosAdded_one": "✓ {{count}} фотография добавлена",
+    "photosAdded_few": "✓ {{count}} фотографии добавлены",
+    "photosAdded_many": "✓ {{count}} фотографий добавлено",
+    "photosAdded_other": "✓ {{count}} фотографии добавлено",
+    "submitFailed": "Не удалось отправить. Пожалуйста, попробуйте снова."
+  },
+  "locationPicker": {
+    "cancelAria": "Отмена",
+    "confirmAria": "Использовать это местоположение"
+  },
+  "hoursPicker": {
+    "cancelAria": "Отмена",
+    "saveAria": "Сохранить часы работы",
+    "statusSetting": "Настройка часов работы для {{days}}",
+    "statusAllSet": "Все дни заданы — сохраните, когда будете готовы",
+    "statusRemaining": "Выберите оставшиеся дни",
+    "statusSelect": "Выберите дни для настройки",
+    "closed": "ЗАКРЫТО",
+    "closedSub": "В этот день не работает",
+    "open24": "ОТКРЫТО 24 ЧАСА",
+    "open24Time": "12:00 AM – 12:00 AM",
+    "opens": "ОТКРЫВАЕТСЯ",
+    "closes": "ЗАКРЫВАЕТСЯ",
+    "nextDay": "на следующий день",
+    "open24Btn": "Открыто 24 часа",
+    "closedBtn": "Закрыто",
+    "set": "Задать {{days}}",
+    "openingTimeAria": "Время открытия",
+    "closingTimeAria": "Время закрытия"
+  },
+  "hours": {
+    "open24": "Открыто 24 часа",
+    "closed": "Закрыто"
+  },
+  "days": {
+    "mon": "Пн",
+    "tue": "Вт",
+    "wed": "Ср",
+    "thu": "Чт",
+    "fri": "Пт",
+    "sat": "Сб",
+    "sun": "Вс"
+  },
+  "products": {
+    "searchPlaceholder": "Поиск товаров...",
+    "all": "ВСЕ",
+    "empty": "Нет подходящих товаров."
+  }
+}

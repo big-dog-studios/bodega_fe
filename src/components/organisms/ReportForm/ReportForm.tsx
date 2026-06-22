@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useIonToast } from '@ionic/react';
 import {
   formatReverseAddress,
@@ -26,14 +27,14 @@ const SUBMIT_FIELDS: Record<string, string> = {
 
 /** The yes/no questions rendered in the form. Hardcoded — independent of the map filters. */
 const QUESTIONS = [
-  { key: 'preparedFood', label: 'HOT FOOD', icon: '🥪' },
-  { key: 'lottery', label: 'LOTTERY', icon: '🎟' },
-  { key: 'alcohol', label: 'BEER & WINE', icon: '🍺' },
-  { key: 'tobacco', label: 'TOBACCO', icon: '🚬' },
-  { key: 'snap', label: 'SNAP/EBT', icon: '🛒' },
-  { key: 'wic', label: 'WIC', icon: '🍼' },
-  { key: 'atm', label: 'ATM', icon: '🏧' },
-  { key: 'cat', label: 'BODEGA CAT', icon: '🐈' },
+  { key: 'preparedFood', labelKey: 'features.preparedFood', icon: '🥪' },
+  { key: 'lottery', labelKey: 'features.lottery', icon: '🎟' },
+  { key: 'alcohol', labelKey: 'features.alcohol', icon: '🍺' },
+  { key: 'tobacco', labelKey: 'features.tobacco', icon: '🚬' },
+  { key: 'snap', labelKey: 'features.snap', icon: '🛒' },
+  { key: 'wic', labelKey: 'features.wic', icon: '🍼' },
+  { key: 'atm', labelKey: 'features.atm', icon: '🏧' },
+  { key: 'cat', labelKey: 'features.catReport', icon: '🐈' },
 ];
 
 const EMPTY_ADDRESS: ReverseAddress = { house: '', street: '', city: '', zip: '' };
@@ -99,6 +100,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
   onSubmitted,
 }) => {
   const isNew = !store;
+  const { t } = useTranslation();
   const userLocation = useUserLocation();
 
   const [name, setName] = useState(store ? store.display_name || store.dba : '');
@@ -191,7 +193,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
       // dismiss) and re-initializes fresh the next time it's shown.
       onSubmitted?.();
     } catch (err) {
-      showError(err instanceof Error ? err.message : 'Submission failed. Please try again.');
+      showError(err instanceof Error ? err.message : t('report.submitFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -200,11 +202,11 @@ const ReportForm: React.FC<ReportFormProps> = ({
   return (
     <form id={formId} className="report-form" onSubmit={submit}>
       <label className="report-form__field">
-        <span className="report-form__label">Name</span>
+        <span className="report-form__label">{t('report.name')}</span>
         <input
           className="report-form__input"
           type="text"
-          placeholder="Bodega name"
+          placeholder={t('report.namePlaceholder')}
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -212,13 +214,13 @@ const ReportForm: React.FC<ReportFormProps> = ({
       </label>
 
       <div className="report-form__field">
-        <span className="report-form__label">Location</span>
+        <span className="report-form__label">{t('report.location')}</span>
         <button
           type="button"
           className={`report-form__picker${addressLabel ? ' report-form__picker--set' : ''}`}
           onClick={() => setLocOpen(true)}
         >
-          <span className="report-form__picker-value">{addressLabel || 'Set location on map'}</span>
+          <span className="report-form__picker-value">{addressLabel || t('report.setLocation')}</span>
           <span className="report-form__picker-chev">›</span>
         </button>
       </div>
@@ -234,14 +236,14 @@ const ReportForm: React.FC<ReportFormProps> = ({
         }}
       />
 
-      <p className="report-form__legend">Does this bodega have…</p>
+      <p className="report-form__legend">{t('report.legend')}</p>
 
       <div className="report-form__rows">
         {QUESTIONS.map((f) => (
           <div key={f.key} className="report-form__row">
             <span className="report-form__feature">
               <span className="report-form__icon">{f.icon}</span>
-              {f.label}
+              {t(f.labelKey)}
             </span>
             <span className="report-form__yesno">
               {(['yes', 'no'] as const).map((v) => (
@@ -253,7 +255,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
                   }`}
                   onClick={() => setAnswer(f.key, v)}
                 >
-                  {v}
+                  {t(`report.${v}`)}
                 </button>
               ))}
             </span>
@@ -262,13 +264,13 @@ const ReportForm: React.FC<ReportFormProps> = ({
       </div>
 
       <div className="report-form__field">
-        <span className="report-form__label">Hours</span>
+        <span className="report-form__label">{t('report.hours')}</span>
         <button
           type="button"
           className={`report-form__picker${hoursLabel ? ' report-form__picker--set' : ''}`}
           onClick={() => setHoursOpen(true)}
         >
-          <span className="report-form__picker-value">{hoursLabel || 'Set hours'}</span>
+          <span className="report-form__picker-value">{hoursLabel || t('report.setHours')}</span>
           <span className="report-form__picker-chev">›</span>
         </button>
       </div>
@@ -284,8 +286,8 @@ const ReportForm: React.FC<ReportFormProps> = ({
       />
 
       <div className="report-form__field">
-        <span className="report-form__label">Upload a receipt</span>
-        <span className="report-form__hint">Help us verify what this bodega sells</span>
+        <span className="report-form__label">{t('report.receiptLabel')}</span>
+        <span className="report-form__hint">{t('report.receiptHint')}</span>
         <label className="report-form__drop">
           <input
             type="file"
@@ -293,13 +295,13 @@ const ReportForm: React.FC<ReportFormProps> = ({
             hidden
             onChange={(e) => setReceipt(e.target.files?.[0] ?? null)}
           />
-          {receipt ? '✓ Receipt added' : '📷 Choose photo'}
+          {receipt ? t('report.receiptAdded') : t('report.receiptChoose')}
         </label>
       </div>
 
       <div className="report-form__field">
-        <span className="report-form__label">Upload photos</span>
-        <span className="report-form__hint">Show us the bodega — storefront, shelves, fridges</span>
+        <span className="report-form__label">{t('report.photosLabel')}</span>
+        <span className="report-form__hint">{t('report.photosHint')}</span>
         <label className="report-form__drop">
           <input
             type="file"
@@ -309,8 +311,8 @@ const ReportForm: React.FC<ReportFormProps> = ({
             onChange={(e) => setPhotos(e.target.files ? Array.from(e.target.files) : [])}
           />
           {photos.length
-            ? `✓ ${photos.length} photo${photos.length > 1 ? 's' : ''} added`
-            : '📸 Choose photos'}
+            ? t('report.photosAdded', { count: photos.length })
+            : t('report.photosChoose')}
         </label>
       </div>
     </form>

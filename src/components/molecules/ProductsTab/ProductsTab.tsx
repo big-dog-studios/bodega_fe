@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { StoreProduct } from '../../../lib/api';
 import './ProductsTab.scss';
 
@@ -20,6 +21,7 @@ interface ProductsTabProps {
  * over the already-fetched catalog — no extra API calls.
  */
 const ProductsTab: React.FC<ProductsTabProps> = ({ products }) => {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [cat, setCat] = useState('all');
 
@@ -38,10 +40,10 @@ const ProductsTab: React.FC<ProductsTabProps> = ({ products }) => {
         });
     }
     return [
-      { slug: 'all', label: 'ALL', emoji: '', count: products.length },
+      { slug: 'all', label: t('products.all'), emoji: '', count: products.length },
       ...byCat.values(),
     ];
-  }, [products]);
+  }, [products, t]);
 
   // Reset to ALL if the active facet vanished (e.g. a different store loaded).
   const activeCat = facets.some((f) => f.slug === cat) ? cat : 'all';
@@ -60,7 +62,7 @@ const ProductsTab: React.FC<ProductsTabProps> = ({ products }) => {
       <input
         className="products-tab__search"
         type="search"
-        placeholder="Search products..."
+        placeholder={t('products.searchPlaceholder')}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
@@ -95,7 +97,7 @@ const ProductsTab: React.FC<ProductsTabProps> = ({ products }) => {
             ) : null}
           </div>
         ))}
-        {filtered.length === 0 && <p className="products-tab__empty">No products match.</p>}
+        {filtered.length === 0 && <p className="products-tab__empty">{t('products.empty')}</p>}
       </div>
     </div>
   );

@@ -1,0 +1,138 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "submitError": "No se pudo enviar. Inténtalo de nuevo."
+  },
+  "app": {
+    "title": "BUSCADOR DE BODEGAS"
+  },
+  "map": {
+    "addBodega": "+ Bodega",
+    "addBodegaAria": "Agregar bodega",
+    "recenterAria": "Recentrar mapa",
+    "favOnlyAria": "Mostrar solo favoritos",
+    "youLocationAria": "Tu ubicación"
+  },
+  "results": {
+    "count_one": "{{count}} BODEGA",
+    "count_other": "{{count}} BODEGAS"
+  },
+  "features": {
+    "preparedFood": "COMIDA CALIENTE",
+    "lottery": "LOTERÍA",
+    "alcohol": "CERVEZA Y VINO",
+    "tobacco": "TABACO",
+    "cat": "GATO",
+    "catReport": "GATO DE BODEGA",
+    "catBadge": "🐈",
+    "atm": "ATM",
+    "delivery": "ENTREGA",
+    "takeout": "PARA LLEVAR",
+    "snap": "SNAP/EBT",
+    "wic": "WIC",
+    "quickDraw": "QUICK DRAW",
+    "products": "TIENE MENÚ"
+  },
+  "payments": {
+    "credit": "💳 CRÉDITO",
+    "debit": "🏧 DÉBITO",
+    "cashOnly": "💵 SOLO EFECTIVO",
+    "nfc": "📲 PAGO SIN CONTACTO"
+  },
+  "filters": {
+    "openAria": "Filtros",
+    "closeAria": "Cerrar filtros"
+  },
+  "detail": {
+    "tag": "BODEGA",
+    "tabInfo": "Información",
+    "tabProducts": "Productos",
+    "tabReport": "Reportar",
+    "featuresLabel": "CARACTERÍSTICAS",
+    "acceptsLabel": "ACEPTA",
+    "favoriteAria": "Favorito",
+    "reportFalse": "🚩 ¿No es una bodega real? Repórtala",
+    "submitReport": "ENVIAR REPORTE",
+    "call": "LLAMAR",
+    "directions": "CÓMO LLEGAR",
+    "reportSubmitted": "¡Gracias! Tu reporte fue enviado.",
+    "falseHeader": "¿No es una bodega real?",
+    "falseMessage": "Reporta “{{name}}” como un listado falso o cerrado. Lo revisaremos.",
+    "falseConfirm": "Reportar",
+    "falseThanks": "Gracias — revisaremos este listado.",
+    "getDirections": "Cómo llegar",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "defaultMaps": "App de mapas predeterminada"
+  },
+  "newBodega": {
+    "tag": "NUEVA BODEGA",
+    "title": "AGREGAR UNA BODEGA",
+    "hint": "¿Conoces un lugar que nos falta? Cuéntanos.",
+    "submit": "ENVIAR BODEGA",
+    "submitted": "¡Gracias! Tu bodega fue enviada."
+  },
+  "report": {
+    "name": "Nombre",
+    "namePlaceholder": "Nombre de la bodega",
+    "location": "Ubicación",
+    "setLocation": "Fijar ubicación en el mapa",
+    "legend": "¿Esta bodega tiene…",
+    "yes": "sí",
+    "no": "no",
+    "hours": "Horario",
+    "setHours": "Fijar horario",
+    "receiptLabel": "Sube un recibo",
+    "receiptHint": "Ayúdanos a verificar qué vende esta bodega",
+    "receiptChoose": "📷 Elegir foto",
+    "receiptAdded": "✓ Recibo agregado",
+    "photosLabel": "Sube fotos",
+    "photosHint": "Muéstranos la bodega — fachada, estantes, neveras",
+    "photosChoose": "📸 Elegir fotos",
+    "photosAdded_one": "✓ {{count}} foto agregada",
+    "photosAdded_other": "✓ {{count}} fotos agregadas",
+    "submitFailed": "Falló el envío. Inténtalo de nuevo."
+  },
+  "locationPicker": {
+    "cancelAria": "Cancelar",
+    "confirmAria": "Usar esta ubicación"
+  },
+  "hoursPicker": {
+    "cancelAria": "Cancelar",
+    "saveAria": "Guardar horario",
+    "statusSetting": "Fijando horario para {{days}}",
+    "statusAllSet": "Todos los días fijados — guarda cuando estés listo",
+    "statusRemaining": "Selecciona los días restantes",
+    "statusSelect": "Selecciona los días a fijar",
+    "closed": "CERRADO",
+    "closedSub": "Sin horario este día",
+    "open24": "ABIERTO 24 HORAS",
+    "open24Time": "12:00 AM – 12:00 AM",
+    "opens": "ABRE",
+    "closes": "CIERRA",
+    "nextDay": "día siguiente",
+    "open24Btn": "Abierto 24 horas",
+    "closedBtn": "Cerrado",
+    "set": "Fijar {{days}}",
+    "openingTimeAria": "Hora de apertura",
+    "closingTimeAria": "Hora de cierre"
+  },
+  "hours": {
+    "open24": "Abierto 24 horas",
+    "closed": "Cerrado"
+  },
+  "days": {
+    "mon": "Lun",
+    "tue": "Mar",
+    "wed": "Mié",
+    "thu": "Jue",
+    "fri": "Vie",
+    "sat": "Sáb",
+    "sun": "Dom"
+  },
+  "products": {
+    "searchPlaceholder": "Buscar productos...",
+    "all": "TODOS",
+    "empty": "No hay productos que coincidan."
+  }
+}

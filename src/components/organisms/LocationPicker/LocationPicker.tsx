@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { IonContent, IonModal } from '@ionic/react';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -32,6 +33,7 @@ interface LocationPickerProps {
  * hands back { lat, lon, address }.
  */
 const LocationPicker: React.FC<LocationPickerProps> = ({ isOpen, initial, onCancel, onSelect }) => {
+  const { t } = useTranslation();
   const start = initial ? { longitude: initial.lon, latitude: initial.lat } : NYC_CENTER;
   // Snapshot of where the map opened. Captured once per open and held fixed —
   // `initial` (often the live, watchPosition-updated user location) keeps
@@ -81,7 +83,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ isOpen, initial, onCanc
           <button
             type="button"
             className="location-picker__icon-btn"
-            aria-label="Cancel"
+            aria-label={t('locationPicker.cancelAria')}
             onClick={onCancel}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -97,7 +99,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ isOpen, initial, onCanc
           <button
             type="button"
             className="location-picker__icon-btn location-picker__confirm"
-            aria-label="Use this location"
+            aria-label={t('locationPicker.confirmAria')}
             disabled={confirming}
             onClick={confirm}
           >

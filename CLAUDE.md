@@ -68,6 +68,30 @@ there, let the normal bbox loop fetch pins. It's a native permission on iOS/Andr
 it on user action (a "locate me" button), not on app launch. Web falls back to the browser
 geolocation API automatically through the same plugin.
 
+## Localization (i18n)
+
+UI strings are localized with **react-i18next**. `src/i18n/index.ts` inits it and
+auto-detects the device language from `navigator.languages` (primary subtag, e.g.
+`zh-CN`→`zh`), falling back to English. No in-app language switcher by design.
+
+- **Catalogs:** `src/i18n/locales/{en,es,zh,ru,bn,el,ht,ko}.json`. `en.json` is the
+  source of truth + fallback; keep all locales key-complete with it.
+- **Usage:** `const { t } = useTranslation()` → `t('detail.call')`. Outside components
+  (pure helpers like `hours.ts`) use the default `i18n` instance: `i18n.t(...)`.
+- **Shared feature labels** live under `features.*`; filters/badges/questions reference
+  them by `labelKey`, so add a new feature's label once there.
+- **Don't translate** analytics event names (`track('Call Tapped')`) — those are fixed keys.
+- Non-English catalogs were machine-translated; flag for native review before relying on them.
+
+## Analytics
+
+Amplitude via a thin wrapper in `src/lib/analytics.ts`. `initAnalytics()` runs once
+in `main.tsx`; `track('Event Name', { ...props })` emits custom events. Both **no-op
+when `VITE_AMPLITUDE_API_KEY` is unset** (local dev), so call sites stay unconditional.
+
+- Event names are fixed English string keys (`'Directions Opened'`) — never localize them.
+- The key is a client-side ingestion key (ships in the bundle); set per env like the API URL.
+
 ## Notes / conduct
 
 - This app only reads the public API; nothing here touches the delivery-scraping layer. Keep

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatTime, MINUTES_IN_DAY, type HoursMode } from './hours';
 
 /** 24h radial clock. Two handles set open/close; dragging the arc shifts the window. */
@@ -70,6 +71,7 @@ interface HoursDialProps {
 }
 
 const HoursDial: React.FC<HoursDialProps> = ({ open, close, mode, onChange }) => {
+  const { t } = useTranslation();
   const wrapRef = useRef<HTMLDivElement>(null);
   // Live values for the window listeners (which are bound once on mount).
   const stateRef = useRef({ open, close, mode });
@@ -217,7 +219,7 @@ const HoursDial: React.FC<HoursDialProps> = ({ open, close, mode, onChange }) =>
             className="hours-dial__handle hours-dial__handle--open"
             style={{ left: `${(ox / 3).toFixed(3)}%`, top: `${(oy / 3).toFixed(3)}%` }}
             role="slider"
-            aria-label="Opening time"
+            aria-label={t('hoursPicker.openingTimeAria')}
             aria-valuetext={formatTime(open)}
             tabIndex={0}
             onPointerDown={startHandle('open')}
@@ -228,7 +230,7 @@ const HoursDial: React.FC<HoursDialProps> = ({ open, close, mode, onChange }) =>
             className="hours-dial__handle hours-dial__handle--close"
             style={{ left: `${(cx / 3).toFixed(3)}%`, top: `${(cy / 3).toFixed(3)}%` }}
             role="slider"
-            aria-label="Closing time"
+            aria-label={t('hoursPicker.closingTimeAria')}
             aria-valuetext={formatTime(close)}
             tabIndex={0}
             onPointerDown={startHandle('close')}

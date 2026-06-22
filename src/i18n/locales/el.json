@@ -1,0 +1,138 @@
+{
+  "common": {
+    "cancel": "Άκυρο",
+    "submitError": "Η υποβολή απέτυχε. Δοκιμάστε ξανά."
+  },
+  "app": {
+    "title": "ΕΥΡΕΣΗ ΜΠΟΝΤΕΓΚΑ"
+  },
+  "map": {
+    "addBodega": "+ Μποντέγκα",
+    "addBodegaAria": "Προσθήκη μποντέγκα",
+    "recenterAria": "Επανακεντράρισμα χάρτη",
+    "favOnlyAria": "Εμφάνιση μόνο αγαπημένων",
+    "youLocationAria": "Η τοποθεσία σας"
+  },
+  "results": {
+    "count_one": "{{count}} ΜΠΟΝΤΕΓΚΑ",
+    "count_other": "{{count}} ΜΠΟΝΤΕΓΚΑ"
+  },
+  "features": {
+    "preparedFood": "ΖΕΣΤΟ ΦΑΓΗΤΟ",
+    "lottery": "ΛΑΧΕΙΟ",
+    "alcohol": "ΜΠΥΡΑ & ΚΡΑΣΙ",
+    "tobacco": "ΚΑΠΝΟΣ",
+    "cat": "ΓΑΤΑ",
+    "catReport": "ΓΑΤΑ ΜΠΟΝΤΕΓΚΑ",
+    "catBadge": "🐈",
+    "atm": "ATM",
+    "delivery": "ΠΑΡΑΔΟΣΗ",
+    "takeout": "ΓΙΑ ΤΟ ΣΠΙΤΙ",
+    "snap": "SNAP/EBT",
+    "wic": "WIC",
+    "quickDraw": "QUICK DRAW",
+    "products": "ΕΧΕΙ ΜΕΝΟΥ"
+  },
+  "payments": {
+    "credit": "💳 ΠΙΣΤΩΤΙΚΗ",
+    "debit": "🏧 ΧΡΕΩΣΤΙΚΗ",
+    "cashOnly": "💵 ΜΟΝΟ ΜΕΤΡΗΤΑ",
+    "nfc": "📲 ΑΝΕΠΑΦΗ ΠΛΗΡΩΜΗ"
+  },
+  "filters": {
+    "openAria": "Φίλτρα",
+    "closeAria": "Κλείσιμο φίλτρων"
+  },
+  "detail": {
+    "tag": "ΜΠΟΝΤΕΓΚΑ",
+    "tabInfo": "Πληροφορίες",
+    "tabProducts": "Προϊόντα",
+    "tabReport": "Αναφορά",
+    "featuresLabel": "ΧΑΡΑΚΤΗΡΙΣΤΙΚΑ",
+    "acceptsLabel": "ΔΕΧΕΤΑΙ",
+    "favoriteAria": "Αγαπημένο",
+    "reportFalse": "🚩 Δεν είναι αληθινή μποντέγκα; Αναφέρετέ το",
+    "submitReport": "ΥΠΟΒΟΛΗ ΑΝΑΦΟΡΑΣ",
+    "call": "ΚΛΗΣΗ",
+    "directions": "ΟΔΗΓΙΕΣ",
+    "reportSubmitted": "Ευχαριστούμε! Η αναφορά σας υποβλήθηκε.",
+    "falseHeader": "Δεν είναι αληθινή μποντέγκα;",
+    "falseMessage": "Αναφέρετε την «{{name}}» ως ψεύτικη ή κλειστή καταχώριση. Θα την ελέγξουμε.",
+    "falseConfirm": "Αναφορά",
+    "falseThanks": "Ευχαριστούμε — θα ελέγξουμε αυτή την καταχώριση.",
+    "getDirections": "Λήψη οδηγιών",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "defaultMaps": "Προεπιλεγμένη εφαρμογή χαρτών"
+  },
+  "newBodega": {
+    "tag": "ΝΕΑ ΜΠΟΝΤΕΓΚΑ",
+    "title": "ΠΡΟΣΘΗΚΗ ΜΠΟΝΤΕΓΚΑ",
+    "hint": "Ξέρετε κάποιο μέρος που μας λείπει; Πείτε μας γι' αυτό.",
+    "submit": "ΥΠΟΒΟΛΗ ΜΠΟΝΤΕΓΚΑ",
+    "submitted": "Ευχαριστούμε! Η μποντέγκα σας υποβλήθηκε."
+  },
+  "report": {
+    "name": "Όνομα",
+    "namePlaceholder": "Όνομα μποντέγκα",
+    "location": "Τοποθεσία",
+    "setLocation": "Ορισμός τοποθεσίας στον χάρτη",
+    "legend": "Διαθέτει αυτή η μποντέγκα…",
+    "yes": "ναι",
+    "no": "όχι",
+    "hours": "Ώρες",
+    "setHours": "Ορισμός ωρών",
+    "receiptLabel": "Μεταφόρτωση απόδειξης",
+    "receiptHint": "Βοηθήστε μας να επαληθεύσουμε τι πουλάει αυτή η μποντέγκα",
+    "receiptChoose": "📷 Επιλογή φωτογραφίας",
+    "receiptAdded": "✓ Η απόδειξη προστέθηκε",
+    "photosLabel": "Μεταφόρτωση φωτογραφιών",
+    "photosHint": "Δείξτε μας τη μποντέγκα — βιτρίνα, ράφια, ψυγεία",
+    "photosChoose": "📸 Επιλογή φωτογραφιών",
+    "photosAdded_one": "✓ {{count}} φωτογραφία προστέθηκε",
+    "photosAdded_other": "✓ {{count}} φωτογραφίες προστέθηκαν",
+    "submitFailed": "Η υποβολή απέτυχε. Δοκιμάστε ξανά."
+  },
+  "locationPicker": {
+    "cancelAria": "Άκυρο",
+    "confirmAria": "Χρήση αυτής της τοποθεσίας"
+  },
+  "hoursPicker": {
+    "cancelAria": "Άκυρο",
+    "saveAria": "Αποθήκευση ωρών",
+    "statusSetting": "Ορισμός ωρών για {{days}}",
+    "statusAllSet": "Όλες οι ημέρες ορίστηκαν — αποθηκεύστε όταν είστε έτοιμοι",
+    "statusRemaining": "Επιλέξτε τις υπόλοιπες ημέρες",
+    "statusSelect": "Επιλέξτε τις ημέρες προς ορισμό",
+    "closed": "ΚΛΕΙΣΤΑ",
+    "closedSub": "Χωρίς ώρες αυτή την ημέρα",
+    "open24": "ΑΝΟΙΧΤΑ 24 ΩΡΕΣ",
+    "open24Time": "12:00 π.μ. – 12:00 π.μ.",
+    "opens": "ΑΝΟΙΓΕΙ",
+    "closes": "ΚΛΕΙΝΕΙ",
+    "nextDay": "επόμενη ημέρα",
+    "open24Btn": "Ανοιχτά 24 ώρες",
+    "closedBtn": "Κλειστά",
+    "set": "Ορισμός {{days}}",
+    "openingTimeAria": "Ώρα ανοίγματος",
+    "closingTimeAria": "Ώρα κλεισίματος"
+  },
+  "hours": {
+    "open24": "Ανοιχτά 24 ώρες",
+    "closed": "Κλειστά"
+  },
+  "days": {
+    "mon": "Δευ",
+    "tue": "Τρι",
+    "wed": "Τετ",
+    "thu": "Πεμ",
+    "fri": "Παρ",
+    "sat": "Σαβ",
+    "sun": "Κυρ"
+  },
+  "products": {
+    "searchPlaceholder": "Αναζήτηση προϊόντων...",
+    "all": "ΟΛΑ",
+    "empty": "Κανένα προϊόν δεν ταιριάζει."
+  }
+}

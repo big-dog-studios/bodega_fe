@@ -1,0 +1,138 @@
+{
+  "common": {
+    "cancel": "বাতিল করুন",
+    "submitError": "জমা দেওয়া যায়নি। আবার চেষ্টা করুন।"
+  },
+  "app": {
+    "title": "বোদেগা ফাইন্ডার"
+  },
+  "map": {
+    "addBodega": "+ বোদেগা",
+    "addBodegaAria": "বোদেগা যোগ করুন",
+    "recenterAria": "মানচিত্র পুনরায় কেন্দ্র করুন",
+    "favOnlyAria": "শুধু পছন্দের দেখান",
+    "youLocationAria": "আপনার অবস্থান"
+  },
+  "results": {
+    "count_one": "{{count}}টি বোদেগা",
+    "count_other": "{{count}}টি বোদেগা"
+  },
+  "features": {
+    "preparedFood": "গরম খাবার",
+    "lottery": "লটারি",
+    "alcohol": "বিয়ার ও ওয়াইন",
+    "tobacco": "তামাক",
+    "cat": "বিড়াল",
+    "catReport": "বোদেগা বিড়াল",
+    "catBadge": "🐈",
+    "atm": "ATM",
+    "delivery": "ডেলিভারি",
+    "takeout": "টেকআউট",
+    "snap": "SNAP/EBT",
+    "wic": "WIC",
+    "quickDraw": "QUICK DRAW",
+    "products": "মেনু আছে"
+  },
+  "payments": {
+    "credit": "💳 ক্রেডিট",
+    "debit": "🏧 ডেবিট",
+    "cashOnly": "💵 শুধু নগদ",
+    "nfc": "📲 ট্যাপ করে পরিশোধ"
+  },
+  "filters": {
+    "openAria": "ফিল্টার",
+    "closeAria": "ফিল্টার বন্ধ করুন"
+  },
+  "detail": {
+    "tag": "বোদেগা",
+    "tabInfo": "তথ্য",
+    "tabProducts": "পণ্য",
+    "tabReport": "রিপোর্ট",
+    "featuresLabel": "বৈশিষ্ট্য",
+    "acceptsLabel": "গ্রহণ করে",
+    "favoriteAria": "পছন্দের",
+    "reportFalse": "🚩 আসল বোদেগা নয়? রিপোর্ট করুন",
+    "submitReport": "রিপোর্ট জমা দিন",
+    "call": "কল করুন",
+    "directions": "দিকনির্দেশ",
+    "reportSubmitted": "ধন্যবাদ! আপনার রিপোর্ট জমা দেওয়া হয়েছে।",
+    "falseHeader": "আসল বোদেগা নয়?",
+    "falseMessage": "“{{name}}”-কে ভুয়া বা বন্ধ তালিকা হিসেবে রিপোর্ট করুন। আমরা এটি পর্যালোচনা করব।",
+    "falseConfirm": "রিপোর্ট",
+    "falseThanks": "ধন্যবাদ — আমরা এই তালিকাটি পর্যালোচনা করব।",
+    "getDirections": "দিকনির্দেশ পান",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "defaultMaps": "ডিফল্ট মানচিত্র অ্যাপ"
+  },
+  "newBodega": {
+    "tag": "নতুন বোদেগা",
+    "title": "একটি বোদেগা যোগ করুন",
+    "hint": "আমরা মিস করেছি এমন কোনো জায়গা জানেন? আমাদের জানান।",
+    "submit": "বোদেগা জমা দিন",
+    "submitted": "ধন্যবাদ! আপনার বোদেগা জমা দেওয়া হয়েছে।"
+  },
+  "report": {
+    "name": "নাম",
+    "namePlaceholder": "বোদেগার নাম",
+    "location": "অবস্থান",
+    "setLocation": "মানচিত্রে অবস্থান নির্ধারণ করুন",
+    "legend": "এই বোদেগায় কি আছে…",
+    "yes": "হ্যাঁ",
+    "no": "না",
+    "hours": "সময়",
+    "setHours": "সময় নির্ধারণ করুন",
+    "receiptLabel": "একটি রসিদ আপলোড করুন",
+    "receiptHint": "এই বোদেগা কী বিক্রি করে তা যাচাই করতে আমাদের সাহায্য করুন",
+    "receiptChoose": "📷 ছবি বেছে নিন",
+    "receiptAdded": "✓ রসিদ যোগ করা হয়েছে",
+    "photosLabel": "ছবি আপলোড করুন",
+    "photosHint": "আমাদের বোদেগাটি দেখান — দোকানের সামনে, তাক, ফ্রিজ",
+    "photosChoose": "📸 ছবি বেছে নিন",
+    "photosAdded_one": "✓ {{count}}টি ছবি যোগ করা হয়েছে",
+    "photosAdded_other": "✓ {{count}}টি ছবি যোগ করা হয়েছে",
+    "submitFailed": "জমা দেওয়া ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
+  },
+  "locationPicker": {
+    "cancelAria": "বাতিল করুন",
+    "confirmAria": "এই অবস্থানটি ব্যবহার করুন"
+  },
+  "hoursPicker": {
+    "cancelAria": "বাতিল করুন",
+    "saveAria": "সময় সংরক্ষণ করুন",
+    "statusSetting": "{{days}}-এর জন্য সময় নির্ধারণ করা হচ্ছে",
+    "statusAllSet": "সব দিন নির্ধারিত — প্রস্তুত হলে সংরক্ষণ করুন",
+    "statusRemaining": "বাকি দিনগুলো নির্বাচন করুন",
+    "statusSelect": "নির্ধারণ করার দিনগুলো নির্বাচন করুন",
+    "closed": "বন্ধ",
+    "closedSub": "এই দিনে কোনো সময় নেই",
+    "open24": "২৪ ঘণ্টা খোলা",
+    "open24Time": "12:00 AM – 12:00 AM",
+    "opens": "খোলে",
+    "closes": "বন্ধ হয়",
+    "nextDay": "পরের দিন",
+    "open24Btn": "২৪ ঘণ্টা খোলা",
+    "closedBtn": "বন্ধ",
+    "set": "{{days}} নির্ধারণ করুন",
+    "openingTimeAria": "খোলার সময়",
+    "closingTimeAria": "বন্ধের সময়"
+  },
+  "hours": {
+    "open24": "২৪ ঘণ্টা খোলা",
+    "closed": "বন্ধ"
+  },
+  "days": {
+    "mon": "সোম",
+    "tue": "মঙ্গল",
+    "wed": "বুধ",
+    "thu": "বৃহস্পতি",
+    "fri": "শুক্র",
+    "sat": "শনি",
+    "sun": "রবি"
+  },
+  "products": {
+    "searchPlaceholder": "পণ্য খুঁজুন...",
+    "all": "সব",
+    "empty": "কোনো পণ্য মেলেনি।"
+  }
+}

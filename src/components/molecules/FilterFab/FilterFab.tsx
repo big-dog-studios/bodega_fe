@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { FILTERS } from '../../../lib/filters';
 import './FilterFab.scss';
@@ -16,6 +17,7 @@ interface FilterFabProps {
  * taps; a scrim closes it.
  */
 const FilterFab: React.FC<FilterFabProps> = ({ active, onToggle }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const activeCount = active.size;
 
@@ -34,7 +36,7 @@ const FilterFab: React.FC<FilterFabProps> = ({ active, onToggle }) => {
       <button
         type="button"
         className="filter-fab__scrim"
-        aria-label="Close filters"
+        aria-label={t('filters.closeAria')}
         tabIndex={open ? 0 : -1}
         onClick={() => setOpen(false)}
       />
@@ -54,7 +56,7 @@ const FilterFab: React.FC<FilterFabProps> = ({ active, onToggle }) => {
               className={`filter-fab__item${isOn ? ' filter-fab__item--active' : ''}`}
               onClick={() => handleToggle(f.key)}
             >
-              <span className="filter-fab__item-label">{f.label}</span>
+              <span className="filter-fab__item-label">{t(f.labelKey)}</span>
               <span className="filter-fab__item-icon">{f.icon}</span>
             </button>
           );
@@ -64,7 +66,7 @@ const FilterFab: React.FC<FilterFabProps> = ({ active, onToggle }) => {
       <button
         type="button"
         className="filter-fab__trigger"
-        aria-label="Filters"
+        aria-label={t('filters.openAria')}
         aria-expanded={open}
         onClick={toggleOpen}
       >

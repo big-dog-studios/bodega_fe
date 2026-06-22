@@ -1,0 +1,138 @@
+{
+  "common": {
+    "cancel": "Anile",
+    "submitError": "Pa t kapab voye. Tanpri eseye ankò."
+  },
+  "app": {
+    "title": "JWENN BODEGA"
+  },
+  "map": {
+    "addBodega": "+ Bodega",
+    "addBodegaAria": "Ajoute bodega",
+    "recenterAria": "Remete kat la nan sant",
+    "favOnlyAria": "Montre sèlman favori yo",
+    "youLocationAria": "Kote ou ye"
+  },
+  "results": {
+    "count_one": "{{count}} BODEGA",
+    "count_other": "{{count}} BODEGA"
+  },
+  "features": {
+    "preparedFood": "MANJE CHO",
+    "lottery": "LOTRI",
+    "alcohol": "BYÈ & DIVEN",
+    "tobacco": "TABAK",
+    "cat": "CHAT",
+    "catReport": "CHAT BODEGA",
+    "catBadge": "🐈",
+    "atm": "ATM",
+    "delivery": "LIVREZON",
+    "takeout": "POTE ALE",
+    "snap": "SNAP/EBT",
+    "wic": "WIC",
+    "quickDraw": "QUICK DRAW",
+    "products": "GEN MENU"
+  },
+  "payments": {
+    "credit": "💳 KREDI",
+    "debit": "🏧 DEBI",
+    "cashOnly": "💵 KÒB SÈLMAN",
+    "nfc": "📲 TOUCHE POU PEYE"
+  },
+  "filters": {
+    "openAria": "Filt",
+    "closeAria": "Fèmen filt yo"
+  },
+  "detail": {
+    "tag": "BODEGA",
+    "tabInfo": "Enfòmasyon",
+    "tabProducts": "Pwodwi",
+    "tabReport": "Rapò",
+    "featuresLabel": "KARAKTERISTIK",
+    "acceptsLabel": "AKSEPTE",
+    "favoriteAria": "Favori",
+    "reportFalse": "🚩 Se pa yon vrè bodega? Rapòte li",
+    "submitReport": "VOYE RAPÒ A",
+    "call": "RELE",
+    "directions": "DIREKSYON",
+    "reportSubmitted": "Mèsi! Rapò ou a te voye.",
+    "falseHeader": "Se pa yon vrè bodega?",
+    "falseMessage": "Rapòte “{{name}}” kòm yon lis ki fo oswa ki fèmen. N ap revize li.",
+    "falseConfirm": "Rapòte",
+    "falseThanks": "Mèsi — n ap revize lis sa a.",
+    "getDirections": "Jwenn direksyon",
+    "appleMaps": "Apple Maps",
+    "googleMaps": "Google Maps",
+    "defaultMaps": "Aplikasyon kat pa defo"
+  },
+  "newBodega": {
+    "tag": "NOUVO BODEGA",
+    "title": "AJOUTE YON BODEGA",
+    "hint": "Ou konnen yon kote nou pa genyen? Di nou sou li.",
+    "submit": "VOYE BODEGA A",
+    "submitted": "Mèsi! Bodega ou a te voye."
+  },
+  "report": {
+    "name": "Non",
+    "namePlaceholder": "Non bodega",
+    "location": "Kote",
+    "setLocation": "Mete kote a sou kat la",
+    "legend": "Èske bodega sa a genyen…",
+    "yes": "wi",
+    "no": "non",
+    "hours": "Lè",
+    "setHours": "Mete lè yo",
+    "receiptLabel": "Voye yon resi",
+    "receiptHint": "Ede nou verifye sa bodega sa a vann",
+    "receiptChoose": "📷 Chwazi foto",
+    "receiptAdded": "✓ Resi ajoute",
+    "photosLabel": "Voye foto",
+    "photosHint": "Montre nou bodega a — devan magazen, etajè, frijidè",
+    "photosChoose": "📸 Chwazi foto",
+    "photosAdded_one": "✓ {{count}} foto ajoute",
+    "photosAdded_other": "✓ {{count}} foto ajoute",
+    "submitFailed": "Voye a echwe. Tanpri eseye ankò."
+  },
+  "locationPicker": {
+    "cancelAria": "Anile",
+    "confirmAria": "Itilize kote sa a"
+  },
+  "hoursPicker": {
+    "cancelAria": "Anile",
+    "saveAria": "Sove lè yo",
+    "statusSetting": "Ap mete lè pou {{days}}",
+    "statusAllSet": "Tout jou yo fin mete — sove lè ou pare",
+    "statusRemaining": "Chwazi jou ki rete yo",
+    "statusSelect": "Chwazi jou pou mete yo",
+    "closed": "FÈMEN",
+    "closedSub": "Pa gen lè jou sa a",
+    "open24": "OUVÈ 24 È",
+    "open24Time": "12:00 AM – 12:00 AM",
+    "opens": "OUVÈ",
+    "closes": "FÈMEN",
+    "nextDay": "jou apre",
+    "open24Btn": "Ouvè 24 è",
+    "closedBtn": "Fèmen",
+    "set": "Mete {{days}}",
+    "openingTimeAria": "Lè ouvèti a",
+    "closingTimeAria": "Lè fèmti a"
+  },
+  "hours": {
+    "open24": "Ouvè 24 è",
+    "closed": "Fèmen"
+  },
+  "days": {
+    "mon": "Len",
+    "tue": "Mad",
+    "wed": "Mèk",
+    "thu": "Jed",
+    "fri": "Van",
+    "sat": "Sam",
+    "sun": "Dim"
+  },
+  "products": {
+    "searchPlaceholder": "Chèche pwodwi...",
+    "all": "TOUT",
+    "empty": "Pa gen pwodwi ki koresponn."
+  }
+}

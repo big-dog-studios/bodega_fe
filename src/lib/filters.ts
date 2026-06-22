@@ -3,7 +3,8 @@ import type { StoreFilters } from './api';
 /** One feature filter: a UI chip mapped to a `GET /stores` query param. */
 export interface StoreFilter {
   key: string;
-  label: string;
+  /** i18n key for the chip label (resolved with t() at render). */
+  labelKey: string;
   icon: string;
   /** The getStores() query param this filter sets. */
   param: keyof StoreFilters;
@@ -14,18 +15,18 @@ export interface StoreFilter {
  * the display order.
  */
 export const FILTERS: StoreFilter[] = [
-  { key: 'preparedFood', label: 'HOT FOOD', icon: '🥪', param: 'has_prepared_food' },
-  { key: 'lottery', label: 'LOTTERY', icon: '🎟', param: 'has_lottery' },
-  { key: 'alcohol', label: 'BEER & WINE', icon: '🍺', param: 'has_alcohol' },
-  { key: 'tobacco', label: 'TOBACCO', icon: '🚬', param: 'has_tobacco' },
-  { key: 'cat', label: 'CAT', icon: '🐈', param: 'has_cat' },
-  { key: 'atm', label: 'ATM', icon: '🏧', param: 'has_atm' },
-  { key: 'delivery', label: 'DELIVERY', icon: '🛵', param: 'delivery' },
-  { key: 'takeout', label: 'TAKEOUT', icon: '🥡', param: 'takeout' },
-  { key: 'snap', label: 'SNAP/EBT', icon: '🛒', param: 'has_snap' },
-  { key: 'wic', label: 'WIC', icon: '🍼', param: 'has_wic' },
-  { key: 'quickDraw', label: 'QUICK DRAW', icon: '🎰', param: 'has_quick_draw' },
-  { key: 'products', label: 'HAS MENU', icon: '🛍️', param: 'has_products' },
+  { key: 'preparedFood', labelKey: 'features.preparedFood', icon: '🥪', param: 'has_prepared_food' },
+  { key: 'lottery', labelKey: 'features.lottery', icon: '🎟', param: 'has_lottery' },
+  { key: 'alcohol', labelKey: 'features.alcohol', icon: '🍺', param: 'has_alcohol' },
+  { key: 'tobacco', labelKey: 'features.tobacco', icon: '🚬', param: 'has_tobacco' },
+  { key: 'cat', labelKey: 'features.cat', icon: '🐈', param: 'has_cat' },
+  { key: 'atm', labelKey: 'features.atm', icon: '🏧', param: 'has_atm' },
+  { key: 'delivery', labelKey: 'features.delivery', icon: '🛵', param: 'delivery' },
+  { key: 'takeout', labelKey: 'features.takeout', icon: '🥡', param: 'takeout' },
+  { key: 'snap', labelKey: 'features.snap', icon: '🛒', param: 'has_snap' },
+  { key: 'wic', labelKey: 'features.wic', icon: '🍼', param: 'has_wic' },
+  { key: 'quickDraw', labelKey: 'features.quickDraw', icon: '🎰', param: 'has_quick_draw' },
+  { key: 'products', labelKey: 'features.products', icon: '🛍️', param: 'has_products' },
 ];
 
 /** Look up a filter definition by key. */

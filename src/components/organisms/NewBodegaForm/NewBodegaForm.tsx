@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { IonContent, IonFooter, IonModal, IonSpinner, useIonToast } from '@ionic/react';
 import ReportForm from '../ReportForm';
 import './NewBodegaForm.scss';
@@ -19,6 +20,7 @@ interface NewBodegaFormProps {
  * submits in "new" mode. Controlled by the owner via `isOpen` / `onDidDismiss`.
  */
 const NewBodegaForm: React.FC<NewBodegaFormProps> = ({ isOpen, onDidDismiss }) => {
+  const { t } = useTranslation();
   const modal = useRef<HTMLIonModalElement>(null);
   const [valid, setValid] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -35,9 +37,9 @@ const NewBodegaForm: React.FC<NewBodegaFormProps> = ({ isOpen, onDidDismiss }) =
       expandToScroll={false}
     >
       <IonContent className="new-bodega__content">
-        <div className="new-bodega__tag">NEW BODEGA</div>
-        <p className="new-bodega__label">ADD A BODEGA</p>
-        <p className="new-bodega__hint">Know a spot we&apos;re missing? Tell us about it.</p>
+        <div className="new-bodega__tag">{t('newBodega.tag')}</div>
+        <p className="new-bodega__label">{t('newBodega.title')}</p>
+        <p className="new-bodega__hint">{t('newBodega.hint')}</p>
 
         <ReportForm
           formId={NEW_BODEGA_FORM_ID}
@@ -45,7 +47,7 @@ const NewBodegaForm: React.FC<NewBodegaFormProps> = ({ isOpen, onDidDismiss }) =
           onSubmittingChange={setSubmitting}
           onSubmitted={() => {
             presentToast({
-              message: 'Thanks! Your bodega was submitted.',
+              message: t('newBodega.submitted'),
               duration: 2500,
               position: 'top',
               color: 'success',
@@ -62,7 +64,7 @@ const NewBodegaForm: React.FC<NewBodegaFormProps> = ({ isOpen, onDidDismiss }) =
           className="new-bodega__submit"
           disabled={!valid || submitting}
         >
-          {submitting ? <IonSpinner name="dots" /> : 'SUBMIT BODEGA'}
+          {submitting ? <IonSpinner name="dots" /> : t('newBodega.submit')}
         </button>
       </IonFooter>
     </IonModal>
