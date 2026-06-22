@@ -8,6 +8,7 @@ import './i18n';
 import { initAnalytics } from './lib/analytics';
 import { initDb } from './lib/db';
 import { startSync } from './lib/sync';
+import { startSubmissions } from './lib/submissions';
 
 void initAnalytics();
 
@@ -24,6 +25,9 @@ await initDb();
 // Populate/refresh the cache in the background, and re-sync on reconnect.
 // Not awaited — the app renders immediately on whatever's already cached.
 void startSync();
+
+// Drain any reports queued while offline, and again whenever we reconnect.
+void startSubmissions();
 
 const container = document.getElementById('root');
 const root = createRoot(container!);

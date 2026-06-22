@@ -13,7 +13,7 @@ import { Capacitor } from '@capacitor/core';
 import { useStores } from '../../../context/StoresContext';
 import { useFavorites } from '../../../context/FavoritesContext';
 import { useUserId } from '../../../context/UserContext';
-import { submitReport } from '../../../lib/api';
+import { enqueueSubmission } from '../../../lib/submissions';
 import type { Store } from '../../../lib/types';
 import { track } from '../../../lib/analytics';
 import FeatureBadge from '../../atoms/FeatureBadge';
@@ -89,7 +89,7 @@ const StoreDetailSheet: React.FC = () => {
           text: t('detail.falseConfirm'),
           role: 'destructive',
           handler: () => {
-            void submitReport({
+            void enqueueSubmission({
               mode: 'delete',
               license_number: selected.license_number,
               name,

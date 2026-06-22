@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIonToast } from '@ionic/react';
-import { formatReverseAddress, submitReport } from '../../../lib/api';
+import { formatReverseAddress } from '../../../lib/api';
+import { enqueueSubmission } from '../../../lib/submissions';
 import type { ReverseAddress, Store } from '../../../lib/types';
 import HoursPicker, { deserialize, serialize, summarize, type HoursGroup } from '../HoursPicker';
 import LocationPicker from '../LocationPicker';
@@ -168,8 +169,9 @@ const ReportForm: React.FC<ReportFormProps> = ({
     setSubmitting(true);
     try {
       // Coords come straight from the map picker (or the existing store) — no
-      // geocoding needed at submit time.
-      await submitReport({
+      // geocoding needed at submit time. Queued locally first, then sent (or
+      // retried later if offline), so this resolves the moment it's saved.
+      await enqueueSubmission({
         mode: isNew ? 'new' : 'report',
         license_number: store?.license_number,
         name,

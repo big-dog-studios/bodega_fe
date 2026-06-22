@@ -182,3 +182,46 @@ export async function setCursor(value: string): Promise<void> {
   await db.run("INSERT OR REPLACE INTO sync_meta (key, value) VALUES ('cursor', ?);", [value]);
   await persist();
 }
+
+/** A queued report awaiting POST. `payload` is the serialized submission JSON. */
+export interface SubmissionRow {
+  id: number;
+  payload: string;
+  attempts: number;
+}
+
+/** Queue a serialized submission for later POST. `createdAt` is an ISO timestamp. */
+export async function enqueueSubmissionRow(payload: string, createdAt: string): Promise<void> {
+  await db.run(
+    "INSERT INTO submissions (payload, status, attempts, created_at) VALUES (?, 'pending', 0, ?);",
+    [payload, createdAt],
+  );
+  await persist();
+}
+
+/** Pending submissions, oldest first — the order the flush should send them. */
+export async function getPendingSubmissions(): Promise<SubmissionRow[]> {
+  const res = await db.query(
+    "SELECT id, payload, attempts FROM submissions WHERE status = 'pending' ORDER BY id ASC;",
+  );
+  return (res.values ?? []) as SubmissionRow[];
+}
+
+/** Drop a submission once the server has accepted it. */
+export async function deleteSubmission(id: number): Promise<void> {
+  await db.run('DELETE FROM submissions WHERE id = ?;', [id]);
+  await persist();
+}
+
+/** Record a failed attempt; flip to 'failed' (stop retrying) once retries run out. */
+export async function recordSubmissionFailure(
+  id: number,
+  error: string,
+  giveUp: boolean,
+): Promise<void> {
+  await db.run(
+    'UPDATE submissions SET attempts = attempts + 1, last_error = ?, status = ? WHERE id = ?;',
+    [error, giveUp ? 'failed' : 'pending', id],
+  );
+  await persist();
+}
