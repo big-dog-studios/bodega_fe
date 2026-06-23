@@ -133,7 +133,7 @@ export async function saveStores(stores: Store[]): Promise<void> {
   await persist();
 }
 
-/** Pins within the bbox, narrowed by feature filters. Capped at 2000 like the old API. */
+/** Pins within the bbox, narrowed by feature filters. Unbounded — the map's WebGL layer handles the full set. */
 export async function getPins(bbox: Bbox, filters?: StoreFilters): Promise<StorePin[]> {
   const [west, south, east, north] = bbox;
   const where = ['lon BETWEEN ? AND ?', 'lat BETWEEN ? AND ?'];
@@ -159,7 +159,7 @@ export async function getPins(bbox: Bbox, filters?: StoreFilters): Promise<Store
   }
 
   const res = await db.query(
-    `SELECT license_number, dba, lat, lon FROM stores WHERE ${where.join(' AND ')} LIMIT 2000;`,
+    `SELECT license_number, dba, lat, lon FROM stores WHERE ${where.join(' AND ')};`,
     values,
   );
   return (res.values ?? []) as StorePin[];
