@@ -32,9 +32,13 @@ const NewBodegaForm: React.FC<NewBodegaFormProps> = ({ isOpen, onDidDismiss }) =
       className="new-bodega"
       isOpen={isOpen}
       onDidDismiss={onDidDismiss}
-      breakpoints={[0, 0.9]}
-      initialBreakpoint={0.9}
-      expandToScroll={false}
+      // Rest at breakpoint 1 so the footer (bottom of the full-height sheet
+      // wrapper) lands on the real screen bottom instead of in the off-screen
+      // band a <1 breakpoint translates it into. With that, expandToScroll can
+      // stay on: the form scrolls in place and the submit footer stays visible.
+      breakpoints={[0, 1]}
+      initialBreakpoint={1}
+      expandToScroll
     >
       <IonContent className="new-bodega__content">
         <div className="new-bodega__tag">{t('newBodega.tag')}</div>

@@ -11,7 +11,10 @@ ion-modal.new-bodega {
   --padding-start: 0;
   --padding-end: 0;
   --padding-top: 0;
-  --padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  // Trailing scroll space before the footer. The footer (normal flow at the
+  // bottom of the sheet) owns the safe-area-inset-bottom, so it isn't repeated
+  // here now that content scrolls above the footer rather than behind it.
+  --padding-bottom: 24px;
 }
 
 // Orange category bar at the top of the sheet.
