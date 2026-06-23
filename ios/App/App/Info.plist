@@ -44,6 +44,8 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Bodega uses your location to find bodegas near you.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Bodega uses your location to find bodegas near you.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Bodega uses the camera so you can photograph a receipt or storefront when reporting a bodega.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
