@@ -13,7 +13,11 @@ ion-modal.store-sheet {
   --padding-bottom: 0;
 }
 
-// Pinned to the bottom of the sheet (works because expandToScroll={false}).
+// Sits in normal flow at the bottom of the sheet. With the sheet resting at
+// breakpoint 1, the wrapper bottom == the screen bottom, so this footer lands
+// on screen with no transform offset eating it — and because it's a flex
+// sibling of ion-content (not absolutely positioned), it never overlaps the
+// last row of content. The buttons carry the safe-area-inset-bottom padding.
 .store-sheet__footer {
   background: var(--brand-blue);
 

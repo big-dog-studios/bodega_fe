@@ -179,11 +179,16 @@ const StoreDetailSheet: React.FC = () => {
       className="store-sheet"
       isOpen={selectedId !== null}
       onDidDismiss={dismiss}
-      // Open at the large detent (like the "+ Bodega" sheet); content scrolls
-      // within it. A 0.6 snap lets you drag down to peek the map underneath.
-      breakpoints={[0, 0.6, 0.9]}
-      initialBreakpoint={0.9}
-      expandToScroll={false}
+      // A sheet modal is a full-screen wrapper translated DOWN by (1 - breakpoint)
+      // of the viewport, with the footer pinned to the wrapper's bottom. So the
+      // footer only sits at the real screen bottom when the resting breakpoint is
+      // exactly 1 — any lower (e.g. 0.9) pushes the footer + last content off
+      // screen. That is the cutoff we kept fighting. Resting at 1 lets us keep
+      // expandToScroll on: content scrolls in place, footer stays visible, and
+      // nothing overlaps. The 0.6 detent is a drag-down peek at the map.
+      breakpoints={[0, 0.6, 1]}
+      initialBreakpoint={1}
+      expandToScroll
     >
       <IonContent className="store-sheet__content">
         <div className="store-sheet__tag">{t('detail.tag')}</div>
