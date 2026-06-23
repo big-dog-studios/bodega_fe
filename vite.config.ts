@@ -11,6 +11,11 @@ export default defineConfig({
   plugins: [
     react(),
   ],
+  // top-level await (main.tsx) is ES2022; the default 'es2020' target rejects it.
+  // Safe here — Capacitor's modern WebViews and MapLibre's baseline both exceed it.
+  build: {
+    target: 'es2022',
+  },
   // Dev-only: proxy /api -> the API gateway so the browser makes a same-origin
   // request (the API doesn't send CORS headers). Set VITE_API_BASE_URL=/api in dev.
   server: {

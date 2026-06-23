@@ -9,8 +9,13 @@ import { initAnalytics } from './lib/analytics';
 import { initDb } from './lib/db';
 import { startSync } from './lib/sync';
 import { startSubmissions } from './lib/submissions';
+import { registerMapCache } from './lib/mapCache';
 
 void initAnalytics();
+
+// Route basemap requests through the Cache API so viewed areas work offline.
+// Awaited so the MapLibre protocol is registered before any map mounts.
+await registerMapCache();
 
 if (Capacitor.getPlatform() === 'web') {
   jeepSqlite(window);

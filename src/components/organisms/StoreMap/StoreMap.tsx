@@ -27,6 +27,7 @@ import {
 import FilterFab from '../../molecules/FilterFab';
 import { track } from '../../../lib/analytics';
 import { MAP_STYLE, MIN_ZOOM, NYC_BOUNDS, NYC_CENTER } from '../../../lib/mapConfig';
+import { mapCacheTransform } from '../../../lib/mapCache';
 import './StoreMap.scss';
 
 // Fallback view (NYC) if geolocation is denied or unavailable.
@@ -248,6 +249,7 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
       <Map
         ref={mapRef}
         mapStyle={MAP_STYLE}
+        transformRequest={mapCacheTransform}
         initialViewState={view}
         maxBounds={NYC_BOUNDS}
         minZoom={MIN_ZOOM}
