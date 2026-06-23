@@ -7,14 +7,9 @@ android {
         applicationId "com.jacknichols.bodegafinder"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.0.1"
+        versionCode 1
+        versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // Ship only ARM — real devices and our test emulator (arm64) need these.
-        // Drops the emulator-only x86/x86_64 SQLCipher libs (~10 MB off the AAB).
-        ndk {
-            abiFilters 'arm64-v8a', 'armeabi-v7a'
-        }
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
