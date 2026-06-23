@@ -1,10 +1,38 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { defineCustomElements as jeepSqlite } from 'jeep-sqlite/loader';
+import { Capacitor } from '@capacitor/core';
+import { CapacitorSQLite, SQLiteConnection } from '@capacitor-community/sqlite';
 import App from './App';
 import './i18n';
 import { initAnalytics } from './lib/analytics';
+import { initDb } from './lib/db';
+import { startSync } from './lib/sync';
+import { startSubmissions } from './lib/submissions';
+import { registerMapCache } from './lib/mapCache';
 
 void initAnalytics();
+
+// Route basemap requests through the Cache API so viewed areas work offline.
+// Awaited so the MapLibre protocol is registered before any map mounts.
+await registerMapCache();
+
+if (Capacitor.getPlatform() === 'web') {
+  jeepSqlite(window);
+  await customElements.whenDefined('jeep-sqlite');
+  document.body.appendChild(document.createElement('jeep-sqlite'));
+  await new SQLiteConnection(CapacitorSQLite).initWebStore();
+}
+
+// Open the local DB + run the schema before anything renders/queries it.
+await initDb();
+
+// Populate/refresh the cache in the background, and re-sync on reconnect.
+// Not awaited — the app renders immediately on whatever's already cached.
+void startSync();
+
+// Drain any reports queued while offline, and again whenever we reconnect.
+void startSubmissions();
 
 const container = document.getElementById('root');
 const root = createRoot(container!);

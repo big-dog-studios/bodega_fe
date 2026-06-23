@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { IonContent, IonModal } from '@ionic/react';
 import Map from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { reverseGeocode, type ReverseAddress } from '../../../lib/api';
+import { reverseGeocode } from '../../../lib/api';
+import type { ReverseAddress } from '../../../lib/types';
 import { MAP_STYLE, MIN_ZOOM, NYC_BOUNDS, NYC_CENTER } from '../../../lib/mapConfig';
+import { mapCacheTransform } from '../../../lib/mapCache';
 import './LocationPicker.scss';
 
 /** A point chosen on the map, with its reverse-geocoded address parts. */
@@ -124,6 +126,7 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ isOpen, initial, onCanc
                 // a different point — not on every live location update.
                 key={`${viewStart.longitude},${viewStart.latitude}`}
                 mapStyle={MAP_STYLE}
+                transformRequest={mapCacheTransform}
                 initialViewState={{ ...viewStart, zoom: 19 }}
                 maxBounds={NYC_BOUNDS}
                 minZoom={MIN_ZOOM}

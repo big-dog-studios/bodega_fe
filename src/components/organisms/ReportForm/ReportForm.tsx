@@ -1,12 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useIonToast } from '@ionic/react';
-import {
-  formatReverseAddress,
-  submitReport,
-  type ReverseAddress,
-  type StoreDetail,
-} from '../../../lib/api';
+import { formatReverseAddress } from '../../../lib/api';
+import { enqueueSubmission } from '../../../lib/submissions';
+import type { ReverseAddress, Store } from '../../../lib/types';
 import HoursPicker, { deserialize, serialize, summarize, type HoursGroup } from '../HoursPicker';
 import LocationPicker from '../LocationPicker';
 import { useUserLocation } from '../../../context/LocationContext';
@@ -41,11 +38,11 @@ const QUESTIONS = [
 const EMPTY_ADDRESS: ReverseAddress = { house: '', street: '', city: '', zip: '' };
 
 /** Structured address parts from a store record (for report prefill). */
-const addressFor = (s?: StoreDetail): ReverseAddress =>
+const addressFor = (s?: Store): ReverseAddress =>
   s ? { house: s.house, street: s.street, city: s.city, zip: s.zip } : EMPTY_ADDRESS;
 
 /** Seed the hours JSON from a store record — only if its value is our format. */
-const initialHours = (s?: StoreDetail): string => {
+const initialHours = (s?: Store): string => {
   const groups = deserialize(s?.hours_summary);
   return groups.length > 0 ? serialize(groups) : '';
 };
@@ -53,7 +50,7 @@ const initialHours = (s?: StoreDetail): string => {
 type Answer = 'yes' | 'no';
 
 /** Reads each question's current value off a store record (for report prefill). */
-const STORE_FLAG: Record<string, (s: StoreDetail) => boolean> = {
+const STORE_FLAG: Record<string, (s: Store) => boolean> = {
   preparedFood: (s) => s.has_prepared_food,
   lottery: (s) => s.has_lottery,
   alcohol: (s) => s.alc_class != null,
@@ -65,7 +62,7 @@ const STORE_FLAG: Record<string, (s: StoreDetail) => boolean> = {
 };
 
 /** Prefill yes/no answers from a store's flags; blank when adding a new bodega. */
-const answersFor = (store?: StoreDetail): Record<string, Answer> => {
+const answersFor = (store?: Store): Record<string, Answer> => {
   if (!store) return {};
   const a: Record<string, Answer> = {};
   for (const q of QUESTIONS) {
@@ -77,7 +74,7 @@ const answersFor = (store?: StoreDetail): Record<string, Answer> => {
 
 interface ReportFormProps {
   /** Existing store → prefill name/address + report mode. Omit for a new bodega. */
-  store?: StoreDetail;
+  store?: Store;
   /** Form id the external submit button targets (defaults to REPORT_FORM_ID). */
   formId?: string;
   /** Reports whether the form has enough to submit (drives the footer button). */
@@ -172,8 +169,9 @@ const ReportForm: React.FC<ReportFormProps> = ({
     setSubmitting(true);
     try {
       // Coords come straight from the map picker (or the existing store) — no
-      // geocoding needed at submit time.
-      await submitReport({
+      // geocoding needed at submit time. Queued locally first, then sent (or
+      // retried later if offline), so this resolves the moment it's saved.
+      await enqueueSubmission({
         mode: isNew ? 'new' : 'report',
         license_number: store?.license_number,
         name,

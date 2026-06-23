@@ -8,7 +8,7 @@ import NewBodegaForm from '../components/organisms/NewBodegaForm';
 import { useStores } from '../context/StoresContext';
 import { track } from '../lib/analytics';
 import { FILTERS } from '../lib/filters';
-import type { StoreFilters } from '../lib/api';
+import type { StoreFilters } from '../lib/types';
 
 const Map: React.FC = () => {
   const { t } = useTranslation();

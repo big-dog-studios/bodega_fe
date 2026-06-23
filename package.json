@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.44.1",
+    "@capacitor-community/sqlite": "^8.1.0",
     "@capacitor/android": "^8.4.0",
     "@capacitor/app": "8.1.0",
     "@capacitor/assets": "^3.0.5",
@@ -22,6 +23,7 @@
     "@capacitor/haptics": "8.0.2",
     "@capacitor/ios": "^8.4.0",
     "@capacitor/keyboard": "8.0.3",
+    "@capacitor/network": "^8.0.1",
     "@capacitor/preferences": "^8.0.1",
     "@capacitor/status-bar": "8.0.2",
     "@ionic/react": "^8.5.0",
@@ -30,13 +32,15 @@
     "@types/react-router-dom": "^5.3.3",
     "i18next": "^26.3.1",
     "ionicons": "^7.4.0",
+    "jeep-sqlite": "^2.8.0",
     "maplibre-gl": "^5.24.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-i18next": "^17.0.8",
     "react-map-gl": "^8.1.1",
     "react-router": "^5.3.4",
-    "react-router-dom": "^5.3.4"
+    "react-router-dom": "^5.3.4",
+    "sql.js": "^1.11.0"
   },
   "devDependencies": {
     "@capacitor/cli": "8.4.0",

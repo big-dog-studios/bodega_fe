@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { StoreProduct } from '../../../lib/api';
+import type { Product } from '../../../lib/types';
 import './ProductsTab.scss';
 
 interface Facet {
@@ -12,7 +12,7 @@ interface Facet {
 }
 
 interface ProductsTabProps {
-  products: StoreProduct[];
+  products: Product[];
 }
 
 /**
