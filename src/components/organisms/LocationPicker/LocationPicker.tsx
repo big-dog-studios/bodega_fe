@@ -15,7 +15,7 @@ export interface PickedLocation extends ReverseAddress {
   lon: number;
 }
 
-const EMPTY_ADDRESS: ReverseAddress = { house: '', street: '', city: '', zip: '' };
+const EMPTY_ADDRESS: ReverseAddress = { house: '', street: '', city: '', county: '', zip: '' };
 
 interface LocationPickerProps {
   isOpen: boolean;

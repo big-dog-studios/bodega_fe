@@ -35,11 +35,13 @@ const QUESTIONS = [
   { key: 'cat', labelKey: 'features.catReport', icon: '🐈' },
 ];
 
-const EMPTY_ADDRESS: ReverseAddress = { house: '', street: '', city: '', zip: '' };
+const EMPTY_ADDRESS: ReverseAddress = { house: '', street: '', city: '', county: '', zip: '' };
 
 /** Structured address parts from a store record (for report prefill). */
 const addressFor = (s?: Store): ReverseAddress =>
-  s ? { house: s.house, street: s.street, city: s.city, zip: s.zip } : EMPTY_ADDRESS;
+  s
+    ? { house: s.house, street: s.street, city: s.city, county: s.county, zip: s.zip }
+    : EMPTY_ADDRESS;
 
 /** Seed the hours JSON from a store record — only if its value is our format. */
 const initialHours = (s?: Store): string => {
@@ -179,6 +181,7 @@ const ReportForm: React.FC<ReportFormProps> = ({
         house: addr.house,
         street: addr.street,
         city: addr.city,
+        county: addr.county,
         zip: addr.zip,
         lat: coords.lat,
         lon: coords.lon,
@@ -230,9 +233,9 @@ const ReportForm: React.FC<ReportFormProps> = ({
         isOpen={locOpen}
         initial={coords ?? userLocation}
         onCancel={() => setLocOpen(false)}
-        onSelect={({ lat, lon, house, street, city, zip }) => {
+        onSelect={({ lat, lon, house, street, city, county, zip }) => {
           setCoords({ lat, lon });
-          setAddr({ house, street, city, zip });
+          setAddr({ house, street, city, county, zip });
           setLocOpen(false);
         }}
       />

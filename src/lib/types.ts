@@ -152,6 +152,7 @@ export interface Report {
   house?: string;
   street?: string;
   city?: string;
+  county?: string;
   zip?: string;
   /** Coordinates for the store, taken from the map location picker. */
   lat?: number;
@@ -169,6 +170,9 @@ export interface Report {
 export interface ReverseAddress {
   house: string;
   street: string;
+  /** Neighborhood (Nominatim `neighbourhood`), e.g. "Ridgewood". */
   city: string;
+  /** Borough (Nominatim `suburb`), e.g. "Queens". */
+  county: string;
   zip: string;
 }

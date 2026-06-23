@@ -83,6 +83,7 @@ export async function submitReport(report: Report, signal?: AbortSignal): Promis
   if (report.house?.trim()) form.set('house', report.house.trim());
   if (report.street?.trim()) form.set('street', report.street.trim());
   if (report.city?.trim()) form.set('city', report.city.trim());
+  if (report.county?.trim()) form.set('county', report.county.trim());
   if (report.zip?.trim()) form.set('zip', report.zip.trim());
   if (report.lat != null) form.set('lat', String(report.lat));
   if (report.lon != null) form.set('lon', String(report.lon));
@@ -108,7 +109,7 @@ export async function submitReport(report: Report, signal?: AbortSignal): Promis
 /** Single-line string built from the structured parts (empty parts dropped). */
 export function formatReverseAddress(a: ReverseAddress): string {
   const street = [a.house, a.street].filter(Boolean).join(' ');
-  return [street, a.city, a.zip].filter(Boolean).join(', ');
+  return [street, a.city, a.county, a.zip].filter(Boolean).join(', ');
 }
 
 /**
@@ -132,7 +133,9 @@ export async function reverseGeocode(
   return {
     house: a.house_number ?? '',
     street: a.road ?? '',
-    city: a.city || a.town || a.village || a.suburb || a.neighbourhood || '',
+    // NYC: neighborhood is the "city" line (Ridgewood); borough/suburb is the county (Queens).
+    city: a.neighbourhood || a.city || a.town || a.village || '',
+    county: a.suburb || a.city_district || a.county || '',
     zip: a.postcode ?? '',
   };
 }
