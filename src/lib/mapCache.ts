@@ -29,7 +29,8 @@ const CACHEABLE = new Set<string>([
   'SpriteJSON',
 ]);
 
-let registered = false;
+let registered = false; // protocol is live — safe to rewrite tile URLs to it
+let starting = false; // registration in flight (maplibre importing); don't re-enter
 
 /**
  * Register the caching protocol. Call once before the map mounts. No-op where
@@ -37,8 +38,8 @@ let registered = false;
  * map just fetches normally).
  */
 export async function registerMapCache(): Promise<void> {
-  if (registered || typeof caches === 'undefined') return;
-  registered = true;
+  if (registered || starting || typeof caches === 'undefined') return;
+  starting = true;
 
   // Imported lazily so this module stays free of maplibre's top-level side
   // effects (e.g. URL.createObjectURL), which break in jsdom under test.
@@ -65,6 +66,9 @@ export async function registerMapCache(): Promise<void> {
         return { data: await res.arrayBuffer() };
     }
   });
+
+  // Protocol is live now — only from here may transformRequest rewrite to it.
+  registered = true;
 }
 
 /**
@@ -75,7 +79,10 @@ export function mapCacheTransform(
   url: string,
   resourceType?: ResourceType,
 ): RequestParameters | undefined {
-  if (typeof caches === 'undefined') return undefined;
+  // Until the protocol is actually registered, fetch directly — rewriting to
+  // mapcache:// before addProtocol runs hands maplibre an unhandled scheme
+  // (blank tiles). Covers caches-unavailable too: registered stays false there.
+  if (!registered) return undefined;
   if (resourceType && CACHEABLE.has(resourceType) && /^https?:\/\//.test(url)) {
     return { url: `${PREFIX}${url}` };
   }

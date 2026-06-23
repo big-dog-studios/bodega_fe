@@ -15,7 +15,7 @@ void initAnalytics();
 
 // Route basemap requests through the Cache API so viewed areas work offline.
 // Awaited so the MapLibre protocol is registered before any map mounts.
-await registerMapCache();
+void registerMapCache();
 
 if (Capacitor.getPlatform() === 'web') {
   jeepSqlite(window);
