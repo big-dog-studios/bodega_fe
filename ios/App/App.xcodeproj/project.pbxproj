@@ -306,7 +306,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 3VELVCN48L;
+				DEVELOPMENT_TEAM = 8RP49JA8NR;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bodega Finder";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
@@ -333,7 +333,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 3VELVCN48L;
+				DEVELOPMENT_TEAM = 8RP49JA8NR;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bodega Finder";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
