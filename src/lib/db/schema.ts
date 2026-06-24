@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS stores (
   has_wic INTEGER,
   has_atm INTEGER,
   has_cat INTEGER,
+  has_plant_based INTEGER,
   alc_class INTEGER,
   takeout INTEGER,
   delivery INTEGER,
@@ -50,3 +51,11 @@ CREATE TABLE IF NOT EXISTS sync_meta (
   value TEXT
 );
 `;
+
+/**
+ * Idempotent column adds for DBs created before a column existed — `CREATE TABLE
+ * IF NOT EXISTS` never alters an existing table. SQLite has no "ADD COLUMN IF NOT
+ * EXISTS", so each runs in its own try/catch: it throws "duplicate column" on a
+ * fresh or already-migrated DB (which we swallow) and adds the column otherwise.
+ */
+export const MIGRATIONS: string[] = ['ALTER TABLE stores ADD COLUMN has_plant_based INTEGER;'];

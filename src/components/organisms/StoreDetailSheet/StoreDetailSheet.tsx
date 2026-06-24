@@ -27,6 +27,7 @@ type TabKey = 'info' | 'products' | 'report';
 /** Feature flags -> badges. `labelKey` is an i18n key; `filled` is the bold red treatment. */
 const BADGES: { test: (s: Store) => boolean; labelKey: string; filled?: boolean }[] = [
   { test: (s) => s.has_prepared_food, labelKey: 'features.preparedFood' },
+  { test: (s) => s.has_plant_based, labelKey: 'features.plantBased' },
   { test: (s) => s.has_tobacco, labelKey: 'features.tobacco' },
   { test: (s) => s.has_lottery, labelKey: 'features.lottery' },
   { test: (s) => s.alc_class != null, labelKey: 'features.alcohol' },

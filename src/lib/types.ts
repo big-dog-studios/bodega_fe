@@ -38,6 +38,7 @@ export interface Store {
   has_wic: boolean;
   has_atm: boolean;
   has_cat: boolean;
+  has_plant_based: boolean;
   /** Resident bodega cat's name, when known. */
   cat_name: string | null;
   /** Alcohol class code; null = no alcohol license. */
@@ -81,6 +82,7 @@ export interface StoreFilters {
   has_lottery?: boolean;
   has_quick_draw?: boolean;
   has_prepared_food?: boolean;
+  has_plant_based?: boolean;
   has_alcohol?: boolean;
   has_cat?: boolean;
   has_atm?: boolean;

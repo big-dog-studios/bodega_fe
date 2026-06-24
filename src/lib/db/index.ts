@@ -9,7 +9,7 @@ import {
   SQLiteConnection,
   type SQLiteDBConnection,
 } from '@capacitor-community/sqlite';
-import { SCHEMA } from './schema';
+import { SCHEMA, MIGRATIONS } from './schema';
 import type { Bbox, Store, StoreFilters, StorePin } from '../types';
 
 const DB_NAME = 'bodega';
@@ -31,6 +31,7 @@ const FLAG_COLUMNS: Record<string, string> = {
   has_cat: 'has_cat',
   has_atm: 'has_atm',
   has_wic: 'has_wic',
+  has_plant_based: 'has_plant_based',
   takeout: 'takeout',
   delivery: 'delivery',
 };
@@ -44,6 +45,13 @@ export async function initDb(): Promise<void> {
     : await sqlite.createConnection(DB_NAME, false, 'no-encryption', 1, false);
   await db.open();
   await db.execute(SCHEMA);
+  for (const stmt of MIGRATIONS) {
+    try {
+      await db.execute(stmt);
+    } catch {
+      // Column already present (fresh install or a prior migration) — ignore.
+    }
+  }
 }
 
 export function getDb(): SQLiteDBConnection {
@@ -76,7 +84,7 @@ function deleteByLicense(table: string, licenses: string[], chunk: number) {
 
 const STORE_COLUMNS =
   'license_number, dba, lat, lon, has_snap, has_tobacco, has_lottery, has_quick_draw, ' +
-  'has_prepared_food, has_wic, has_atm, has_cat, alc_class, takeout, delivery, updated_at, data';
+  'has_prepared_food, has_wic, has_atm, has_cat, has_plant_based, alc_class, takeout, delivery, updated_at, data';
 
 /**
  * Apply a batch of stores from sync: upsert visible ones (and their hours),
@@ -95,7 +103,7 @@ export async function saveStores(stores: Store[]): Promise<void> {
     set.push(...deleteByLicense('stores', ids, 400), ...deleteByLicense('store_hours', ids, 400));
   }
 
-  // Stores: multi-row upsert. 17 cols × 200 rows = 3400 binds, well under SQLite's limit.
+  // Stores: multi-row upsert. 18 cols × 200 rows = 3600 binds, well under SQLite's limit.
   const STORE_CHUNK = 200;
   for (let i = 0; i < visible.length; i += STORE_CHUNK) {
     const chunk = visible.slice(i, i + STORE_CHUNK);
@@ -105,10 +113,11 @@ export async function saveStores(stores: Store[]): Promise<void> {
         s.license_number, s.dba, s.lat, s.lon,
         bit(s.has_snap), bit(s.has_tobacco), bit(s.has_lottery), bit(s.has_quick_draw),
         bit(s.has_prepared_food), bit(s.has_wic), bit(s.has_atm), bit(s.has_cat),
+        bit(s.has_plant_based),
         s.alc_class, bit(s.takeout), bit(s.delivery), s.updated_at, JSON.stringify(s),
       );
     }
-    const rows = chunk.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
+    const rows = chunk.map(() => '(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)').join(',');
     set.push({ statement: `INSERT OR REPLACE INTO stores (${STORE_COLUMNS}) VALUES ${rows};`, values });
   }
 

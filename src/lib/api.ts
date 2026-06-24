@@ -133,8 +133,10 @@ export async function reverseGeocode(
   return {
     house: a.house_number ?? '',
     street: a.road ?? '',
-    // NYC: neighborhood is the "city" line (Ridgewood); borough/suburb is the county (Queens).
-    city: a.neighbourhood || a.city || a.town || a.village || '',
+    // NYC: neighborhood is the "city" line (Ridgewood/Steinway); borough/suburb is the
+    // county (Queens). Nominatim's `city` is the useless literal "New York" for all five
+    // boroughs, so when OSM has no neighbourhood we fall back to the borough, never "New York".
+    city: a.neighbourhood || a.suburb || '',
     county: a.suburb || a.city_district || a.county || '',
     zip: a.postcode ?? '',
   };

@@ -21,6 +21,7 @@
   "features": {
     "openNow": "ABIERTO AHORA",
     "preparedFood": "COMIDA CALIENTE",
+    "plantBased": "VEGANO",
     "lottery": "LOTERÍA",
     "alcohol": "CERVEZA Y VINO",
     "tobacco": "TABACO",

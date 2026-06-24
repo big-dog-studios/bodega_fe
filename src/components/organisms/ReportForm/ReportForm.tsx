@@ -17,6 +17,7 @@ export const REPORT_FORM_ID = 'report-form';
 /** Maps a feature filter key to its `POST /submissions` field name. */
 const SUBMIT_FIELDS: Record<string, string> = {
   preparedFood: 'prepared_food',
+  plantBased: 'plant_based',
   lottery: 'lottery',
   alcohol: 'alcohol',
   tobacco: 'tobacco',
@@ -26,6 +27,7 @@ const SUBMIT_FIELDS: Record<string, string> = {
 /** The yes/no questions rendered in the form. Hardcoded — independent of the map filters. */
 const QUESTIONS = [
   { key: 'preparedFood', labelKey: 'features.preparedFood', icon: '🥪' },
+  { key: 'plantBased', labelKey: 'features.plantBased', icon: '🌱' },
   { key: 'lottery', labelKey: 'features.lottery', icon: '🎟' },
   { key: 'alcohol', labelKey: 'features.alcohol', icon: '🍺' },
   { key: 'tobacco', labelKey: 'features.tobacco', icon: '🚬' },
@@ -54,6 +56,7 @@ type Answer = 'yes' | 'no';
 /** Reads each question's current value off a store record (for report prefill). */
 const STORE_FLAG: Record<string, (s: Store) => boolean> = {
   preparedFood: (s) => s.has_prepared_food,
+  plantBased: (s) => s.has_plant_based,
   lottery: (s) => s.has_lottery,
   alcohol: (s) => s.alc_class != null,
   tobacco: (s) => s.has_tobacco,
