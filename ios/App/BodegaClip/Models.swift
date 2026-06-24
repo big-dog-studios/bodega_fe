@@ -16,6 +16,7 @@ struct StorePin: Decodable, Identifiable {
 /// ignored by Codable, so this only declares the fields the clip renders.
 struct StoreDetail: Decodable {
     let dba: String
+    let estab_type: String?
     let house: String?
     let street: String?
     let city: String?

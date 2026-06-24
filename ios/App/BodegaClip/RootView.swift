@@ -59,7 +59,7 @@ struct RootView: View {
         .onChange(of: active) { _ in reload() }
         .sheet(item: $selected) { sel in
             TeaserSheet(license: sel.license)
-                .presentationDetents([.height(300)])
+                .presentationDetents([.height(340)])
         }
         .onAppear { location.request() }
         .onChange(of: location.coord) { newCoord in
@@ -193,7 +193,8 @@ struct FilterPill: View {
         Button(action: action) {
             HStack(spacing: 8) {
                 Text(LocalizedStringKey(filter.label))
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.displayCaps(15))
+                    .tracking(0.5)
                     .fixedSize()
                 Text(filter.icon).font(.system(size: 18))
             }

@@ -2,56 +2,74 @@ import StoreKit
 import SwiftUI
 import UIKit
 
-/// Tapped-bodega peek: name, address, a few feature badges, and a CTA that
-/// presents Apple's SKOverlay to install the full app.
+/// Tapped-bodega peek, styled like the core app's detail sheet: brand-blue
+/// surface, orange uppercase name with a red hard-shadow, outlined badges, and
+/// a CTA that presents Apple's SKOverlay to install the full app.
 struct TeaserSheet: View {
     let license: String
     @State private var detail: StoreDetail?
     @State private var loading = true
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            if let detail {
-                Text(detail.dba)
-                    .font(.title2.bold())
-                    .lineLimit(2)
-                if let line = addressLine(detail) {
-                    Text(line)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 6) {
-                        ForEach(badges(detail), id: \.self) { badge in
-                            Text(LocalizedStringKey(badge))
-                                .font(.system(size: 12, weight: .bold))
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(Brand.orange.opacity(0.2))
-                                .clipShape(Capsule())
+        ZStack {
+            Brand.blue.ignoresSafeArea()
+
+            VStack(alignment: .leading, spacing: 0) {
+                if let detail {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(detail.dba.uppercased())
+                            .font(.displayCaps(34, extraBold: true))
+                            .foregroundColor(Brand.orange)
+                            .shadow(color: Brand.red, radius: 0, x: 2, y: 2)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .lineLimit(2)
+
+                        if let line = addressLine(detail) {
+                            Text(line.uppercased())
+                                .font(.displayCaps(15))
+                                .tracking(1)
+                                .foregroundColor(Brand.orange)
+                        }
+
+                        let tags = badges(detail)
+                        if !tags.isEmpty {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(tags, id: \.self) { TeaserBadge(label: $0) }
+                                }
+                            }
+                            .padding(.top, 4)
                         }
                     }
+                    .padding(20)
+                } else if loading {
+                    ProgressView()
+                        .tint(Brand.orange)
+                        .frame(maxWidth: .infinity)
+                        .padding(40)
+                } else {
+                    Text("Couldn't load this bodega.")
+                        .foregroundColor(.white.opacity(0.8))
+                        .padding(20)
                 }
-            } else if loading {
-                ProgressView().frame(maxWidth: .infinity)
-            } else {
-                Text("Couldn't load this bodega.")
-                    .foregroundColor(.secondary)
-            }
 
-            Spacer(minLength: 0)
+                Spacer(minLength: 0)
 
-            Button(action: presentInstallOverlay) {
-                Text("Get the app for full details")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Brand.blue)
-                    .foregroundColor(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                Button(action: presentInstallOverlay) {
+                    Text("Get the app for full details")
+                        .textCase(.uppercase)
+                        .font(.displayCaps(20, extraBold: true))
+                        .tracking(1)
+                        .foregroundColor(Brand.blue)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Brand.orange)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .buttonStyle(.plain)
+                .padding(20)
             }
         }
-        .padding(20)
         .task { await load() }
     }
 
@@ -62,7 +80,7 @@ struct TeaserSheet: View {
 
     private func addressLine(_ d: StoreDetail) -> String? {
         let street = [d.house, d.street].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " ")
-        let parts = [street, d.city, d.county, d.zip].filter { !($0?.isEmpty ?? true) }.compactMap { $0 }
+        let parts = [street, d.city, d.county, d.zip].compactMap { $0 }.filter { !$0.isEmpty }
         return parts.isEmpty ? nil : parts.joined(separator: ", ")
     }
 
@@ -92,5 +110,20 @@ struct TeaserSheet: View {
         else { return }
         let config = SKOverlay.AppClipConfiguration(position: .bottom)
         SKOverlay(configuration: config).present(in: scene)
+    }
+}
+
+/// Outlined orange feature tag — mirrors the web's `.feature-badge`.
+struct TeaserBadge: View {
+    let label: String
+
+    var body: some View {
+        Text(LocalizedStringKey(label))
+            .font(.displayCaps(13))
+            .tracking(0.7)
+            .foregroundColor(Brand.orange)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .overlay(RoundedRectangle(cornerRadius: 4).stroke(Brand.orange, lineWidth: 2))
     }
 }

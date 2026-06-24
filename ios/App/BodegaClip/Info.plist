@@ -15,5 +15,10 @@
 	<string>https://bodega-gateway-2q60deae.ue.gateway.dev</string>
 	<key>BODEGA_API_KEY</key>
 	<string>AIzaSyA31lUH4vxxewg7Jgoj8kZS9wJ0p9O0NKs</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>BarlowCondensed-Bold.ttf</string>
+		<string>BarlowCondensed-ExtraBold.ttf</string>
+	</array>
 </dict>
 </plist>

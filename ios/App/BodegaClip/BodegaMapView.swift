@@ -40,13 +40,34 @@ enum BrandTiles {
             Brand.uiOrange.setStroke()
             path.lineWidth = border
             path.stroke()
-            let attrs: [NSAttributedString.Key: Any] = [
-                .font: UIFont.systemFont(ofSize: label.count > 1 ? 13 : 15, weight: .heavy),
-                .foregroundColor: Brand.uiOrange,
-            ]
-            let str = NSAttributedString(string: label, attributes: attrs)
-            let ts = str.size()
-            str.draw(at: CGPoint(x: (canvas.width - ts.width) / 2, y: (canvas.height - ts.height) / 2))
+            if label.count > 1 {
+                // Cluster: three dots in a centered pyramid (one over two),
+                // matching the web cluster glyph.
+                let r: CGFloat = 2.4
+                let cx = canvas.width / 2, cy = canvas.height / 2
+                let gapY: CGFloat = 4.8, gapX: CGFloat = 3.4
+                Brand.uiOrange.setFill()
+                for c in [
+                    CGPoint(x: cx, y: cy - gapY / 2),
+                    CGPoint(x: cx - gapX, y: cy + gapY / 2),
+                    CGPoint(x: cx + gapX, y: cy + gapY / 2),
+                ] {
+                    cg.fillEllipse(in: CGRect(x: c.x - r, y: c.y - r, width: r * 2, height: r * 2))
+                }
+            } else {
+                // Single bodega: Barlow Condensed ExtraBold "B", centered on its
+                // cap-height (line-box centering leaves a cap letter sitting high).
+                let font = UIFont(name: "BarlowCondensed-ExtraBold", size: 18)
+                    ?? UIFont.systemFont(ofSize: 15, weight: .heavy)
+                let str = NSAttributedString(
+                    string: label,
+                    attributes: [.font: font, .foregroundColor: Brand.uiOrange]
+                )
+                let ts = str.size()
+                let drawX = (canvas.width - ts.width) / 2
+                let drawY = canvas.height / 2 - font.ascender + font.capHeight / 2
+                str.draw(at: CGPoint(x: drawX, y: drawY))
+            }
         }
     }
 }
