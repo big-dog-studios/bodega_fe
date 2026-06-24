@@ -10,6 +10,8 @@ import { initDb } from './lib/db';
 import { startSync } from './lib/sync';
 import { startSubmissions } from './lib/submissions';
 import { registerMapCache } from './lib/mapCache';
+import { spotlightIndex } from './lib/spotlight';
+import { categoryItems } from './lib/spotlightItems';
 
 void initAnalytics();
 
@@ -33,6 +35,9 @@ void startSync();
 
 // Drain any reports queued while offline, and again whenever we reconnect.
 void startSubmissions();
+
+// Make the feature collections ("SNAP/EBT", "Beer & Wine"…) searchable in Spotlight.
+void spotlightIndex(categoryItems());
 
 const container = document.getElementById('root');
 const root = createRoot(container!);

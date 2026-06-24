@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Preferences } from '@capacitor/preferences';
 import { track } from '../lib/analytics';
+import { spotlightIndex } from '../lib/spotlight';
+import { favoriteItem, SPOTLIGHT_DOMAIN } from '../lib/spotlightItems';
 import {
   FavoritesContext,
   type FavoriteStore,
@@ -67,6 +69,12 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     });
     // Outside the updater so it fires once (StrictMode double-invokes updaters).
     track('Favorite Toggled', { license_number: store.license_number, on });
+    // Mirror to Spotlight. On un-star, demote to the "viewed" domain rather than
+    // deleting — a viewed + favorited store shares one id, so deleting would also
+    // drop it from the viewed index (and favoriting always implies a view).
+    void spotlightIndex([
+      on ? favoriteItem(store) : { ...favoriteItem(store), domain: SPOTLIGHT_DOMAIN.viewed },
+    ]);
   }, []);
 
   const list = favorites ?? [];

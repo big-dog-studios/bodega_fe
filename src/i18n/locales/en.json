@@ -18,6 +18,10 @@
     "count_one": "{{count}} BODEGA",
     "count_other": "{{count}} BODEGAS"
   },
+  "spotlight": {
+    "saved": "Saved bodega",
+    "findNearby": "Find {{feature}} bodegas near you"
+  },
   "features": {
     "openNow": "OPEN NOW",
     "preparedFood": "HOT FOOD",

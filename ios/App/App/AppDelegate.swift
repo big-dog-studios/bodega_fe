@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import CoreSpotlight
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -41,9 +42,60 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         // Called when the app was launched with an activity, including Universal Links.
+        // A tapped Spotlight result arrives here — route the app to its target.
+        if userActivity.activityType == CSSearchableItemActionType,
+            let id = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
+            AppRouterPlugin.open(id)
+            return true
+        }
         // Feel free to add additional processing here, but if you want the App API to support
         // tracking app url opens, make sure to keep this call
         return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
 
+}
+
+/// Capacitor bridge view controller subclass — registers our local plugins
+/// (Capacitor doesn't auto-discover plugins that live only in the app target).
+class MainViewController: CAPBridgeViewController {
+    override func capacitorDidLoad() {
+        bridge?.registerPluginInstance(SpotlightPlugin())
+        bridge?.registerPluginInstance(AppRouterPlugin())
+    }
+}
+
+extension Notification.Name {
+    /// Posted by any native source (Spotlight, App Intents, universal links) to
+    /// route the app to a deep-link target.
+    static let appOpenRoute = Notification.Name("appOpenRoute")
+}
+
+/// Generic deep-link router: any native entry point calls `AppRouterPlugin.open(route)`,
+/// and the web layer listens for the `openRoute` event and navigates. Event source
+/// only — no callable methods.
+@objc(AppRouterPlugin)
+public class AppRouterPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "AppRouterPlugin"
+    public let jsName = "AppRouter"
+    public let pluginMethods: [CAPPluginMethod] = []
+
+    public override func load() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(onRoute(_:)),
+            name: .appOpenRoute,
+            object: nil
+        )
+    }
+
+    @objc private func onRoute(_ note: Notification) {
+        guard let route = note.object as? String else { return }
+        // retainUntilConsumed covers cold start (route can arrive before JS attaches).
+        notifyListeners("openRoute", data: ["route": route], retainUntilConsumed: true)
+    }
+
+    /// Native entry point for routing the app (Spotlight, App Intents, links).
+    static func open(_ route: String) {
+        NotificationCenter.default.post(name: .appOpenRoute, object: route)
+    }
 }
