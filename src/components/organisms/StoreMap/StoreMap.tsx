@@ -139,7 +139,11 @@ const StoreMap: React.FC<StoreMapProps> = ({ filters }) => {
         .map((p) => ({
           type: 'Feature',
           geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
-          properties: { license_number: p.license_number, dba: p.dba },
+          properties: {
+            license_number: p.license_number,
+            dba: p.dba,
+            favorite: isFavorite(p.license_number),
+          },
         })),
     }),
     [pins, favOnly, isFavorite],

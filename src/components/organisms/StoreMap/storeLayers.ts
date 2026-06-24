@@ -17,16 +17,20 @@ export const INTERACTIVE_LAYERS = ['clusters', 'unclustered'];
 // Registered map image ids for the brand tiles.
 const IMG_PIN = 'bodega-pin';
 const IMG_PIN_SELECTED = 'bodega-pin-selected';
+const IMG_PIN_FAV = 'bodega-pin-fav'; // favorites: inverted palette (orange fill, blue ring/label)
 const IMG_CLUSTER = 'bodega-cluster'; // 9-slice tile that stretches around the count
 
 // Draw the square brand tile (blue/red fill, orange ring, optional baked label)
-// to a canvas and return it as an addImage()-ready spec. `stretch` makes a
-// 9-slice tile whose middle can stretch to fit cluster-count text.
+// to a canvas and return it as an addImage()-ready spec. `fg` is the ring + label
+// color (default orange; favorites invert it to blue). `stretch` makes a 9-slice
+// tile whose middle can stretch to fit cluster-count text.
 function makeTile(opts: {
   bg: string;
+  fg?: string;
   label?: string;
   stretch?: boolean;
 }): { data: ImageData; options: Parameters<MaplibreMap['addImage']>[2] } {
+  const fg = opts.fg ?? BRAND_ORANGE;
   const scale = 3; // render at 3x for crisp retina
   const size = 30;
   const border = 3;
@@ -54,11 +58,11 @@ function makeTile(opts: {
   ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.lineWidth = b;
-  ctx.strokeStyle = BRAND_ORANGE;
+  ctx.strokeStyle = fg;
   ctx.stroke();
 
   if (opts.label) {
-    ctx.fillStyle = BRAND_ORANGE;
+    ctx.fillStyle = fg;
     ctx.font = `800 ${17 * scale}px 'Barlow Condensed', sans-serif`;
     ctx.textAlign = 'center';
     // Center on the glyph's real bounding box rather than textBaseline='middle'
@@ -87,9 +91,10 @@ function makeTile(opts: {
 // Register the three brand tiles on a map (idempotent). Run on load and via
 // styleimagemissing so layers never reference an image that isn't there yet.
 export function ensureTileImages(map: MaplibreMap): void {
-  const defs: Record<string, { bg: string; label?: string; stretch?: boolean }> = {
+  const defs: Record<string, { bg: string; fg?: string; label?: string; stretch?: boolean }> = {
     [IMG_PIN]: { bg: BRAND_BLUE, label: 'B' },
     [IMG_PIN_SELECTED]: { bg: BRAND_RED, label: 'B' },
+    [IMG_PIN_FAV]: { bg: BRAND_ORANGE, fg: BRAND_BLUE, label: 'B' },
     [IMG_CLUSTER]: { bg: BRAND_BLUE, stretch: true },
   };
   for (const [id, opt] of Object.entries(defs)) {
@@ -124,19 +129,21 @@ export const clusterLayer: SymbolLayerSpecification = {
 };
 
 /**
- * Single (unclustered) pin layer — the brand "B" tile, swapped to the red tile
- * and popped 1.25× when its store is selected. Built per selection so the
- * data expression reflects the current `selectedId`.
+ * Single (unclustered) pin layer — the brand "B" tile, with an inverted palette
+ * for favorites (`favorite` property) and swapped to the red tile + popped 1.25×
+ * when its store is selected (selection wins over the favorite styling). Built
+ * per selection so the data expression reflects the current `selectedId`.
  */
 export function makeUnclusteredLayer(selectedId: string | null): SymbolLayerSpecification {
   const isSelected: ExpressionSpecification = ['==', ['get', 'license_number'], selectedId ?? ''];
+  const isFavorite: ExpressionSpecification = ['==', ['get', 'favorite'], true];
   return {
     id: 'unclustered',
     type: 'symbol',
     source: SOURCE_ID,
     filter: ['!', ['has', 'point_count']],
     layout: {
-      'icon-image': ['case', isSelected, IMG_PIN_SELECTED, IMG_PIN],
+      'icon-image': ['case', isSelected, IMG_PIN_SELECTED, isFavorite, IMG_PIN_FAV, IMG_PIN],
       'icon-allow-overlap': true,
       // Selected pin pops slightly larger, matching the old marker.
       'icon-size': ['case', isSelected, 1.25, 1],
