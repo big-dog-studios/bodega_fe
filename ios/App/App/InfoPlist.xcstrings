@@ -1,0 +1,218 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "NSLocationWhenInUseUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega uses your location to find bodegas near you."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega usa tu ubicación para encontrar bodegas cerca de ti."
+          }
+        },
+        "zh": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega 使用您的位置来查找附近的便利店。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega использует ваше местоположение, чтобы найти магазины поблизости."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega আপনার কাছাকাছি বোডেগা খুঁজে পেতে আপনার অবস্থান ব্যবহার করে।"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Το Bodega χρησιμοποιεί την τοποθεσία σας για να βρει μπακάλικα κοντά σας."
+          }
+        },
+        "ht": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega itilize kote ou ye pou jwenn bodega toupre ou."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega는 근처 가게를 찾기 위해 위치 정보를 사용합니다."
+          }
+        }
+      }
+    },
+    "NSLocationAlwaysAndWhenInUseUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega uses your location to find bodegas near you."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega usa tu ubicación para encontrar bodegas cerca de ti."
+          }
+        },
+        "zh": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega 使用您的位置来查找附近的便利店。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega использует ваше местоположение, чтобы найти магазины поблизости."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega আপনার কাছাকাছি বোডেগা খুঁজে পেতে আপনার অবস্থান ব্যবহার করে।"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Το Bodega χρησιμοποιεί την τοποθεσία σας για να βρει μπακάλικα κοντά σας."
+          }
+        },
+        "ht": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega itilize kote ou ye pou jwenn bodega toupre ou."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega는 근처 가게를 찾기 위해 위치 정보를 사용합니다."
+          }
+        }
+      }
+    },
+    "NSCameraUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega uses the camera so you can photograph a receipt or storefront when reporting a bodega."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega usa la cámara para que puedas fotografiar un recibo o la fachada al reportar una bodega."
+          }
+        },
+        "zh": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega 使用相机，以便您在报告便利店时拍摄收据或店面照片。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega использует камеру, чтобы вы могли сфотографировать чек или витрину при добавлении магазина."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega ক্যামেরা ব্যবহার করে যাতে আপনি কোনো বোডেগা রিপোর্ট করার সময় রসিদ বা দোকানের ছবি তুলতে পারেন।"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Το Bodega χρησιμοποιεί την κάμερα ώστε να φωτογραφίζετε μια απόδειξη ή τη βιτρίνα όταν αναφέρετε ένα μπακάλικο."
+          }
+        },
+        "ht": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega itilize kamera a pou ou ka pran foto yon resi oswa devan magazen lè w ap rapòte yon bodega."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega는 가게를 제보할 때 영수증이나 매장 사진을 찍을 수 있도록 카메라를 사용합니다."
+          }
+        }
+      }
+    },
+    "NSPhotoLibraryUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega needs access to your photos so you can attach a receipt or storefront image when reporting a bodega."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega necesita acceso a tus fotos para que puedas adjuntar un recibo o una imagen de la fachada al reportar una bodega."
+          }
+        },
+        "zh": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega 需要访问您的照片，以便您在报告便利店时附上收据或店面图片。"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega нужен доступ к вашим фотографиям, чтобы вы могли прикрепить чек или фото витрины при добавлении магазина."
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega আপনার ফটোতে অ্যাক্সেস প্রয়োজন যাতে আপনি কোনো বোডেগা রিপোর্ট করার সময় রসিদ বা দোকানের ছবি যুক্ত করতে পারেন।"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Το Bodega χρειάζεται πρόσβαση στις φωτογραφίες σας ώστε να επισυνάπτετε μια απόδειξη ή εικόνα βιτρίνας όταν αναφέρετε ένα μπακάλικο."
+          }
+        },
+        "ht": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega bezwen aksè a foto ou yo pou ou ka tache yon resi oswa yon imaj devan magazen lè w ap rapòte yon bodega."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bodega는 가게를 제보할 때 영수증이나 매장 이미지를 첨부할 수 있도록 사진에 대한 접근 권한이 필요합니다."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
