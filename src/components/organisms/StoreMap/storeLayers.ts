@@ -111,9 +111,14 @@ export const clusterLayer: SymbolLayerSpecification = {
     'icon-text-fit-padding': [4, 6, 4, 6],
     'icon-allow-overlap': true,
     'text-allow-overlap': true,
-    'text-field': ['get', 'point_count_abbreviated'],
+    // A little triangle of dots (one over two) instead of the cluster count —
+    // reads as "more here, zoom in". Lines are centered, so the top dot sits
+    // over the pair; icon-text-fit keeps the tile snug around it.
+    'text-field': '•\n••',
     'text-font': ['Noto Sans Bold'],
     'text-size': 15,
+    'text-letter-spacing': 0.15,
+    'text-line-height': 0.5,
   },
   paint: { 'text-color': BRAND_ORANGE },
 };
