@@ -7,7 +7,7 @@ struct SelectedStore: Identifiable {
     var id: String { license }
 }
 
-/// The whole clip: map + floating filter FAB + locate button + teaser sheet.
+/// The whole clip: map + filter FAB + re-center button (side by side) + teaser.
 struct RootView: View {
     @StateObject private var location = LocationManager()
     @State private var pins: [StorePin] = []
@@ -40,16 +40,21 @@ struct RootView: View {
                     .onTapGesture { withAnimation(.easeOut(duration: 0.18)) { filtersOpen = false } }
             }
 
-            VStack(alignment: .trailing, spacing: 12) {
-                if !filtersOpen {
-                    Button(action: locate) {
-                        controlTile { Image(systemName: "location.fill") }
-                    }
-                    .buttonStyle(.plain)
+            // Re-center — the iOS-native SF Symbol location arrow.
+            Button(action: locate) {
+                controlTile {
+                    Image(systemName: "location.fill")
+                        .font(.system(size: 20, weight: .semibold))
+                        .foregroundColor(Brand.orange)
                 }
-                FilterFab(active: $active, open: $filtersOpen)
             }
+            .buttonStyle(.plain)
             .padding(20)
+
+            // Filter FAB — sits just left of the re-center button.
+            FilterFab(active: $active, open: $filtersOpen)
+                .padding(.trailing, 80)
+                .padding(.bottom, 20)
         }
         .onChange(of: active) { _ in reload() }
         .sheet(item: $selected) { sel in
@@ -85,13 +90,12 @@ struct RootView: View {
     }
 }
 
-/// The 48pt brand control square (blue fill, orange ring) shared by the locate
-/// button and the filter trigger — mirrors the web's map control buttons.
+// MARK: - Controls
+
+/// The 48pt brand control square (blue fill, orange ring) shared by both buttons.
 @ViewBuilder
 func controlTile<Glyph: View>(@ViewBuilder glyph: () -> Glyph) -> some View {
     glyph()
-        .font(.system(size: 20, weight: .bold))
-        .foregroundColor(Brand.orange)
         .frame(width: 48, height: 48)
         .background(Brand.blue)
         .clipShape(RoundedRectangle(cornerRadius: 14))
@@ -99,8 +103,33 @@ func controlTile<Glyph: View>(@ViewBuilder glyph: () -> Glyph) -> some View {
         .shadow(color: .black.opacity(0.3), radius: 4, y: 2)
 }
 
-/// Floating filter button: a brand square trigger that fans a vertical column of
-/// filter pills upward. Multi-select, so the list stays open; orange = active.
+/// Web funnel icon (FilterFab SVG path): M3 5h18l-7 8v6l-4 2v-8L3 5z.
+struct FunnelShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let s = min(rect.width, rect.height) / 24
+        func pt(_ x: CGFloat, _ y: CGFloat) -> CGPoint { CGPoint(x: rect.minX + x * s, y: rect.minY + y * s) }
+        var p = Path()
+        p.move(to: pt(3, 5)); p.addLine(to: pt(21, 5)); p.addLine(to: pt(14, 13))
+        p.addLine(to: pt(14, 19)); p.addLine(to: pt(10, 21)); p.addLine(to: pt(10, 13))
+        p.closeSubpath()
+        return p
+    }
+}
+
+/// Web close icon: M6 6l12 12M18 6L6 18.
+struct XShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let s = min(rect.width, rect.height) / 24
+        func pt(_ x: CGFloat, _ y: CGFloat) -> CGPoint { CGPoint(x: rect.minX + x * s, y: rect.minY + y * s) }
+        var p = Path()
+        p.move(to: pt(6, 6)); p.addLine(to: pt(18, 18))
+        p.move(to: pt(18, 6)); p.addLine(to: pt(6, 18))
+        return p
+    }
+}
+
+/// Floating filter button: a brand square trigger (funnel → ✕) that fans a
+/// vertical column of filter pills upward. Multi-select; orange = active.
 struct FilterFab: View {
     @Binding var active: Set<String>
     @Binding var open: Bool
@@ -123,7 +152,14 @@ struct FilterFab: View {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.82)) { open.toggle() }
             } label: {
                 controlTile {
-                    Image(systemName: open ? "xmark" : "line.3.horizontal.decrease")
+                    Group {
+                        if open {
+                            XShape().stroke(Brand.orange, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+                        } else {
+                            FunnelShape().stroke(Brand.orange, style: StrokeStyle(lineWidth: 2, lineJoin: .round))
+                        }
+                    }
+                    .frame(width: 24, height: 24)
                 }
                 .overlay(alignment: .topTrailing) {
                     if !open && !active.isEmpty {
