@@ -7,11 +7,32 @@
  * VITE_AMPLITUDE_API_KEY in the env files, same pattern as the API config.
  */
 import * as amplitude from '@amplitude/analytics-browser';
+import { Capacitor } from '@capacitor/core';
 import { getDeviceId } from './device';
 
 const AMPLITUDE_API_KEY: string | undefined = import.meta.env.VITE_AMPLITUDE_API_KEY;
 
 let enabled = false;
+
+/**
+ * The browser SDK always stamps `platform: Web` because it only sees the
+ * webview — it can't tell it's wrapped in a native Capacitor shell. This
+ * enrichment plugin overrides `platform` from Capacitor's runtime check so
+ * native installs report `iOS`/`Android`. Web is left as the SDK's default.
+ */
+function platformOverridePlugin(): amplitude.Types.EnrichmentPlugin {
+  const native = Capacitor.getPlatform(); // 'web' | 'ios' | 'android'
+  const platform = native === 'ios' ? 'iOS' : native === 'android' ? 'Android' : null;
+  return {
+    name: 'capacitor-platform-override',
+    type: 'enrichment',
+    setup: async () => undefined,
+    execute: async (event) => {
+      if (platform) event.platform = platform;
+      return event;
+    },
+  };
+}
 
 /**
  * Initialize Amplitude once at app start. No-ops if no key is set. Resolves the
@@ -22,6 +43,7 @@ let enabled = false;
 export async function initAnalytics(): Promise<void> {
   if (enabled || !AMPLITUDE_API_KEY) return;
   const userId = await getDeviceId();
+  amplitude.add(platformOverridePlugin());
   amplitude.init(AMPLITUDE_API_KEY, {
     userId,
     // Auto-capture sessions + install/attribution; skip noisy DOM autocapture

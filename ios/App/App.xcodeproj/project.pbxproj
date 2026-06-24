@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		040C2DC22FEC14CA007947B8 /* BodegaClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 040C2DA02FEC14C9007947B8 /* BodegaClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		040C2EC02FEC4565007947B8 /* SpotlightPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040C2EBF2FEC4565007947B8 /* SpotlightPlugin.swift */; };
+		04B0DA1B2FEC4565007947B8 /* BodegaIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B0DA1A2FEC4565007947B8 /* BodegaIntents.swift */; };
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
 		4D22ABE92AF431CB00220026 /* CapApp-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 4D22ABE82AF431CB00220026 /* CapApp-SPM */; };
 		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
@@ -60,6 +62,8 @@
 		040C2DA02FEC14C9007947B8 /* BodegaClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BodegaClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		040C2DAE2FEC14CA007947B8 /* BodegaClipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BodegaClipTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		040C2DB82FEC14CA007947B8 /* BodegaClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BodegaClipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		040C2EBF2FEC4565007947B8 /* SpotlightPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SpotlightPlugin.swift; path = App/SpotlightPlugin.swift; sourceTree = "<group>"; };
+		04B0DA1A2FEC4565007947B8 /* BodegaIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BodegaIntents.swift; path = App/BodegaIntents.swift; sourceTree = "<group>"; };
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* BodegaFinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BodegaFinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -124,6 +128,8 @@
 		504EC2FB1FED79650016851F = {
 			isa = PBXGroup;
 			children = (
+				040C2EBF2FEC4565007947B8 /* SpotlightPlugin.swift */,
+				04B0DA1A2FEC4565007947B8 /* BodegaIntents.swift */,
 				958DCC722DB07C7200EA8C5F /* debug.xcconfig */,
 				504EC3061FED79650016851F /* App */,
 				040C2DA12FEC14C9007947B8 /* BodegaClip */,
@@ -367,6 +373,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
+				040C2EC02FEC4565007947B8 /* SpotlightPlugin.swift in Sources */,
+				04B0DA1B2FEC4565007947B8 /* BodegaIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -734,11 +742,11 @@
 			baseConfigurationReference = 958DCC722DB07C7200EA8C5F /* debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 8RP49JA8NR;
-				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bodega Finder";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";
@@ -762,11 +770,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = 8RP49JA8NR;
-				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				INFOPLIST_FILE = App/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Bodega Finder";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.navigation";

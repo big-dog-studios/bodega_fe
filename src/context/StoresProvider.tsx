@@ -4,6 +4,8 @@ import { getPins, getStore, storeCount } from '../lib/db';
 import { onSynced } from '../lib/sync';
 import type { Bbox, Product, Store, StoreFilters, StorePin } from '../lib/types';
 import { track } from '../lib/analytics';
+import { spotlightIndex } from '../lib/spotlight';
+import { viewedItem } from '../lib/spotlightItems';
 import { StoresContext, type StoresContextValue } from './StoresContext';
 
 /** Owns the shared stores state and the API calls that populate it. */
@@ -110,8 +112,12 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     getStore(licenseNumber)
       .then((data) => {
         if (detailCtrl.current !== ctrl) return; // a newer selection superseded this
-        if (data) setSelected(data);
-        else setSelectedError(new Error(`Store ${licenseNumber} not in local cache`));
+        if (data) {
+          setSelected(data);
+          void spotlightIndex([viewedItem(data)]); // make viewed stores searchable
+        } else {
+          setSelectedError(new Error(`Store ${licenseNumber} not in local cache`));
+        }
       })
       .catch((err: unknown) => {
         if (detailCtrl.current !== ctrl) return;

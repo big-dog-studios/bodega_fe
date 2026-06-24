@@ -55,6 +55,9 @@ const LocationPicker: React.FC<LocationPickerProps> = ({ isOpen, initial, onCanc
     const s = initial ? { longitude: initial.lon, latitude: initial.lat } : NYC_CENTER;
     setViewStart(s);
     setCenter(s);
+    // The modal stays mounted between opens, so clear the in-flight flag from a
+    // prior confirm — otherwise the confirm button stays disabled on reopen.
+    setConfirming(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 

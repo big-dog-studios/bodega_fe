@@ -5,6 +5,7 @@ import { UserProvider } from './context/UserProvider';
 import { StoresProvider } from './context/StoresProvider';
 import { LocationProvider } from './context/LocationProvider';
 import { FavoritesProvider } from './context/FavoritesProvider';
+import DeepLinkRouter from './components/DeepLinkRouter';
 import Map from './pages/Map';
 
 /* Core CSS required for Ionic components to work properly */
@@ -45,6 +46,7 @@ const App: React.FC = () => (
       <StoresProvider>
         <LocationProvider>
           <FavoritesProvider>
+            <DeepLinkRouter />
             <IonReactRouter>
               <IonRouterOutlet id="main-content">
                 <Route exact path="/map">

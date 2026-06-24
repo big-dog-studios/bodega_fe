@@ -18,9 +18,14 @@
     "count_one": "{{count}} BODEGA",
     "count_other": "{{count}} BODEGAS"
   },
+  "spotlight": {
+    "saved": "Saved bodega",
+    "findNearby": "Find {{feature}} bodegas near you"
+  },
   "features": {
     "openNow": "OPEN NOW",
     "preparedFood": "HOT FOOD",
+    "plantBased": "PLANT-BASED",
     "lottery": "LOTTERY",
     "alcohol": "BEER & WINE",
     "tobacco": "TOBACCO",
@@ -49,15 +54,15 @@
     "tag": "BODEGA",
     "tabInfo": "Info",
     "tabProducts": "Products",
-    "tabReport": "Report",
+    "tabReport": "Contribute",
     "featuresLabel": "FEATURES",
     "acceptsLabel": "ACCEPTS",
     "favoriteAria": "Favorite",
     "reportFalse": "🚩 Not a real bodega? Report it",
-    "submitReport": "SUBMIT REPORT",
+    "submitReport": "SUGGEST AN UPDATE",
     "call": "CALL",
     "directions": "DIRECTIONS",
-    "reportSubmitted": "Thanks! Your report was submitted.",
+    "reportSubmitted": "Thanks! Your update was submitted.",
     "falseHeader": "Not a real bodega?",
     "falseMessage": "Report “{{name}}” as a false or closed listing. We'll review it.",
     "falseConfirm": "Report",

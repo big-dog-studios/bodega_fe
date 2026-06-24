@@ -4,6 +4,12 @@
 <dict>
 	<key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
+	<!-- Read API base + client key for native App Intents (BodegaIntents.swift).
+	     Same low-trust ingestion key the web bundle and App Clip ship. -->
+	<key>BODEGA_API_BASE_URL</key>
+	<string>https://bodega-gateway-2q60deae.ue.gateway.dev</string>
+	<key>BODEGA_API_KEY</key>
+	<string>AIzaSyA31lUH4vxxewg7Jgoj8kZS9wJ0p9O0NKs</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<!-- Languages the app declares support for. Required so WKWebView reports the
