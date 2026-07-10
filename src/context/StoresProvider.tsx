@@ -131,6 +131,7 @@ export const StoresProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     getStoreProducts(licenseNumber, ctrl.signal)
       .then((data) => {
         if (ctrl.signal.aborted) return;
+        console.log('[products]', licenseNumber, data);
         setProducts(data.products);
         setProductsError(null);
       })

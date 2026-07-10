@@ -24,6 +24,21 @@ const API_BASE_URL: string = (import.meta.env.VITE_API_BASE_URL ?? 'http://local
 /** Gateway API key, sent as `x-api-key` on every request to our API. */
 const API_KEY: string | undefined = import.meta.env.VITE_API_KEY;
 
+/**
+ * Public base for `storefront_photos` paths. They're crowd-sourced photos of
+ * public storefronts sitting in a public-read GCS bucket, so they resolve to a
+ * plain URL — no proxy, no key. Override with `VITE_IMAGE_BASE_URL` if the
+ * bucket/CDN host ever changes.
+ */
+const IMAGE_BASE_URL: string = (
+  import.meta.env.VITE_IMAGE_BASE_URL ?? 'https://storage.googleapis.com/bodega-submissions'
+).replace(/\/+$/, '');
+
+/** Resolve a `storefront_photos` path (e.g. `submissions/…/x.jpg`) to a fetchable URL. */
+export function storefrontPhotoUrl(path: string): string {
+  return `${IMAGE_BASE_URL}/${encodeURI(path.replace(/^\/+/, ''))}`;
+}
+
 /** Headers required on every gateway request (merged with any per-call extras). */
 function apiHeaders(extra?: Record<string, string>): Record<string, string> {
   return { ...(API_KEY ? { 'x-api-key': API_KEY } : {}), ...extra };

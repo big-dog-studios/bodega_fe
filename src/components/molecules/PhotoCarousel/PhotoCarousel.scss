@@ -1,0 +1,72 @@
+// "Peek card" carousel: each photo is an inset rounded card that snaps to
+// centre, with the neighbours peeking in on both sides and page dots below.
+.photo-carousel {
+  padding: 18px 0 6px;
+}
+
+// Single photo: same card styling, just one wider card centred with a small
+// inset (no peek gutters, no dots).
+.photo-carousel--solo {
+  .photo-carousel__card {
+    flex: none;
+    margin-inline: 16px;
+  }
+}
+
+.photo-carousel__track {
+  display: flex;
+  gap: 12px;
+  // Side padding = the peek gutter: it lets the first/last card rest centred and
+  // reveals a sliver of the neighbours between.
+  padding-inline: 36px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none; // WebKit
+  }
+}
+
+.photo-carousel__card {
+  flex: 0 0 calc(100% - 72px); // container minus the two 36px gutters
+  scroll-snap-align: center;
+  height: 240px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.photo-carousel__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+// Page dots. Active dot stretches into an orange pill; the rest are faint white.
+.photo-carousel__dots {
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.photo-carousel__dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition:
+    width 0.2s ease,
+    background-color 0.2s ease;
+
+  &--active {
+    width: 20px;
+    background: var(--brand-orange);
+  }
+}

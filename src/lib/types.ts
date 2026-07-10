@@ -59,6 +59,13 @@ export interface Store {
   delivery: boolean | null;
   /** Human-readable hours line, e.g. "M-Th: 8AM - 11PM". */
   hours_summary: string | null;
+  /**
+   * Crowd-sourced storefront photos as storage object paths (e.g.
+   * `submissions/<license>/photo/<uuid>.jpg`), NOT full URLs — the bucket is
+   * private. Resolve to a fetchable URL with `storefrontPhotoUrl()` in `api.ts`.
+   * Empty array when the store has no photos.
+   */
+  storefront_photos: string[];
   /** Structured weekly hours. */
   hours: StoreHour[];
   /** Soft-delete: hidden stores are dropped from the local DB on sync. */

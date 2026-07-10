@@ -17,6 +17,7 @@ import { enqueueSubmission } from '../../../lib/submissions';
 import type { Store } from '../../../lib/types';
 import { track } from '../../../lib/analytics';
 import FeatureBadge from '../../atoms/FeatureBadge';
+import PhotoCarousel from '../../molecules/PhotoCarousel';
 import ProductsTab from '../../molecules/ProductsTab';
 import WalkTimeTag from '../../molecules/WalkTimeTag';
 import ReportForm, { REPORT_FORM_ID } from '../ReportForm';
@@ -220,6 +221,9 @@ const StoreDetailSheet: React.FC = () => {
 
         {selected && activeTab === 'info' && (
           <div className="store-sheet__body">
+            {selected.storefront_photos?.length > 0 && (
+              <PhotoCarousel paths={selected.storefront_photos} />
+            )}
             <header className="store-sheet__head">
               <div className="store-sheet__name-row">
                 <h1 className="store-sheet__name">{selected.display_name || selected.dba}</h1>
