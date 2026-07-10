@@ -1,4 +1,5 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Network } from '@capacitor/network';
 import { storefrontPhotoUrl } from '../../../lib/api';
 import './PhotoCarousel.scss';
 
@@ -22,6 +23,19 @@ const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ paths }) => {
   const [active, setActive] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
   const raf = useRef(0);
+
+  // Photos are fetched on view, never cached — so offline there's nothing to
+  // show. Track connectivity and skip the carousel entirely when offline (rather
+  // than render broken/empty cards). Re-renders when the device reconnects.
+  const [online, setOnline] = useState(() => navigator.onLine);
+  useEffect(() => {
+    let handle: { remove: () => Promise<void> } | undefined;
+    void Network.getStatus().then((s) => setOnline(s.connected));
+    void Network.addListener('networkStatusChange', (s) => setOnline(s.connected)).then((h) => {
+      handle = h;
+    });
+    return () => void handle?.remove();
+  }, []);
 
   const shown = paths.map((path, i) => ({ path, i })).filter(({ i }) => !failed.has(i));
 
@@ -52,7 +66,8 @@ const PhotoCarousel: React.FC<PhotoCarouselProps> = ({ paths }) => {
     child?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   };
 
-  if (shown.length === 0) return null;
+  // Offline: nothing to show (photos aren't cached), and no images means no empty cards.
+  if (!online || shown.length === 0) return null;
 
   // A single photo has no neighbour to peek at (and no dots), so drop the
   // snap/peek/dots treatment but keep the card styling — one wider, centred card.
